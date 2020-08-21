@@ -31,11 +31,11 @@ SOFTWARE.
 namespace mem_print {
 
 /**
- * Base class for all the MemPrint<SIZE> and MemPrintLarge<SIZE> classes. A
- * common base class reduces the code size because only one copy of the core
- * code is included across all possible template instances. Otherwise,
- * MemPrint<10> is a different class than MemPrint<20> and would pull in
- * duplicate copies of the code.
+ * Base class for all template instances of the MemPrint<SIZE> class. A common
+ * base class reduces the code size because only one copy of the core code is
+ * included across all possible template instances. Otherwise, MemPrint<10> is
+ * a different class than MemPrint<20> and would pull in duplicate copies of
+ * the code.
  *
  * Here are the actual numbers. I modified tests/CommonTest.ino program to use
  * 2 template instances, MemPrint<10> and MemPrint<20> instead of just
@@ -55,7 +55,6 @@ namespace mem_print {
  * instances. In other words, the amount of flash and static RAM remains
  * constant no matter how many template instances we create.
  */
-template<typename TYPE>
 class MemPrintBase: public Print {
   public:
     size_t write(uint8_t c) override {
@@ -102,18 +101,19 @@ class MemPrintBase: public Print {
       return buf_;
     }
 
+    /** Return the length of the internal c-string buffer. */
     size_t length() const {
       return index_;
     }
 
   protected:
-    MemPrintBase(TYPE size, char* buf):
+    MemPrintBase(uint16_t size, char* buf):
         size_(size),
         buf_(buf) {}
 
   private:
-    TYPE const size_;
-    TYPE index_ = 0;
+    uint16_t const size_;
+    uint16_t index_ = 0;
 
     // This is the pointer to actualBuf_ which is defined in the subclasses.
     // Instead of storing it (and taking up precious RAM), maybe there's a way
@@ -133,15 +133,19 @@ class MemPrintBase: public Print {
 
 /**
  * An implementation of `Print` that writes to an in-memory buffer supporting
- * string size less than 255. The NUL-terminated c-string representation can be
- * retrieved using `getCstr()`.
+ * string size less than 65535. It is intended to be a replacement for the
+ * String class to avoid heap fragmentation due to repeated creation and
+ * deletion of small String objects. The 'MemPrint' object inherit the 'Print'
+ * interface which can be used to build an internal string representation of
+ * various objects. After the internal string is built, the NUL-terminated
+ * c-string representation can be retrieved using `getCstr()`.
  *
- * This object is expected to be created on the stack. The desired information
- * will be written into it, and then extracted using the `getCstr()`. The
- * object will be destroyed automatically when the stack is unwound after
- * returning from the function where this is used. It is possible to create an
- * instance of this object statically and reused across different calling
- * sites, but the programmer must handle the memory management properly.
+ * This object is expected to be created on the stack. The object will be
+ * destroyed automatically when the stack is unwound after returning from the
+ * function where this is used. It is possible to create an instance of this
+ * object statically and reused across different calling sites, but the
+ * programmer must handle the memory management properly, for example, by
+ * calling the flush() method to clear the internal string before reuse.
  *
  * Warning: The contents of `getCstr()` is valid only as long as the MemPrint
  * object is alive. It should never be passed to another part of the program if
@@ -168,30 +172,13 @@ class MemPrintBase: public Print {
  * @endverbatim
  *
  * @tparam SIZE size of internal string buffer including the NUL terminator
- *         character, the maximum is 255, which means a maximum string length of
- *         254 characters.
- */
-template <uint8_t SIZE>
-class MemPrint: public MemPrintBase<uint8_t> {
-  public:
-    MemPrint(): MemPrintBase<uint8_t>(SIZE, actualBuf_) {}
-
-  private:
-    char actualBuf_[SIZE];
-};
-
-/**
- * A version of MemPrint that uses `uint16_t` to keep its internal size
- * parameters, so that a maximum of 65534 character can be stored.
- *
- * @tparam SIZE size of internal string buffer including the NUL terminator
  *         character, the maximum is 65535, which means a maximum string length
  *         of 65534 characters.
  */
 template <uint16_t SIZE>
-class MemPrintLarge: public MemPrintBase<uint16_t> {
+class MemPrint: public MemPrintBase {
   public:
-    MemPrintLarge(): MemPrintBase<uint16_t>(SIZE, actualBuf_) {}
+    MemPrint(): MemPrintBase(SIZE, actualBuf_) {}
 
   private:
     char actualBuf_[SIZE];
