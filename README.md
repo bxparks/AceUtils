@@ -8,7 +8,7 @@ Small and light Arduino utilities and libraries. The following are provided:
       created on the stack to avoid heap fragmentation caused by too many
       `String` objects.
 
-Version: 0.1
+Version: 0.1 (2020-08-20)
 
 Changelog: [CHANGELOG.md](CHANGELOG.md)
 
