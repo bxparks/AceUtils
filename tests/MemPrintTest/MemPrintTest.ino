@@ -24,6 +24,7 @@ test(MemPrintTest, print_underSized) {
   size_t n = memPrint.print("012345678");
 
   assertEqual((size_t) 9, n);
+  assertEqual((size_t) 9, memPrint.length());
   assertEqual("012345678", memPrint.getCstr());
 }
 
@@ -32,6 +33,7 @@ test(MemPrintTest, print_overSized) {
   size_t n = memPrint.print("0123456789");
 
   assertEqual((size_t) 9, n);
+  assertEqual((size_t) 9, memPrint.length());
   assertEqual("012345678", memPrint.getCstr());
 }
 
@@ -40,6 +42,7 @@ test(MemPrintTest, write_overSized) {
   size_t n = memPrint.write((const uint8_t*) "0123456789", 10);
 
   assertEqual((size_t) 9, n);
+  assertEqual((size_t) 9, memPrint.length());
   assertEqual("012345678", memPrint.getCstr());
 }
 
@@ -78,6 +81,7 @@ test(MemPrintLargeTest, print_underSized) {
 
   // Verify that the entire STRING got copied
   assertEqual((size_t) BUF_SIZE - 1, n);
+  assertEqual((size_t) BUF_SIZE - 1, memPrint.length());
   assertEqual(STRING, memPrint.getCstr());
 }
 
@@ -88,6 +92,7 @@ test(MemPrintLargeTest, print_overSized) {
 
   // Verify that the STRING was truncated to 269
   assertEqual((size_t) 269, n);
+  assertEqual((size_t) 269, memPrint.length());
   truncateString(269);
   assertEqual(STRING, memPrint.getCstr());
 }
@@ -98,6 +103,7 @@ test(MemPrintLargeTest, write_overSized) {
   size_t n = memPrint.write((const uint8_t*) STRING, BUF_SIZE - 1);
 
   assertEqual((size_t) 269, n);
+  assertEqual((size_t) 269, memPrint.length());
   truncateString(269);
   assertEqual(STRING, memPrint.getCstr());
 }

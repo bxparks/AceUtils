@@ -102,6 +102,10 @@ class MemPrintBase: public Print {
       return buf_;
     }
 
+    size_t length() const {
+      return index_;
+    }
+
   protected:
     MemPrintBase(TYPE size, char* buf):
         size_(size),
