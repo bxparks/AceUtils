@@ -13,7 +13,7 @@
 #ifndef ACE_UTILS_ACE_UTILS_H
 #define ACE_UTILS_ACE_UTILS_H
 
-#include "mem_print/MemPrint.h"
+#include "print_string/PrintString.h"
 #include "url_encoding/url_encoding.h"
 
 // Version format: "xx.yy.zz" -> xxyyzz without leading 0

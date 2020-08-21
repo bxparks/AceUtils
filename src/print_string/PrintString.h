@@ -22,40 +22,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef MEM_PRINT_MEM_PRINT_H
-#define MEM_PRINT_MEM_PRINT_H
+#ifndef PRINT_STRING_PRINT_STRING_H
+#define PRINT_STRING_PRINT_STRING_H
 
 #include <stddef.h> // size_t
 #include <Print.h>
 
-namespace mem_print {
+namespace print_string {
 
 /**
- * Base class for all template instances of the MemPrint<SIZE> class. A common
- * base class reduces the code size because only one copy of the core code is
- * included across all possible template instances. Otherwise, MemPrint<10> is
- * a different class than MemPrint<20> and would pull in duplicate copies of
- * the code.
+ * Base class for all template instances of the PrintString<SIZE> class. A
+ * common base class reduces the code size because only one copy of the core
+ * code is included across all possible template instances. Otherwise,
+ * PrintString<10> is a different class than PrintString<20> and would pull in
+ * duplicate copies of the code.
+ *
+ * Usually the `Print` base class can be used to accept instances of the
+ * `PrintString<SIZE>` objects. However, if you need access to the `lenth()`
+ * method, then you need to use the `PrintStringBase` class instead, since the
+ * `Print` class does not have a `length()` method.
  *
  * Here are the actual numbers. I modified tests/CommonTest.ino program to use
- * 2 template instances, MemPrint<10> and MemPrint<20> instead of just
- * MemPrint<10>. Without this base class optimization, the sketch uses:
+ * 2 template instances, PrintString<10> and PrintString<20> instead of just
+ * PrintString<10>. Without this base class optimization, the sketch uses:
  *
  *    * 10030 bytes (32%) of program storage space,
  *    * 710 bytes (34%) of dynamic memory on an Arduino Nano.
  *
- * After inserting this MemPrintBase class in the class hierarchy, the same
+ * After inserting this PrintStringBase class in the class hierarchy, the same
  * sketch uses:
  *
  *    * 9936 bytes (32%) of program storage space,
  *    * 698 bytes (34%) of dynamic memory,
  *
  * So we save 94 bytes of flash memory, and 12 bytes of static RAM. And even
- * better, the program and RAM size was the same as using 2 MemPrint<10>
+ * better, the program and RAM size was the same as using 2 PrintString<10>
  * instances. In other words, the amount of flash and static RAM remains
  * constant no matter how many template instances we create.
  */
-class MemPrintBase: public Print {
+class PrintStringBase: public Print {
   public:
     size_t write(uint8_t c) override {
       if (index_ < size_ - 1) {
@@ -107,7 +112,7 @@ class MemPrintBase: public Print {
     }
 
   protected:
-    MemPrintBase(uint16_t size, char* buf):
+    PrintStringBase(uint16_t size, char* buf):
         size_(size),
         buf_(buf) {}
 
@@ -122,7 +127,7 @@ class MemPrintBase: public Print {
     // But I am not convinced that I have the knowledge do that properly
     // without triggering UB (undefined behavior) in the C++ language. Do I
     // define buf_[0] here and will it point exactly where actualBuf_[] is
-    // allocated? Or do I use [&MemPrintBase + sizeof(MemPrintBase)] to
+    // allocated? Or do I use [&PrintStringBase + sizeof(PrintStringBase)] to
     // calculate the pointer to actualBuf_. I just don't know what's actually
     // allowed in the language spec versus something that works by pure luck on
     // a particular microcontroller and compiler. So I'll pay the cost of the 2
@@ -133,23 +138,28 @@ class MemPrintBase: public Print {
 
 /**
  * An implementation of `Print` that writes to an in-memory buffer supporting
- * string size less than 65535. It is intended to be a replacement for the
- * String class to avoid heap fragmentation due to repeated creation and
- * deletion of small String objects. The 'MemPrint' object inherit the 'Print'
- * interface which can be used to build an internal string representation of
- * various objects. After the internal string is built, the NUL-terminated
- * c-string representation can be retrieved using `getCstr()`.
+ * strings less than 65535 in length. It is intended to be an alternative to
+ * the `String` class to help avoid heap fragmentation due to repeated creation
+ * and deletion of small String objects. The 'PrintString' object inherit the
+ * methods from the 'Print' interface which can be used to build an internal
+ * string representation of various objects. Instead of using the
+ * `operator+=()` or the `concat()` method, use the `print()`, `println()` (or
+ * sometimes the `printf()` method) of the `Print` class. After the internal
+ * string is built, the NUL-terminated c-string representation can be retrieved
+ * using `getCstr()`.
  *
- * This object is expected to be created on the stack. The object will be
- * destroyed automatically when the stack is unwound after returning from the
- * function where this is used. It is possible to create an instance of this
- * object statically and reused across different calling sites, but the
+ * This object is expected to be created on the stack instead of the heap
+ * to avoid heap fragmentation. The `SIZE` parameter is a compile time constant,
+ * to allow the internal string buffer to be created on the stack. The object
+ * will be destroyed automatically when the stack is unwound after returning
+ * from the function where this is used. It is possible to create an instance
+ * of this object statically and reused across different calling sites, but the
  * programmer must handle the memory management properly, for example, by
  * calling the flush() method to clear the internal string before reuse.
  *
- * Warning: The contents of `getCstr()` is valid only as long as the MemPrint
+ * Warning: The contents of `getCstr()` is valid only as long as the PrintString
  * object is alive. It should never be passed to another part of the program if
- * the getCstr() pointer outlives its underlying MemPrint object.
+ * the getCstr() pointer outlives its underlying PrintString object.
  *
  * Usage:
  *
@@ -159,7 +169,7 @@ class MemPrintBase: public Print {
  * using namespace mem_print;
  *
  * void someFunction() {
- *   MemPrint<32> memPrint;
+ *   PrintString<32> memPrint;
  *   memPrint.print("hello, ");
  *   memPrint.println("world!");
  *   const char* cstr = memPrint.getCstr();
@@ -176,9 +186,9 @@ class MemPrintBase: public Print {
  *         of 65534 characters.
  */
 template <uint16_t SIZE>
-class MemPrint: public MemPrintBase {
+class PrintString: public PrintStringBase {
   public:
-    MemPrint(): MemPrintBase(SIZE, actualBuf_) {}
+    PrintString(): PrintStringBase(SIZE, actualBuf_) {}
 
   private:
     char actualBuf_[SIZE];
