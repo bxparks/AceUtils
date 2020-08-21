@@ -128,8 +128,9 @@ class MemPrintBase: public Print {
 };
 
 /**
- * An implementation of `Print` that writes to an in-memory buffer. The
- * NUL-terminated c-string representation can be retrieved using `getCstr()`.
+ * An implementation of `Print` that writes to an in-memory buffer supporting
+ * string size less than 255. The NUL-terminated c-string representation can be
+ * retrieved using `getCstr()`.
  *
  * This object is expected to be created on the stack. The desired information
  * will be written into it, and then extracted using the `getCstr()`. The
