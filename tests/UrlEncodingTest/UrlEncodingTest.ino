@@ -1,10 +1,10 @@
-#line 2 "MemPrintTest.ino"
+#line 2 "UrlEncodingTest.ino"
 
 #include <AUnit.h>
 #include <AceUtils.h>
 
 using namespace aunit;
-using namespace mem_print;
+using namespace print_string;
 using namespace url_encoding;
 
 //----------------------------------------------------------------------------
@@ -12,14 +12,14 @@ using namespace url_encoding;
 //----------------------------------------------------------------------------
 
 test(formUrlEncode, normal) {
-  MemPrint<10> memPrint;
+  PrintString<10> memPrint;
   formUrlEncode(memPrint, "0aA %");
   assertEqual("0aA+%25", memPrint.getCstr());
 }
 
 test(formUrlEncode, tooLong) {
-  MemPrint<10> memPrint;
-  // truncated to 9 characters because MemPrint is only 10-characters big
+  PrintString<10> memPrint;
+  // truncated to 9 characters because PrintString is only 10-characters big
   formUrlEncode(memPrint, "0aA %0123456");
   assertEqual("0aA+%2501", memPrint.getCstr());
 }
@@ -29,27 +29,27 @@ test(formUrlEncode, tooLong) {
 //----------------------------------------------------------------------------
 
 test(formUrlDecode, normal) {
-  MemPrint<10> memPrint;
+  PrintString<10> memPrint;
   formUrlDecode(memPrint, "0aA+%25");
   assertEqual("0aA %", memPrint.getCstr());
 }
 
 test(formUrlDecode, truncated1) {
-  MemPrint<10> memPrint;
+  PrintString<10> memPrint;
   // Missing 2-digit of hex after %, which is ignored.
   formUrlDecode(memPrint, "0aA+%2");
   assertEqual("0aA ", memPrint.getCstr());
 }
 
 test(formUrlDecode, truncated2) {
-  MemPrint<10> memPrint;
+  PrintString<10> memPrint;
   // Missing 2-digit of hex after %, which is ignored.
   formUrlDecode(memPrint, "0aA+%");
   assertEqual("0aA ", memPrint.getCstr());
 }
 
 test(formUrlDecode, invalidHex) {
-  MemPrint<10> memPrint;
+  PrintString<10> memPrint;
   // Missing 2-digit of hex after %, which is ignored.
   formUrlDecode(memPrint, "0aA+%0Z");
   assertEqual("0aA ", memPrint.getCstr());
