@@ -7,6 +7,9 @@ Small and light Arduino utilities and libraries. The following are provided:
       can be printed into it, and extracted as human-readable string. It can be
       created on the stack to avoid heap fragmentation caused by too many
       `String` objects.
+* [UrlEncoding](src/url_encoding/)
+    * Encodes and decodes strings using "form URL encoding" which converts
+      spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
 
 Version: 0.1 (2020-08-20)
 
@@ -24,6 +27,9 @@ directory used by the Arduino IDE. (The result is a directory named
 `./libraries/AceUtils`.) The `master` branch contains the stable release.
 
 ### Source Code
+
+* `src/AceUtil.h`: The main include header file.
+* `tests/*`: Unit tests using AUnit.
 
 ### Doxygen Docs
 

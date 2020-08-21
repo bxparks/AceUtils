@@ -14,6 +14,7 @@
 #define ACE_UTILS_ACE_UTILS_H
 
 #include "mem_print/MemPrint.h"
+#include "url_encoding/url_encoding.h"
 
 // Version format: "xx.yy.zz" -> xxyyzz without leading 0
 #define ACE_UTILS_VERSION 100
