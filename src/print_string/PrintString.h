@@ -166,18 +166,18 @@ class PrintStringBase: public Print {
  * @verbatim
  * #include <AceUtils.h>
  *
- * using namespace mem_print;
+ * using namespace print_string;
  *
  * void someFunction() {
- *   PrintString<32> memPrint;
- *   memPrint.print("hello, ");
- *   memPrint.println("world!");
- *   const char* cstr = memPrint.getCstr();
+ *   PrintString<32> printString;
+ *   printString.print("hello, ");
+ *   printString.println("world!");
+ *   const char* cstr = printString.getCstr();
  *
  *   // do stuff with cstr
  *   // ...
  *
- *   memPrint.flush(); // needed only if this will be used again
+ *   printString.flush(); // needed only if this will be used again
  * }
  * @endverbatim
  *

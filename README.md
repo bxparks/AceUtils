@@ -1,12 +1,14 @@
 # AceUtils
 
-Small and light Arduino utilities and libraries. The following are provided:
+Arduino utilities which are too small to be in separate libraries. The following
+are provided:
 
-* [MemPrint](src/mem_print/)
-    * A memory object that implements the `Print` interface so that quantities
-      can be printed into it, and extracted as human-readable string. It can be
-      created on the stack to avoid heap fragmentation caused by too many
-      `String` objects.
+* [PrintString](src/print_string/)
+    * An object of a fixed size that implements the `Print` interface so that
+      quantities can be printed into it, then extracted as human-readable
+      string. It is meant to be an alternative to the Arduino `String` class
+      without the risk of heap fragmentation because the entire `PrintString`
+      object can be created on the stack.
 * [UrlEncoding](src/url_encoding/)
     * Encodes and decodes strings using "form URL encoding" which converts
       spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
