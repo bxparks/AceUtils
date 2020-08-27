@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AceUtils: Member List</title>
+<title>AceUtils: Print String</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,25 +61,47 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>mem_print</b></li><li class="navelem"><a class="el" href="classmem__print_1_1MemPrintBase.html">MemPrintBase</a></li>  </ul>
-</div>
 </div><!-- top -->
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">mem_print::MemPrintBase&lt; TYPE &gt; Member List</div>  </div>
+<div class="title">Print String </div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>This is the complete list of members for <a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a>, including all inherited members.</p>
-<table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>flush</b>() override (defined in <a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a>)</td><td class="entry"><a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classmem__print_1_1MemPrintBase.html#a0d188a964b0543dccc3d63ca8218f4f8">getCstr</a>() const</td><td class="entry"><a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>MemPrintBase</b>(TYPE size, char *buf) (defined in <a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a>)</td><td class="entry"><a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>write</b>(uint8_t c) override (defined in <a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a>)</td><td class="entry"><a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>write</b>(const uint8_t *buf, size_t size) override (defined in <a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a>)</td><td class="entry"><a class="el" href="classmem__print_1_1MemPrintBase.html">mem_print::MemPrintBase&lt; TYPE &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-</table></div><!-- contents -->
+<div class="textblock"><p>An implementation of <code>Print</code> that writes to an in-memory buffer supporting strings less than 65535 in length. It is intended to be an alternative to the <code>String</code> class to help avoid heap fragmentation due to repeated creation and deletion of small String objects. The 'PrintString' object inherit the methods from the 'Print' interface which can be used to build an internal string representation of various objects. Instead of using the <code>operator+=()</code> or the <code>concat()</code> method, use the <code>print()</code>, <code>println()</code> (or sometimes the <code>printf()</code> method) of the <code>Print</code> class. After the internal string is built, the NUL-terminated c-string representation can be retrieved using <code>getCstr()</code>.</p>
+<h1>Usage</h1>
+<div class="fragment"><div class="line"> {C++}</div>
+<div class="line">#include &lt;Arduino.h&gt;</div>
+<div class="line">#include &lt;print_string.h&gt;</div>
+<div class="line"> </div>
+<div class="line">using namesapce print_string;</div>
+<div class="line"> </div>
+<div class="line">void buildMessage(PrintStringBase&amp; message) {</div>
+<div class="line">  if (message.length() &gt; 0) {</div>
+<div class="line">    message.print(&quot;; &quot;);</div>
+<div class="line">  }</div>
+<div class="line">  message.print(&quot;x=&quot;);</div>
+<div class="line">  message.print(3);</div>
+<div class="line">  message.print(&quot;; s=&quot;)</div>
+<div class="line">  message.print(&quot;a-string&quot;);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">void doSomething(const char* message) {</div>
+<div class="line">  // Do something with message</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">void doStuff() {</div>
+<div class="line">  PrintString&lt;30&gt; message;</div>
+<div class="line">  buildMessage(message);</div>
+<div class="line"> </div>
+<div class="line">  const char* cstr = message.getCstr();</div>
+<div class="line">  doSomething(cstr);</div>
+<div class="line"> </div>
+<div class="line">  message.flush();</div>
+<div class="line">  buildMessage(message);</div>
+<div class="line">  ...</div>
+<div class="line">}</div>
+</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
