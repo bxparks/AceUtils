@@ -13,7 +13,7 @@ are provided:
     * Encodes and decodes strings using "form URL encoding" which converts
       spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
 
-Version: 0.1 (2020-08-20)
+Version: 0.1 (2020-08-27)
 
 Changelog: [CHANGELOG.md](CHANGELOG.md)
 
