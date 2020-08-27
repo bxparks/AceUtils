@@ -152,38 +152,53 @@ class PrintStringBase: public Print {
  * to avoid heap fragmentation. The `SIZE` parameter is a compile time constant,
  * to allow the internal string buffer to be created on the stack. The object
  * will be destroyed automatically when the stack is unwound after returning
- * from the function where this is used. It is possible to create an instance
- * of this object statically and reused across different calling sites, but the
- * programmer must handle the memory management properly, for example, by
- * calling the flush() method to clear the internal string before reuse.
+ * from the function where this is used.
  *
- * Warning: The contents of `getCstr()` is valid only as long as the PrintString
- * object is alive. It should never be passed to another part of the program if
- * the getCstr() pointer outlives its underlying PrintString object.
+ * An instance of `PrintString` can be reused by calling the `flush()` method
+ * which causes the internal buffer to be cleared to an empty string. An
+ * instance of this object could be created statically and reused across
+ * different calling sites, but this was not the main intended use of this
+ * class.
+ *
+ * Warning: The contents of `getCstr()` are valid only as long as the
+ * PrintString object is alive. The pointer should never be passed to another
+ * part of the program if the PrintString object is destroyed before the
+ * pointer is used.
  *
  * Usage:
  *
  * @verbatim
- * #include <AceUtils.h>
+ * #include <print_string.h>
  *
  * using namespace print_string;
  *
+ * void fillStringA(PrintString& message) {
+ *   message.print("hello, ");
+ *   message.println("world!");
+ * }
+ *
+ * void fillStringB(PrintString& message) {
+ *   message.print("There are ");
+ *   message.print(42);
+ *   message.println(" apples");
+ * }
+ *
  * void someFunction() {
- *   PrintString<32> printString;
- *   printString.print("hello, ");
- *   printString.println("world!");
- *   const char* cstr = printString.getCstr();
- *
+ *   PrintString<32> message;
+ *   fillStringA(message)
+ *   const char* cstr = message.getCstr();
  *   // do stuff with cstr
- *   // ...
  *
- *   printString.flush(); // needed only if this will be used again
+ *   message.flush();
+ *   fillStringB(message);
+ *   cstr = message.getCstr();
+ *   // do more stuff with cstr
  * }
  * @endverbatim
  *
  * @tparam SIZE size of internal string buffer including the NUL terminator
- *         character, the maximum is 65535, which means a maximum string length
- *         of 65534 characters.
+ *         character, the maximum is 65535, which means the maximum string
+ *         length is 65534 characters.
  */
 template <uint16_t SIZE>
 class PrintString: public PrintStringBase {
