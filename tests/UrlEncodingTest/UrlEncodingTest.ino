@@ -1,7 +1,8 @@
 #line 2 "UrlEncodingTest.ino"
 
 #include <AUnit.h>
-#include <AceUtils.h>
+#include <print_string.h>
+#include <url_encoding.h>
 
 using namespace aunit;
 using namespace print_string;

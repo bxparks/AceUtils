@@ -14,7 +14,7 @@ NUL-terminated c-string representation can be retrieved using `getCstr()`.
 
 ```C++
 #include <Arduino.h>
-#include <AceUtils.h>
+#include <print_string.h>
 
 using namesapce print_string;
 
