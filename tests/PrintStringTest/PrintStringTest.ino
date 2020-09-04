@@ -1,7 +1,7 @@
 #line 2 "PrintStringTest.ino"
 
 #include <AUnit.h>
-#include <print_string.h>
+#include <PrintString.h>
 
 using namespace aunit;
 using namespace print_string;

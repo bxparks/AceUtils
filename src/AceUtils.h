@@ -11,8 +11,8 @@
  *
  * Includes the following utilities:
  *
- *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/print_string">print_string</a>
- *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/url_encoding">url_encoding</a>
+ *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/print_string">PrintString</a>
+ *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/url_encoding">UrlEncoding</a>
  */
 
 // Version format: "xx.yy.zz" -> xxyyzz without leading 0

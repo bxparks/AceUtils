@@ -1,7 +1,14 @@
 # AceUtils
 
-Arduino utilities which are too small to be in separate libraries. The following
-are provided:
+Arduino utilities which are too small to be in separate libraries, but are used
+in multiple projects or other libraries. To avoid duplication, I have collected
+them into this library. Most of the following utilities can often be used
+independently of other utilities within this library. Some utlities do depend on
+actually use another utility within this library. I have tried to document those
+dependencies as well as possible.
+
+The following utilities are provided. Click through the hyperlink to see the
+documentation for each utility in their respective `README.md` file:
 
 * [PrintString](src/print_string/)
     * An object of a fixed size that implements the `Print` interface so that
@@ -30,7 +37,10 @@ directory used by the Arduino IDE. (The result is a directory named
 
 ### Source Code
 
-* `src/AceUtil.h`: The main include header file.
+* `src/AceUtil.h`: A bookkeeping header file that includes the version and
+  Doxygen docs. Individual utilities have their own header files.
+* `src/PrintString.h`: Header file for the PrintString utility.
+* `src/UrlEncoding.h`: Header file for the UrlEncoding utility.
 * `tests/*`: Unit tests using AUnit.
 
 ### Doxygen Docs
@@ -73,12 +83,20 @@ them.
 
 ### Hardware
 
-The library is extensively tested on the following boards:
+Most utilities will work on various Arduino boards. I test most utilities on
+on the following boards:
 
 * Arduino Nano clone (16 MHz ATmega328P)
 * SparkFun Pro Micro clone (16 MHz ATmega32U4)
 * WeMos D1 Mini clone (ESP-12E module, 80 MHz ESP8266)
 * ESP32 dev board (ESP-WROOM-32 module, 240 MHz dual core Tensilica LX6)
+
+Some utlities work only on microcontrollers with built-in WiFi. The header
+files for those utilities will contain preprpocessor directives using `#ifdef`
+to print out a warning if the board is not one of the following:
+
+* ESP8266
+* ESP32
 
 I will occasionally test on the following hardware as a sanity check:
 
