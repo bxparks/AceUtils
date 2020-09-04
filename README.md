@@ -19,6 +19,9 @@ documentation for each utility in their respective `README.md` file:
 * [UrlEncoding](src/url_encoding/)
     * Encodes and decodes strings using "form URL encoding" which converts
       spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
+* [TimingStats](src/timing_stats/)
+    * Helper class to collect data (often durations in milliseconds) and
+      then print out various statistics such as min, max, average, and count.
 
 Version: 0.1 (2020-08-27)
 
@@ -41,6 +44,8 @@ directory used by the Arduino IDE. (The result is a directory named
   Doxygen docs. Individual utilities have their own header files.
 * `src/PrintString.h`: Header file for the PrintString utility.
 * `src/UrlEncoding.h`: Header file for the UrlEncoding utility.
+* `src/TimingStats.h`: Header file for the TimingStats utility.
+* `examples/*`: Example code for various utilities.
 * `tests/*`: Unit tests using AUnit.
 
 ### Doxygen Docs
