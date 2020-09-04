@@ -25,10 +25,6 @@ SOFTWARE.
 #include <Print.h>
 #include <UrlEncoding.h>
 
-// Inspired by
-// https://github.com/zenmanenergy/ESP8266-Arduino-Examples/blob/master/helloWorld_urlencoded/urlencode.ino.
-// Rewritten to use the PrintString object instead of String.
-
 namespace url_encoding {
 
 /**
