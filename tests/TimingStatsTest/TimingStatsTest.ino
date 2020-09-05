@@ -15,10 +15,11 @@ test(TimingStatsTest, one) {
   stats.update(10);
 
   assertEqual(1, stats.getCount());
+  assertEqual(1, stats.getCounter());
   assertEqual(10, stats.getMin());
   assertEqual(10, stats.getMax());
   assertEqual(10, stats.getAvg());
-  //assertEqual(10, stats.getExpDecayAvg());
+  assertEqual(10, stats.getExpDecayAvg());
 }
 
 test(TimingStatsTest, two) {
@@ -27,12 +28,12 @@ test(TimingStatsTest, two) {
   stats.update(20);
 
   assertEqual(2, stats.getCount());
+  assertEqual(2, stats.getCounter());
   assertEqual(10, stats.getMin());
   assertEqual(20, stats.getMax());
   assertEqual(15, stats.getAvg());
-  //assertEqual(10, stats.getExpDecayAvg());
+  assertEqual(15, stats.getExpDecayAvg());
 }
-
 
 test(TimingStatsTest, three) {
   TimingStats stats;
@@ -41,10 +42,41 @@ test(TimingStatsTest, three) {
   stats.update(30);
 
   assertEqual(3, stats.getCount());
+  assertEqual(3, stats.getCounter());
   assertEqual(10, stats.getMin());
   assertEqual(30, stats.getMax());
   assertEqual(20, stats.getAvg());
-  //assertEqual(10, stats.getExpDecayAvg());
+  assertEqual(22, stats.getExpDecayAvg());
+}
+
+test(TimingStatsTest, four) {
+  TimingStats stats;
+  stats.update(10);
+  stats.update(20);
+  stats.update(30);
+  stats.update(40);
+
+  assertEqual(4, stats.getCount());
+  assertEqual(4, stats.getCounter());
+  assertEqual(10, stats.getMin());
+  assertEqual(40, stats.getMax());
+  assertEqual(25, stats.getAvg());
+  assertEqual(31, stats.getExpDecayAvg());
+}
+
+test(TimingStatsTest, reset) {
+  TimingStats stats;
+  stats.update(10);
+  stats.update(20);
+  stats.update(30);
+  stats.update(40);
+
+  assertEqual(4, stats.getCount());
+  assertEqual(4, stats.getCounter());
+
+  stats.reset();
+  assertEqual(0, stats.getCount());
+  assertEqual(4, stats.getCounter());
 }
 
 //----------------------------------------------------------------------------

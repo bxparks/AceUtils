@@ -83,8 +83,6 @@ class TimingStats {
 
     /** Add the given duration (often in milliseconds) to the statistics. */
     void update(uint16_t duration) {
-      mCount++;
-      mCounter++;
       mSum += duration;
       if (duration < mMin) {
         mMin = duration;
@@ -92,7 +90,11 @@ class TimingStats {
       if (duration > mMax) {
         mMax = duration;
       }
-      mExpDecayAvg = (mExpDecayAvg + duration) / 2;
+
+      mExpDecayAvg = (mCount > 0) ? (mExpDecayAvg + duration) / 2 : duration;
+
+      mCount++;
+      mCounter++;
     }
 
   private:
