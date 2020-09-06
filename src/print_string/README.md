@@ -12,6 +12,43 @@ NUL-terminated c-string representation can be retrieved using `getCstr()`.
 
 ## Usage
 
+There are 2 implementations of `PrintString`:
+
+* `PrintString<uint16_t SiZE>` is a templatized class where the character array
+  buffer is created on the stack.
+    * The `SiZE` parameter is a compile-time constant and given as a template
+      parameter.
+    * The largest `SIZE` is limited by the amount of stack space available,
+      which can be much smaller than the total amount of static RAM. For
+      example, on the ESP8266, the maximum stack size is about 4kB, even though
+      the total static RAM is 80kB.
+    * In practice, `SIZE` should probably be less than about 400-500.
+    * This version is recommended for small strings, say less than 100.
+* `PrintStringN(uint16_t size)` is a non-templatized class which creates
+  the character array buffer on the heap.
+    * The `size` parameter can be either a compile-time or runtime value.
+    * The `size` parameter is given in the constructor.
+    * The largest `size` is limited by the size of the heap, which is
+      closer to the maximum size of static RAM, compared to the size of the
+      stack.
+
+### `PrintStringBase`
+
+All `PrintString` subclasses inherit from the `PrintStringBase` class,
+which also inherits from the Arduino `Print` class.
+
+Since all subclasses of `PrintString` also implement the `Print` interface, you
+can write functions that accept a bare `Print` (or a `Print&` reference), and
+write the implementation code inside the function as if you were writing to a
+normal `Print` object such as the usual `Serial` object.
+
+However, if you need access to the `PrintStringBase.length()` method, which
+returns the string length in the current buffer, you need to use the
+`PrintStringBase` (or PrintStringBase&` reference), instead of using the
+`Print`, because the `Print` class does not implement that `length()` method.
+
+### `PrintString<SiZE>` Example
+
 ```C++
 #include <Arduino.h>
 #include <PrintString.h>
@@ -33,7 +70,7 @@ void doSomething(const char* message) {
 }
 
 void doStuff() {
-  PrintString<30> message;
+  PrintString<30> message;  // <----------- ONLY DiFFERENCE
   buildMessage(message);
 
   const char* cstr = message.getCstr();
@@ -44,3 +81,39 @@ void doStuff() {
   ...
 }
 ```
+
+### `PrintStringN(size)` Example
+
+Here is the version using `PrintStringN` class:
+
+```C++
+#include <Arduino.h>
+#include <PrintString.h>
+
+using namesapce print_string;
+
+void buildMessage(PrintStringBase& message) {
+  if (message.length() > 0) {
+    message.print("; ");
+  }
+  message.print("x=");
+  message.print(3);
+  message.print("; s=")
+  message.print("a-string");
+}
+
+void doSomething(const char* message) {
+  // Do something with message
+}
+
+void doStuff() {
+  PrintStringN message(30); // <----------- ONLY DiFFERENCE
+  buildMessage(message);
+
+  const char* cstr = message.getCstr();
+  doSomething(cstr);
+
+  message.flush();
+  buildMessage(message);
+  ...
+}

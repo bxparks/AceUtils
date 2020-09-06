@@ -117,22 +117,37 @@ class PrintStringBase: public Print {
         buf_(buf) {}
 
   private:
+    // Disable copy constructor and assignment operator
+    PrintStringBase(const PrintStringBase&) = delete;
+    PrintStringBase& operator=(const PrintStringBase&) = delete;
+
+    // These member variables are declared together for more efficient packing
+    // on 32-bit processors.
     uint16_t const size_;
     uint16_t index_ = 0;
 
-    // This is the pointer to actualBuf_ which is defined in the subclasses.
-    // Instead of storing it (and taking up precious RAM), maybe there's a way
-    // to calculate this pointer by simply extending the pointer from the last
-    // element of this object (i.e. &index_), and thereby saving some memory.
-    // But I am not convinced that I have the knowledge do that properly
-    // without triggering UB (undefined behavior) in the C++ language. Do I
-    // define buf_[0] here and will it point exactly where actualBuf_[] is
-    // allocated? Or do I use [&PrintStringBase + sizeof(PrintStringBase)] to
-    // calculate the pointer to actualBuf_. I just don't know what's actually
-    // allowed in the language spec versus something that works by pure luck on
-    // a particular microcontroller and compiler. So I'll pay the cost of the 2
-    // extra bytes (8-bit) or 4 extra bytes (32-bit processors) of RAM and
-    // store the pointer to actualBuf_ explicitly here in the base class.
+  protected:
+    /**
+     * This is the pointer to the character array buffer. For instances of
+     * `PrintString<SIZE>`, this points to `actualBuf_` which is created on the
+     * stack. For instances of `PrintStringN`, it points to the char array
+     * allocated on the heap.
+     *
+     * In the case of `PrintString`, there might be a way to remove this member
+     * variable by calculating the pointer to the stack buffer, by extending
+     * the pointer from the last element of this object (i.e. &index_), and
+     * thereby saving some memory.
+     *
+     * But I am not convinced that I have the knowledge do that properly
+     * without triggering UB (undefined behavior) in the C++ language. Do I
+     * define buf_[0] here and will it point exactly where actualBuf_[] is
+     * allocated? Or do I use [&PrintStringBase + sizeof(PrintStringBase)] to
+     * calculate the pointer to actualBuf_. I just don't know what's actually
+     * allowed in the language spec versus something that works by pure luck on
+     * a particular microcontroller and compiler. So I'll pay the cost of the 2
+     * extra bytes (8-bit) or 4 extra bytes (32-bit processors) of RAM and
+     * store the pointer to actualBuf_ explicitly here in the base class.
+     */
     char* const buf_;
 };
 
@@ -207,6 +222,35 @@ class PrintString: public PrintStringBase {
 
   private:
     char actualBuf_[SIZE];
+};
+
+/**
+ * An alternate implementation of `PrintString` that allocates the character
+ * array in the heap, instead of the stack. This allows the creation of
+ * `PrintString` which are much larger than the available stack size. For an
+ * ESP8266 for example, the maximum stack size is about 4kB, even though there
+ * is 80kB of static RAM available.
+ *
+ * The name `PrintStringN` was the best I could think of that was relatively
+ * short, similar to `PrintString`, and conveyed the idea that the memory is
+ * allocated on the heap, which allows the `size` parameter to be a runtime
+ * value, instead of a compile-time value.
+ *
+ * If this object is created dynamically at the beginning of a function, the
+ * character array buffer will be created on the heap. At the end of the
+ * function, the object will be automatically destroyed, and destruuctor will
+ * automatically reclaim the character array on the heap. if no other heap
+ * allocation is performed, then this object should cause no heap
+ * fragmentation, just like the `PrintString` object which uses only the stack.
+ */
+class PrintStringN: public PrintStringBase {
+  public:
+    PrintStringN(uint16_t size):
+      PrintStringBase(size, new char[size]) {}
+
+    ~PrintStringN() {
+      delete[] buf_;
+    }
 };
 
 }
