@@ -65,11 +65,11 @@ static char hexToInt(char c) {
   if (c >= '0' && c <= '9') {
     return c - '0';
   }
-  if (c >= 'a' && c <= 'f') {
-    return c - 'a' + 10;
-  }
   if (c >= 'A' && c <= 'F') {
     return c - 'A' + 10;
+  }
+  if (c >= 'a' && c <= 'f') {
+    return c - 'a' + 10;
   }
   return 0;
 }
@@ -77,24 +77,24 @@ static char hexToInt(char c) {
 void formUrlDecode(Print& output, const char* str) {
   while (true) {
     char c = *str;
+    str++;
     if (c == '\0') break;
 
     if (c == '+') {
       c = ' ';
     } else if (c == '%') {
       // Convert %{hex} to character
-      str++;
       char code0 = *str;
+      str++;
       if (code0 == '\0') break;
 
-      str++;
       char code1 = *str;
+      str++;
       if (code1 == '\0') break;
 
       c = (hexToInt(code0) << 4) | hexToInt(code1);
     }
     output.print(c);
-    str++;
   }
 }
 
