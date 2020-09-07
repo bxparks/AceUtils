@@ -16,7 +16,7 @@ const int NUM_SAMPLES = 20;
   const unsigned URL_ENCODE_YIELD_SIZES[] = {5, 10, 20, 40};
 #elif defined(ESP8266)
   const unsigned FORM_URL_ENCODE_SIZES[] = {1000, 2000, 4000, 8000};
-  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {1000, 2000, 4000, 8000};
+  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {1000, 2000, 4000, 6000};
   const unsigned URL_ENCODE_YIELD_SIZES[] = {100, 200, 400, 800};
 #else
   #error Unsupported microcontroller
@@ -62,10 +62,11 @@ void printFormUrlEncodeTime(uint16_t size) {
   createMessage(message, size);
   TimingStats stats;
   benchmarkFormUrlEncode(stats, message.getCstr());
+  uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
   SERIAL_PORT_MONITOR.printf(
-      "formUrlEncode(%4u)       | %6u | %6u | %6u |\n",
-      size, stats.getAvg(), stats.getMin(), stats.getMax());
+      "formUrlEncode(%4u)       | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
 }
 
 //----------------------------------------------------------------------------
@@ -101,10 +102,11 @@ void printFormUrlDecodeTime(uint16_t size) {
 
   TimingStats stats;
   benchmarkFormUrlDecode(stats, encoded.getCstr());
+  uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
   SERIAL_PORT_MONITOR.printf(
-      "formUrlDecode(%4u)       | %6u | %6u | %6u |\n",
-      size, stats.getAvg(), stats.getMin(), stats.getMax());
+      "formUrlDecode(%4u)       | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
 }
 
 //----------------------------------------------------------------------------
@@ -132,10 +134,11 @@ void printUrlEncodeYieldTime(uint16_t size) {
   createMessage(message, size);
   TimingStats stats;
   benchmarkUrlEncodeYield(stats, message.getCstr());
+  uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
   SERIAL_PORT_MONITOR.printf(
-      "urlencode_yield(%4u)     | %6u | %6u | %6u |\n",
-      size, stats.getAvg(), stats.getMin(), stats.getMax());
+      "urlencode_yield(%4u)     | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
 }
 
 //----------------------------------------------------------------------------
@@ -172,10 +175,11 @@ void printUrlDecodeYieldTime(uint16_t size) {
 
   TimingStats stats;
   benchmarkUrlDecodeYield(stats, encoded.getCstr());
+  uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
   SERIAL_PORT_MONITOR.printf(
-      "urldecode_yield(%4u)     | %6u | %6u | %6u |\n",
-      size, stats.getAvg(), stats.getMin(), stats.getMax());
+      "urldecode_yield(%4u)     | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
 }
 
 //----------------------------------------------------------------------------
@@ -203,10 +207,11 @@ void printUrlEncodeNoYieldTime(uint16_t size) {
   createMessage(message, size);
   TimingStats stats;
   benchmarkUrlEncodeNoYield(stats, message.getCstr());
+  uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
   SERIAL_PORT_MONITOR.printf(
-      "urlencode_no_yield(%4u)  | %6u | %6u | %6u |\n",
-      size, stats.getAvg(), stats.getMin(), stats.getMax());
+      "urlencode_no_yield(%4u)  | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
 }
 
 //----------------------------------------------------------------------------
@@ -243,10 +248,11 @@ void printUrlDecodeNoYieldTime(uint16_t size) {
 
   TimingStats stats;
   benchmarkUrlDecodeNoYield(stats, encoded.getCstr());
+  uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
   SERIAL_PORT_MONITOR.printf(
-      "urldecode_no_yield(%4u)  | %6u | %6u | %6u |\n",
-      size, stats.getAvg(), stats.getMin(), stats.getMax());
+      "urldecode_no_yield(%4u)  | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
 }
 
 //----------------------------------------------------------------------------
@@ -262,13 +268,13 @@ void setup() {
   while (!SERIAL_PORT_MONITOR); // Wait until ready - Leonardo/Micro
 
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   SERIAL_PORT_MONITOR.println(
-      F("Description               | micros |    min |    max |"));
+      F("Description               | micros | us/1000|    min |    max |"));
 
   // formUrlEncode()
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   for (unsigned i = 0; i < sizeof(FORM_URL_ENCODE_SIZES) / sizeof(unsigned);
       i++) {
     printFormUrlEncodeTime(FORM_URL_ENCODE_SIZES[i]);
@@ -276,7 +282,7 @@ void setup() {
 
   // formUrlDecode()
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   for (unsigned i = 0; i < sizeof(FORM_URL_ENCODE_SIZES) / sizeof(unsigned);
       i++) {
     printFormUrlDecodeTime(FORM_URL_ENCODE_SIZES[i]);
@@ -284,7 +290,7 @@ void setup() {
 
   // urlencode_no_yield()
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   for (unsigned i = 0; i < sizeof(URL_ENCODE_NO_YIELD_SIZES) / sizeof(unsigned);
       i++) {
     printUrlEncodeNoYieldTime(URL_ENCODE_NO_YIELD_SIZES[i]);
@@ -292,7 +298,7 @@ void setup() {
 
   // urldecode_no_yield()
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   for (unsigned i = 0; i < sizeof(URL_ENCODE_NO_YIELD_SIZES) / sizeof(unsigned);
       i++) {
     printUrlDecodeNoYieldTime(URL_ENCODE_NO_YIELD_SIZES[i]);
@@ -300,7 +306,7 @@ void setup() {
 
   // urlencode_yield()
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   for (unsigned i = 0; i < sizeof(URL_ENCODE_YIELD_SIZES) / sizeof(unsigned);
       i++) {
     printUrlEncodeYieldTime(URL_ENCODE_YIELD_SIZES[i]);
@@ -308,14 +314,14 @@ void setup() {
 
   // urldecode_yield()
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   for (unsigned i = 0; i < sizeof(URL_ENCODE_YIELD_SIZES) / sizeof(unsigned);
       i++) {
     printUrlDecodeYieldTime(URL_ENCODE_YIELD_SIZES[i]);
   }
 
   SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
+      F("--------------------------+--------+--------+--------+--------+"));
   SERIAL_PORT_MONITOR.print("Num iterations: ");
   SERIAL_PORT_MONITOR.println(NUM_SAMPLES);
 
