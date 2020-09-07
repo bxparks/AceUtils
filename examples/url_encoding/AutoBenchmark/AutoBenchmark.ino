@@ -2,12 +2,25 @@
 #include <PrintString.h>
 #include <UrlEncoding.h>
 #include <TimingStats.h>
+#include "url_coding.hpp"
 
 using namespace print_string;
 using namespace url_encoding;
 using namespace timing_stats;
 
 const int NUM_SAMPLES = 20;
+
+#if defined(__linux__) || defined(__APPLE__)
+  const unsigned FORM_URL_ENCODE_SIZES[] = {1000, 2000, 4000, 8000};
+  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {1000, 2000, 4000, 8000};
+  const unsigned URL_ENCODE_YIELD_SIZES[] = {5, 10, 20, 40};
+#elif defined(ESP8266)
+  const unsigned FORM_URL_ENCODE_SIZES[] = {1000, 2000, 4000, 8000};
+  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {1000, 2000, 4000, 8000};
+  const unsigned URL_ENCODE_YIELD_SIZES[] = {100, 200, 400, 800};
+#else
+  #error Unsupported microcontroller
+#endif
 
 // A volatile variable that's updated at the end of the benchmark routine
 // to prevent the compiler from optimizing away the entire calculation because
@@ -23,7 +36,11 @@ void createMessage(Print& message, uint16_t size) {
   }
 }
 
-void benchmarkEncode(TimingStats& stats, const char* message) {
+//----------------------------------------------------------------------------
+// formUrlEncode()
+//----------------------------------------------------------------------------
+
+void benchmarkFormUrlEncode(TimingStats& stats, const char* message) {
   size_t messageLength = strlen(message);
   PrintStringN printString(2 * messageLength);
   yield();
@@ -39,19 +56,23 @@ void benchmarkEncode(TimingStats& stats, const char* message) {
   }
 }
 
-void printEncodingTime(uint16_t size) {
+void printFormUrlEncodeTime(uint16_t size) {
   yield();
   PrintStringN message(size);
   createMessage(message, size);
   TimingStats stats;
-  benchmarkEncode(stats, message.getCstr());
+  benchmarkFormUrlEncode(stats, message.getCstr());
 
   SERIAL_PORT_MONITOR.printf(
-      "formUrlEncode(%4u)       | %6u | %6u | %6u |\n", 
+      "formUrlEncode(%4u)       | %6u | %6u | %6u |\n",
       size, stats.getAvg(), stats.getMin(), stats.getMax());
 }
 
-void benchmarkDecode(TimingStats& stats, const char* encoded) {
+//----------------------------------------------------------------------------
+// formUrlDecode()
+//----------------------------------------------------------------------------
+
+void benchmarkFormUrlDecode(TimingStats& stats, const char* encoded) {
   size_t encodedLength = strlen(encoded);
   PrintStringN printString(encodedLength);
   yield();
@@ -67,7 +88,7 @@ void benchmarkDecode(TimingStats& stats, const char* encoded) {
   }
 }
 
-void printDecodingTime(uint16_t size) {
+void printFormUrlDecodeTime(uint16_t size) {
   // Create a random message
   PrintStringN message(size);
   yield();
@@ -79,12 +100,158 @@ void printDecodingTime(uint16_t size) {
   formUrlEncode(encoded, message.getCstr());
 
   TimingStats stats;
-  benchmarkDecode(stats, encoded.getCstr());
+  benchmarkFormUrlDecode(stats, encoded.getCstr());
 
   SERIAL_PORT_MONITOR.printf(
-      "formUrlDecode(%4u)       | %6u | %6u | %6u |\n", 
+      "formUrlDecode(%4u)       | %6u | %6u | %6u |\n",
       size, stats.getAvg(), stats.getMin(), stats.getMax());
 }
+
+//----------------------------------------------------------------------------
+// urlencode_yield()
+//----------------------------------------------------------------------------
+
+void benchmarkUrlEncodeYield(TimingStats& stats, const char* message) {
+  String msg(message);
+  yield();
+
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    uint16_t nowMicros = micros();
+    String encoded = urlencode_yield(msg);
+    uint16_t elapsed = micros() - nowMicros;
+
+    yield();
+    guard = encoded.length();
+    stats.update(elapsed);
+  }
+}
+
+void printUrlEncodeYieldTime(uint16_t size) {
+  yield();
+  PrintStringN message(size);
+  createMessage(message, size);
+  TimingStats stats;
+  benchmarkUrlEncodeYield(stats, message.getCstr());
+
+  SERIAL_PORT_MONITOR.printf(
+      "urlencode_yield(%4u)     | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), stats.getMin(), stats.getMax());
+}
+
+//----------------------------------------------------------------------------
+// urldecode_yield()
+//----------------------------------------------------------------------------
+
+void benchmarkUrlDecodeYield(TimingStats& stats, const char* encoded) {
+  String encMsg(encoded);
+  size_t encodedLength = strlen(encoded);
+  PrintStringN printString(encodedLength);
+  yield();
+
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    uint16_t nowMicros = micros();
+    String decoded = urldecode_yield(encMsg);
+    uint16_t elapsed = micros() - nowMicros;
+
+    yield();
+    guard = decoded.length();
+    stats.update(elapsed);
+  }
+}
+
+void printUrlDecodeYieldTime(uint16_t size) {
+  // Create a random message
+  PrintStringN message(size);
+  yield();
+  createMessage(message, size);
+
+  // encode it
+  PrintStringN encoded(2 * size);
+  yield();
+  formUrlEncode(encoded, message.getCstr());
+
+  TimingStats stats;
+  benchmarkUrlDecodeYield(stats, encoded.getCstr());
+
+  SERIAL_PORT_MONITOR.printf(
+      "urldecode_yield(%4u)     | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), stats.getMin(), stats.getMax());
+}
+
+//----------------------------------------------------------------------------
+// urlencode_no_yield()
+//----------------------------------------------------------------------------
+
+void benchmarkUrlEncodeNoYield(TimingStats& stats, const char* message) {
+  String msg(message);
+  yield();
+
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    uint16_t nowMicros = micros();
+    String encoded = urlencode_no_yield(msg);
+    uint16_t elapsed = micros() - nowMicros;
+
+    yield();
+    guard = encoded.length();
+    stats.update(elapsed);
+  }
+}
+
+void printUrlEncodeNoYieldTime(uint16_t size) {
+  yield();
+  PrintStringN message(size);
+  createMessage(message, size);
+  TimingStats stats;
+  benchmarkUrlEncodeNoYield(stats, message.getCstr());
+
+  SERIAL_PORT_MONITOR.printf(
+      "urlencode_no_yield(%4u)  | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), stats.getMin(), stats.getMax());
+}
+
+//----------------------------------------------------------------------------
+// urldecode_no_yield()
+//----------------------------------------------------------------------------
+
+void benchmarkUrlDecodeNoYield(TimingStats& stats, const char* encoded) {
+  String encMsg(encoded);
+  size_t encodedLength = strlen(encoded);
+  PrintStringN printString(encodedLength);
+  yield();
+
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    uint16_t nowMicros = micros();
+    String decoded = urldecode_no_yield(encMsg);
+    uint16_t elapsed = micros() - nowMicros;
+
+    yield();
+    guard = decoded.length();
+    stats.update(elapsed);
+  }
+}
+
+void printUrlDecodeNoYieldTime(uint16_t size) {
+  // Create a random message
+  PrintStringN message(size);
+  yield();
+  createMessage(message, size);
+
+  // encode it
+  PrintStringN encoded(2 * size);
+  yield();
+  formUrlEncode(encoded, message.getCstr());
+
+  TimingStats stats;
+  benchmarkUrlDecodeNoYield(stats, encoded.getCstr());
+
+  SERIAL_PORT_MONITOR.printf(
+      "urldecode_no_yield(%4u)  | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), stats.getMin(), stats.getMax());
+}
+
+//----------------------------------------------------------------------------
+// setup() and loop()
+//----------------------------------------------------------------------------
 
 void setup() {
 #if ! defined(UNIX_HOST_DUINO)
@@ -98,19 +265,54 @@ void setup() {
       F("--------------------------+--------+--------+--------+"));
   SERIAL_PORT_MONITOR.println(
       F("Description               | micros |    min |    max |"));
-  SERIAL_PORT_MONITOR.println(
-      F("--------------------------+--------+--------+--------+"));
-  printEncodingTime(1000);
-  printEncodingTime(2000);
-  printEncodingTime(4000);
-  printEncodingTime(8000);
 
+  // formUrlEncode()
   SERIAL_PORT_MONITOR.println(
       F("--------------------------+--------+--------+--------+"));
-  printDecodingTime(1000);
-  printDecodingTime(2000);
-  printDecodingTime(4000);
-  printDecodingTime(8000);
+  for (unsigned i = 0; i < sizeof(FORM_URL_ENCODE_SIZES) / sizeof(unsigned);
+      i++) {
+    printFormUrlEncodeTime(FORM_URL_ENCODE_SIZES[i]);
+  }
+
+  // formUrlDecode()
+  SERIAL_PORT_MONITOR.println(
+      F("--------------------------+--------+--------+--------+"));
+  for (unsigned i = 0; i < sizeof(FORM_URL_ENCODE_SIZES) / sizeof(unsigned);
+      i++) {
+    printFormUrlDecodeTime(FORM_URL_ENCODE_SIZES[i]);
+  }
+
+  // urlencode_no_yield()
+  SERIAL_PORT_MONITOR.println(
+      F("--------------------------+--------+--------+--------+"));
+  for (unsigned i = 0; i < sizeof(URL_ENCODE_NO_YIELD_SIZES) / sizeof(unsigned);
+      i++) {
+    printUrlEncodeNoYieldTime(URL_ENCODE_NO_YIELD_SIZES[i]);
+  }
+
+  // urldecode_no_yield()
+  SERIAL_PORT_MONITOR.println(
+      F("--------------------------+--------+--------+--------+"));
+  for (unsigned i = 0; i < sizeof(URL_ENCODE_NO_YIELD_SIZES) / sizeof(unsigned);
+      i++) {
+    printUrlDecodeNoYieldTime(URL_ENCODE_NO_YIELD_SIZES[i]);
+  }
+
+  // urlencode_yield()
+  SERIAL_PORT_MONITOR.println(
+      F("--------------------------+--------+--------+--------+"));
+  for (unsigned i = 0; i < sizeof(URL_ENCODE_YIELD_SIZES) / sizeof(unsigned);
+      i++) {
+    printUrlEncodeYieldTime(URL_ENCODE_YIELD_SIZES[i]);
+  }
+
+  // urldecode_yield()
+  SERIAL_PORT_MONITOR.println(
+      F("--------------------------+--------+--------+--------+"));
+  for (unsigned i = 0; i < sizeof(URL_ENCODE_YIELD_SIZES) / sizeof(unsigned);
+      i++) {
+    printUrlDecodeYieldTime(URL_ENCODE_YIELD_SIZES[i]);
+  }
 
   SERIAL_PORT_MONITOR.println(
       F("--------------------------+--------+--------+--------+"));
