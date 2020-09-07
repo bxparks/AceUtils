@@ -267,6 +267,14 @@ void setup() {
   SERIAL_PORT_MONITOR.begin(115200);
   while (!SERIAL_PORT_MONITOR); // Wait until ready - Leonardo/Micro
 
+  SERIAL_PORT_MONITOR.print("sizeof(PrintStringBase) = ");
+  SERIAL_PORT_MONITOR.println(sizeof(PrintStringBase));
+  SERIAL_PORT_MONITOR.print("sizeof(PrintStringN) = ");
+  SERIAL_PORT_MONITOR.println(sizeof(PrintStringN));
+  SERIAL_PORT_MONITOR.print("sizeof(PrintString<8>) = ");
+  SERIAL_PORT_MONITOR.println(sizeof(PrintString<8>));
+
+
   SERIAL_PORT_MONITOR.println(
       F("--------------------------+--------+--------+--------+--------+"));
   SERIAL_PORT_MONITOR.println(

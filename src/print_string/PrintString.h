@@ -239,7 +239,7 @@ class PrintString: public PrintStringBase {
  * If this object is created dynamically at the beginning of a function, the
  * character array buffer will be created on the heap. At the end of the
  * function, the object will be automatically destroyed, and destruuctor will
- * automatically reclaim the character array on the heap. if no other heap
+ * automatically reclaim the character array on the heap. If no other heap
  * allocation is performed, then this object should cause no heap
  * fragmentation, just like the `PrintString` object which uses only the stack.
  */
