@@ -96,7 +96,8 @@ triggering the Watchdog Timer reset on a ESP8266. (See below).
 
 ## Avoiding the Watchdog Timer Reset
 
-The original `urlencode()` and `urldecode()` methods (above) call the `yield()`
+The original `urlencode()` and `urldecode()` methods from
+https://github.com/TwilioDevEd/twilio_esp8266_arduino_example call the `yield()`
 function on every iteration of the loop. I assume that this was inserted to
 avoid triggering the Watchdog Timer (WDT) reset on large strings on ESP8266
 processors. If a single function consumes more than 20-40 milliseconds without
@@ -105,7 +106,7 @@ reset by the WDT.
 
 This code in this library uses `PrintString` class instead of a `String` class.
 Performance benchmarks at
-[url_encoding/AutoBenchmark](../../examples/url_encoding/AutoBenchmark/)
+[examples/url_encoding/AutoBenchmark](../../examples/url_encoding/AutoBenchmark/)
 show that the new code is 5-6 times faster than the old code on an ESP8266. For
 example, the `formUrlEncode()` function takes about 1500 microseconds per 1000
 characters, compared to 7700 microseconds per 1000 characters in the original
@@ -117,3 +118,12 @@ large as 10000 characters long within 15 milliseconds, which is fast enough to
 avoid triggering the WDT reset. Therefore, I decided to remove the calls
 `yield()` function, because I do not see myself needing these functions for
 strings longer than 10,000 characters.
+
+On a dual-core ESP32, my understanding is that it is not necessary to call the
+`yield()` function periodically, so the functions in this library should work
+fine.
+
+If the `yield()` function needs to be inserted into these functions on an
+ESP8266 to handle very long strings, I recommend using a counter so that the
+`yield()` is called every 500-1000 iterations (for example) instead of
+calling it on every iteration.
