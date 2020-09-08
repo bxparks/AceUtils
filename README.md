@@ -22,6 +22,9 @@ documentation for each utility in their respective `README.md` file:
 * [TimingStats](src/timing_stats/)
     * Helper class to collect data (often durations in milliseconds) and
       then print out various statistics such as min, max, average, and count.
+* [PrintUtils](src/print_utils/)
+    * Useful utilities on `Print` objects such as `Serial`. Includes
+      `printfTo()`, `printPad2To()` to `printPad5To()` functions.
 
 Version: 0.1 (2020-08-27)
 

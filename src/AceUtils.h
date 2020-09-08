@@ -14,6 +14,7 @@
  *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/print_string">PrintString</a>
  *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/url_encoding">UrlEncoding</a>
  *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/timing_stats">TimingStats</a>
+ *  * <a href="https://github.com/bxparks/AceUtils/tree/develop/src/print_utils">PrintUtils</a>
  */
 
 // Version format: "xx.yy.zz" -> xxyyzz without leading 0
