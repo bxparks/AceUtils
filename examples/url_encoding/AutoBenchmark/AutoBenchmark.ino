@@ -16,10 +16,29 @@ const int NUM_SAMPLES = 20;
   const unsigned URL_ENCODE_YIELD_SIZES[] = {5, 10, 20, 40};
 #elif defined(ESP8266)
   const unsigned FORM_URL_ENCODE_SIZES[] = {1000, 2000, 4000, 8000};
-  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {1000, 2000, 4000, 6000};
+  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {100, 200, 400, 800};
   const unsigned URL_ENCODE_YIELD_SIZES[] = {100, 200, 400, 800};
+#elif defined(ESP32)
+  #ifndef SERIAL_PORT_MONITOR
+    #define SERIAL_PORT_MONITOR Serial
+  #endif
+  const unsigned FORM_URL_ENCODE_SIZES[] = {1000, 2000, 4000, 8000};
+  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {100, 200, 400, 800};
+  const unsigned URL_ENCODE_YIELD_SIZES[] = {100, 200, 400, 800};
+#elif defined(ARDUINO_ARCH_AVR)
+  #include <PrintUtils.h>
+  using namespace print_utils;
+
+  const unsigned FORM_URL_ENCODE_SIZES[] = {25, 50, 100};
+  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {25, 50, 100};
+  const unsigned URL_ENCODE_YIELD_SIZES[] = {25, 50, 100};
 #else
-  #error Unsupported microcontroller
+  #include <PrintUtils.h>
+  using namespace print_utils;
+
+  const unsigned FORM_URL_ENCODE_SIZES[] = {100, 200, 400, 800};
+  const unsigned URL_ENCODE_NO_YIELD_SIZES[] = {100, 200, 400, 800};
+  const unsigned URL_ENCODE_YIELD_SIZES[] = {100, 200, 400, 800};
 #endif
 
 // A volatile variable that's updated at the end of the benchmark routine
@@ -64,9 +83,15 @@ void printFormUrlEncodeTime(uint16_t size) {
   benchmarkFormUrlEncode(stats, message.getCstr());
   uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
+#if defined(ESP32) || defined(ESP8266)
   SERIAL_PORT_MONITOR.printf(
       "formUrlEncode(%4u)       | %6u | %6u | %6u | %6u |\n",
       size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#else
+  printfTo(SERIAL_PORT_MONITOR,
+      "formUrlEncode(%4u)       | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -104,9 +129,15 @@ void printFormUrlDecodeTime(uint16_t size) {
   benchmarkFormUrlDecode(stats, encoded.getCstr());
   uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
+#if defined(ESP32) || defined(ESP8266)
   SERIAL_PORT_MONITOR.printf(
       "formUrlDecode(%4u)       | %6u | %6u | %6u | %6u |\n",
       size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#else
+  printfTo(SERIAL_PORT_MONITOR,
+      "formUrlEncode(%4u)       | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -136,9 +167,15 @@ void printUrlEncodeYieldTime(uint16_t size) {
   benchmarkUrlEncodeYield(stats, message.getCstr());
   uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
+#if defined(ESP8266) || defined(ESP32)
   SERIAL_PORT_MONITOR.printf(
       "urlencode_yield(%4u)     | %6u | %6u | %6u | %6u |\n",
       size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#else
+  printfTo(SERIAL_PORT_MONITOR,
+      "urlencode_yield(%4u)     | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -177,9 +214,15 @@ void printUrlDecodeYieldTime(uint16_t size) {
   benchmarkUrlDecodeYield(stats, encoded.getCstr());
   uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
+#if defined(ESP32) || defined(ESP8266)
   SERIAL_PORT_MONITOR.printf(
       "urldecode_yield(%4u)     | %6u | %6u | %6u | %6u |\n",
       size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#else
+  printfTo(SERIAL_PORT_MONITOR,
+      "urldecode_yield(%4u)     | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -209,9 +252,15 @@ void printUrlEncodeNoYieldTime(uint16_t size) {
   benchmarkUrlEncodeNoYield(stats, message.getCstr());
   uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
+#if defined(ESP32) || defined(ESP8266)
   SERIAL_PORT_MONITOR.printf(
       "urlencode_no_yield(%4u)  | %6u | %6u | %6u | %6u |\n",
       size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#else
+  printfTo(SERIAL_PORT_MONITOR,
+      "urlencode_no_yield(%4u)  | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -250,9 +299,15 @@ void printUrlDecodeNoYieldTime(uint16_t size) {
   benchmarkUrlDecodeNoYield(stats, encoded.getCstr());
   uint16_t perMil = (stats.getAvg() * 1000L) / size;
 
+#if defined(ESP32) || defined(ESP8266)
   SERIAL_PORT_MONITOR.printf(
       "urldecode_no_yield(%4u)  | %6u | %6u | %6u | %6u |\n",
       size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#else
+  printfTo(SERIAL_PORT_MONITOR,
+      "urldecode_no_yield(%4u)  | %6u | %6u | %6u | %6u |\n",
+      size, stats.getAvg(), perMil, stats.getMin(), stats.getMax());
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -267,11 +322,11 @@ void setup() {
   SERIAL_PORT_MONITOR.begin(115200);
   while (!SERIAL_PORT_MONITOR); // Wait until ready - Leonardo/Micro
 
-  SERIAL_PORT_MONITOR.print("sizeof(PrintStringBase) = ");
+  SERIAL_PORT_MONITOR.print(F("sizeof(PrintStringBase): "));
   SERIAL_PORT_MONITOR.println(sizeof(PrintStringBase));
-  SERIAL_PORT_MONITOR.print("sizeof(PrintStringN) = ");
+  SERIAL_PORT_MONITOR.print(F("sizeof(PrintStringN): "));
   SERIAL_PORT_MONITOR.println(sizeof(PrintStringN));
-  SERIAL_PORT_MONITOR.print("sizeof(PrintString<8>) = ");
+  SERIAL_PORT_MONITOR.print(F("sizeof(PrintString<8>): "));
   SERIAL_PORT_MONITOR.println(sizeof(PrintString<8>));
 
 
@@ -330,7 +385,7 @@ void setup() {
 
   SERIAL_PORT_MONITOR.println(
       F("--------------------------+--------+--------+--------+--------+"));
-  SERIAL_PORT_MONITOR.print("Num iterations: ");
+  SERIAL_PORT_MONITOR.print(F("Num iterations: "));
   SERIAL_PORT_MONITOR.println(NUM_SAMPLES);
 
 #if defined(UNIX_HOST_DUINO)

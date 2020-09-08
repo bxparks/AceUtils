@@ -17,15 +17,18 @@ Two functions are provided:
 * `void formUrlEncode(Print& output, const char* str);`
 * `void formUrlDecode(Print& output, const char* str);`
 
-These functions do *not* use the `String` class to avoid heap fragmentation
-associated with numerous creation and deletion of small `String` objects.
-Instead, these functions print to the `output` parameter implementing the
-`Print` interface. The most convenient implementation of the `Print` interface
+These functions do *not* use the `String` class so that we can avoid heap
+fragmentation associated with numerous creation and deletion of small `String`
+objects. Instead, these functions print to the `output` parameter implementing
+the `Print` interface.
+
+The most convenient implementation of the `Print` interface
 is the [PrintString](../print_string) class provided in the `AceUtils` library,
 which allows the encoded or decoded string to be captured in memory. The
 `PrintString` object can be converted into a normal c-string (`const char*`)
 using the `getCstr()` method. It's also possible to pass a `Serial` object as
-the `output` if that is more convenient.
+the `output` if that is more convenient since `Serial` also implements the
+`Print` interface.
 
 ## Usage
 
@@ -73,20 +76,44 @@ void loop() {
 }
 ```
 
-## References
+## Source Code History
 
-Inspired by:
+These routines were inspired by:
 
 * https://github.com/TwilioDevEd/twilio_esp8266_arduino_example
 * https://github.com/zenmanenergy/ESP8266-Arduino-Examples/blob/master/helloWorld_urlencoded/urlencode.ino.
 
-Rewritten in the following way:
+The original code was rewritten to create the functions in this library in the
+following way:
 
-* Use the `PrintString` object instead of `String` to avoid repeated
-allocation of small strings which causes heap fragmentation.
-* Remove the calls to `yield()` on every iteration because this
-implementation should be so efficient that `yield()` should not be necessary
-for any reasonable sized strings. TODO(brian): Do some benchmarks for
-large strings.
 * Fix buffer overrun bug for decoding strings which are malformed.
 * Apply consistent style and code formatting.
+* Use the `PrintString` object instead of `String` to avoid repeated
+allocation of small strings which causes heap fragmentation.
+* Remove the calls to `yield()` on every iteration because using `PrintString`
+makes this implementation 5-6 times faster, so there is little danger of
+triggering the Watchdog Timer reset on a ESP8266. (See below).
+
+## Avoiding the Watchdog Timer Reset
+
+The original `urlencode()` and `urldecode()` methods (above) call the `yield()`
+function on every iteration of the loop. I assume that this was inserted to
+avoid triggering the Watchdog Timer (WDT) reset on large strings on ESP8266
+processors. If a single function consumes more than 20-40 milliseconds without
+calling the `yield()` function on an ESP8266, the processor is automatically
+reset by the WDT.
+
+This code in this library uses `PrintString` class instead of a `String` class.
+Performance benchmarks at
+[url_encoding/AutoBenchmark](../../examples/url_encoding/AutoBenchmark/)
+show that the new code is 5-6 times faster than the old code on an ESP8266. For
+example, the `formUrlEncode()` function takes about 1500 microseconds per 1000
+characters, compared to 7700 microseconds per 1000 characters in the original
+code. The `formUrlDecode()` function takes about 910 microseconds per 1000
+characters, compared to 5300 microseconds for the old code.
+
+With this increased performance, it is possible to encode and decode strings as
+large as 10000 characters long within 15 milliseconds, which is fast enough to
+avoid triggering the WDT reset. Therefore, I decided to remove the calls
+`yield()` function, because I do not see myself needing these functions for
+strings longer than 10,000 characters.
