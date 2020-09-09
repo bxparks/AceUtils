@@ -1,17 +1,17 @@
 # AutoBenchmark
 
-Determine the efficiency of various URL encoding and decoding routines.
+Determine the speed of various URL encoding and decoding routines.
 
 * `formUrlEncode(size)` and `formUrlDecode(size)`
     * The routines implemented by the `<UrlEncoding.h>` utility of this library.
-* `urlencode_no_yield()` and `urldecode_no_yield()`
-    * The versions of `urlencode_yield()` and `urldecode_yield()`
-      *without* calling the `yield()` method at every iteration.
 * `urlencode_yield()` and `urldecode_yield()`
     * The routines implemented by
       https://github.com/TwilioDevEd/twilio_esp8266_arduino_example which calls
       the `yield()` method on each iteration in an attempt to avoid triggering
       the Watch Dog Timer reset after 20-40 ms.
+* `urlencode_no_yield()` and `urldecode_no_yield()`
+    * The versions of `urlencode_yield()` and `urldecode_yield()`
+      *without* calling the `yield()` method at every iteration.
 
 The `size` parameter in the `Description` column refers to the length of the
 string being encoded or decoded. For example, `formUrlEncode(1000)` means
@@ -27,10 +27,14 @@ The `min` and `max` columns show the min and max of `micros` over the number of
 iterations (usually 20 iterations). These are recorded to show the variability
 of the routine on a particular platform.
 
-See the [url_encoding/README.md](../../../src/url_encoding/) to interpret
-these data points.
+See the [url_encoding/README.md](../../../src/url_encoding/) for an explanation
+of why the `yield()` call was removed from `<UrlEncoding.h>` routines.
 
 ## Arduino Nano
+
+* Arduino IDE 1.8.13
+* AVR Boards 1.8.3
+* 16 MHz ATmega328P
 
 ```
 sizeof(PrintStringBase): 10
@@ -67,6 +71,10 @@ Num iterations: 20
 ```
 
 ## ESP8266
+
+* Arduino IDE 1.8.13
+* ESP8266 Board 2.7.4
+* 80 MHz ESP8266
 
 ```
 sizeof(PrintStringBase): 16
@@ -110,6 +118,10 @@ Num iterations: 20
 
 ## ESP32
 
+* Arduino IDE 1.8.13
+* ESP32 Board 1.0.4
+* 240 MHz ESP32
+
 ```
 sizeof(PrintStringBase): 16
 sizeof(PrintStringN): 16
@@ -150,9 +162,12 @@ urldecode_yield( 800)     |   6605 |   8256 |   6596 |   6616 |
 Num iterations: 20
 ```
 
-## Linux
+## Linux x86-64
 
-Ubuntu Linux 20.04
+* Ubuntu Linux 20.04
+* [UnixHostDuino 0.3](https://github.com/bxparks/UnixHostDuino)
+* g++ (Ubuntu 9.3.0-10ubuntu2) 9.3.0
+* Intel Core i7-3840QM CPU @ 2.80GHz
 
 ```
 sizeof(PrintStringBase): 24
@@ -193,3 +208,9 @@ urldecode_yield(  40)     |  43383 |  35999 |  42238 |  43626 |
 --------------------------+--------+--------+--------+--------+
 Num iterations: 20
 ```
+
+**Notes**
+
+* The `yield()` function emulated by UnixHostDuino yields control for
+  1 whole millisecond. That produces the long execution time of the
+  `urlencode_yield()` and `url_decode_yield()` functions.
