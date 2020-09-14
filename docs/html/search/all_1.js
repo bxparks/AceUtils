@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getcstr_1',['getCstr',['../classprint__string_1_1PrintStringBase.html#a16c776fd59a9c97fa15864e06fc5a45b',1,'print_string::PrintStringBase']]]
+  ['buf_5f_1',['buf_',['../classprint__str_1_1PrintStrBase.html#aa92f3c298a80b83cd97bdc9d4e652aa1',1,'print_str::PrintStrBase']]]
 ];
