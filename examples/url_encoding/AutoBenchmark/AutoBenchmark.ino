@@ -1,10 +1,12 @@
 #include <Arduino.h>
-#include <PrintString.h>
+#include <PrintStr.h>
 #include <UrlEncoding.h>
 #include <TimingStats.h>
+#include <PrintUtils.h>
 #include "url_coding.hpp"
 
-using namespace print_string;
+using namespace print_str;
+using namespace print_utils;
 using namespace url_encoding;
 using namespace timing_stats;
 
@@ -61,7 +63,7 @@ void createMessage(Print& message, uint16_t size) {
 
 void benchmarkFormUrlEncode(TimingStats& stats, const char* message) {
   size_t messageLength = strlen(message);
-  PrintStringN printString(2 * messageLength);
+  PrintStrN printString(2 * messageLength);
   yield();
 
   for (int i = 0; i < NUM_SAMPLES; i++) {
@@ -77,7 +79,7 @@ void benchmarkFormUrlEncode(TimingStats& stats, const char* message) {
 
 void printFormUrlEncodeTime(uint16_t size) {
   yield();
-  PrintStringN message(size);
+  PrintStrN message(size);
   createMessage(message, size);
   TimingStats stats;
   benchmarkFormUrlEncode(stats, message.getCstr());
@@ -100,7 +102,7 @@ void printFormUrlEncodeTime(uint16_t size) {
 
 void benchmarkFormUrlDecode(TimingStats& stats, const char* encoded) {
   size_t encodedLength = strlen(encoded);
-  PrintStringN printString(encodedLength);
+  PrintStrN printString(encodedLength);
   yield();
 
   for (int i = 0; i < NUM_SAMPLES; i++) {
@@ -116,12 +118,12 @@ void benchmarkFormUrlDecode(TimingStats& stats, const char* encoded) {
 
 void printFormUrlDecodeTime(uint16_t size) {
   // Create a random message
-  PrintStringN message(size);
+  PrintStrN message(size);
   yield();
   createMessage(message, size);
 
   // encode it
-  PrintStringN encoded(2 * size);
+  PrintStrN encoded(2 * size);
   yield();
   formUrlEncode(encoded, message.getCstr());
 
@@ -161,7 +163,7 @@ void benchmarkUrlEncodeYield(TimingStats& stats, const char* message) {
 
 void printUrlEncodeYieldTime(uint16_t size) {
   yield();
-  PrintStringN message(size);
+  PrintStrN message(size);
   createMessage(message, size);
   TimingStats stats;
   benchmarkUrlEncodeYield(stats, message.getCstr());
@@ -185,7 +187,7 @@ void printUrlEncodeYieldTime(uint16_t size) {
 void benchmarkUrlDecodeYield(TimingStats& stats, const char* encoded) {
   String encMsg(encoded);
   size_t encodedLength = strlen(encoded);
-  PrintStringN printString(encodedLength);
+  PrintStrN printString(encodedLength);
   yield();
 
   for (int i = 0; i < NUM_SAMPLES; i++) {
@@ -201,12 +203,12 @@ void benchmarkUrlDecodeYield(TimingStats& stats, const char* encoded) {
 
 void printUrlDecodeYieldTime(uint16_t size) {
   // Create a random message
-  PrintStringN message(size);
+  PrintStrN message(size);
   yield();
   createMessage(message, size);
 
   // encode it
-  PrintStringN encoded(2 * size);
+  PrintStrN encoded(2 * size);
   yield();
   formUrlEncode(encoded, message.getCstr());
 
@@ -246,7 +248,7 @@ void benchmarkUrlEncodeNoYield(TimingStats& stats, const char* message) {
 
 void printUrlEncodeNoYieldTime(uint16_t size) {
   yield();
-  PrintStringN message(size);
+  PrintStrN message(size);
   createMessage(message, size);
   TimingStats stats;
   benchmarkUrlEncodeNoYield(stats, message.getCstr());
@@ -270,7 +272,7 @@ void printUrlEncodeNoYieldTime(uint16_t size) {
 void benchmarkUrlDecodeNoYield(TimingStats& stats, const char* encoded) {
   String encMsg(encoded);
   size_t encodedLength = strlen(encoded);
-  PrintStringN printString(encodedLength);
+  PrintStrN printString(encodedLength);
   yield();
 
   for (int i = 0; i < NUM_SAMPLES; i++) {
@@ -286,12 +288,12 @@ void benchmarkUrlDecodeNoYield(TimingStats& stats, const char* encoded) {
 
 void printUrlDecodeNoYieldTime(uint16_t size) {
   // Create a random message
-  PrintStringN message(size);
+  PrintStrN message(size);
   yield();
   createMessage(message, size);
 
   // encode it
-  PrintStringN encoded(2 * size);
+  PrintStrN encoded(2 * size);
   yield();
   formUrlEncode(encoded, message.getCstr());
 
@@ -322,12 +324,12 @@ void setup() {
   SERIAL_PORT_MONITOR.begin(115200);
   while (!SERIAL_PORT_MONITOR); // Wait until ready - Leonardo/Micro
 
-  SERIAL_PORT_MONITOR.print(F("sizeof(PrintStringBase): "));
-  SERIAL_PORT_MONITOR.println(sizeof(PrintStringBase));
-  SERIAL_PORT_MONITOR.print(F("sizeof(PrintStringN): "));
-  SERIAL_PORT_MONITOR.println(sizeof(PrintStringN));
-  SERIAL_PORT_MONITOR.print(F("sizeof(PrintString<8>): "));
-  SERIAL_PORT_MONITOR.println(sizeof(PrintString<8>));
+  SERIAL_PORT_MONITOR.print(F("sizeof(PrintStrBase): "));
+  SERIAL_PORT_MONITOR.println(sizeof(PrintStrBase));
+  SERIAL_PORT_MONITOR.print(F("sizeof(PrintStrN): "));
+  SERIAL_PORT_MONITOR.println(sizeof(PrintStrN));
+  SERIAL_PORT_MONITOR.print(F("sizeof(PrintStr<8>): "));
+  SERIAL_PORT_MONITOR.println(sizeof(PrintStr<8>));
 
 
   SERIAL_PORT_MONITOR.println(

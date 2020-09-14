@@ -28,39 +28,39 @@ SOFTWARE.
 #include <stddef.h> // size_t
 #include <Print.h>
 
-namespace print_string {
+namespace print_str {
 
 /**
- * Base class for all template instances of the PrintString<SIZE> class. A
+ * Base class for all template instances of the PrintStr<SIZE> class. A
  * common base class reduces the code size because only one copy of the core
  * code is included across all possible template instances. Otherwise,
- * PrintString<10> is a different class than PrintString<20> and would pull in
+ * PrintStr<10> is a different class than PrintStr<20> and would pull in
  * duplicate copies of the code.
  *
  * Usually the `Print` base class can be used to accept instances of the
- * `PrintString<SIZE>` objects. However, if you need access to the `lenth()`
- * method, then you need to use the `PrintStringBase` class instead, since the
+ * `PrintStr<SIZE>` objects. However, if you need access to the `lenth()`
+ * method, then you need to use the `PrintStrBase` class instead, since the
  * `Print` class does not have a `length()` method.
  *
  * Here are the actual numbers. I modified tests/CommonTest.ino program to use
- * 2 template instances, PrintString<10> and PrintString<20> instead of just
- * PrintString<10>. Without this base class optimization, the sketch uses:
+ * 2 template instances, PrintStr<10> and PrintStr<20> instead of just
+ * PrintStr<10>. Without this base class optimization, the sketch uses:
  *
  *    * 10030 bytes (32%) of program storage space,
  *    * 710 bytes (34%) of dynamic memory on an Arduino Nano.
  *
- * After inserting this PrintStringBase class in the class hierarchy, the same
+ * After inserting this PrintStrBase class in the class hierarchy, the same
  * sketch uses:
  *
  *    * 9936 bytes (32%) of program storage space,
  *    * 698 bytes (34%) of dynamic memory,
  *
  * So we save 94 bytes of flash memory, and 12 bytes of static RAM. And even
- * better, the program and RAM size was the same as using 2 PrintString<10>
+ * better, the program and RAM size was the same as using 2 PrintStr<10>
  * instances. In other words, the amount of flash and static RAM remains
  * constant no matter how many template instances we create.
  */
-class PrintStringBase: public Print {
+class PrintStrBase: public Print {
   public:
     size_t write(uint8_t c) override {
       if (index_ < size_ - 1) {
@@ -112,14 +112,14 @@ class PrintStringBase: public Print {
     }
 
   protected:
-    PrintStringBase(uint16_t size, char* buf):
+    PrintStrBase(uint16_t size, char* buf):
         size_(size),
         buf_(buf) {}
 
   private:
     // Disable copy constructor and assignment operator
-    PrintStringBase(const PrintStringBase&) = delete;
-    PrintStringBase& operator=(const PrintStringBase&) = delete;
+    PrintStrBase(const PrintStrBase&) = delete;
+    PrintStrBase& operator=(const PrintStrBase&) = delete;
 
     // These member variables are declared together for more efficient packing
     // on 32-bit processors.
@@ -129,11 +129,11 @@ class PrintStringBase: public Print {
   protected:
     /**
      * This is the pointer to the character array buffer. For instances of
-     * `PrintString<SIZE>`, this points to `actualBuf_` which is created on the
-     * stack. For instances of `PrintStringN`, it points to the char array
+     * `PrintStr<SIZE>`, this points to `actualBuf_` which is created on the
+     * stack. For instances of `PrintStrN`, it points to the char array
      * allocated on the heap.
      *
-     * In the case of `PrintString`, there might be a way to remove this member
+     * In the case of `PrintStr`, there might be a way to remove this member
      * variable by calculating the pointer to the stack buffer, by extending
      * the pointer from the last element of this object (i.e. &index_), and
      * thereby saving some memory.
@@ -141,7 +141,7 @@ class PrintStringBase: public Print {
      * But I am not convinced that I have the knowledge do that properly
      * without triggering UB (undefined behavior) in the C++ language. Do I
      * define buf_[0] here and will it point exactly where actualBuf_[] is
-     * allocated? Or do I use [&PrintStringBase + sizeof(PrintStringBase)] to
+     * allocated? Or do I use [&PrintStrBase + sizeof(PrintStrBase)] to
      * calculate the pointer to actualBuf_. I just don't know what's actually
      * allowed in the language spec versus something that works by pure luck on
      * a particular microcontroller and compiler. So I'll pay the cost of the 2
@@ -155,7 +155,7 @@ class PrintStringBase: public Print {
  * An implementation of `Print` that writes to an in-memory buffer supporting
  * strings less than 65535 in length. It is intended to be an alternative to
  * the `String` class to help avoid heap fragmentation due to repeated creation
- * and deletion of small String objects. The 'PrintString' object inherit the
+ * and deletion of small String objects. The 'PrintStr' object inherit the
  * methods from the 'Print' interface which can be used to build an internal
  * string representation of various objects. Instead of using the
  * `operator+=()` or the `concat()` method, use the `print()`, `println()` (or
@@ -169,37 +169,37 @@ class PrintStringBase: public Print {
  * will be destroyed automatically when the stack is unwound after returning
  * from the function where this is used.
  *
- * An instance of `PrintString` can be reused by calling the `flush()` method
+ * An instance of `PrintStr` can be reused by calling the `flush()` method
  * which causes the internal buffer to be cleared to an empty string. An
  * instance of this object could be created statically and reused across
  * different calling sites, but this was not the main intended use of this
  * class.
  *
  * Warning: The contents of `getCstr()` are valid only as long as the
- * PrintString object is alive. The pointer should never be passed to another
- * part of the program if the PrintString object is destroyed before the
+ * PrintStr object is alive. The pointer should never be passed to another
+ * part of the program if the PrintStr object is destroyed before the
  * pointer is used.
  *
  * Usage:
  *
  * @verbatim
- * #include <print_string.h>
+ * #include <PrintStr.h>
  *
- * using namespace print_string;
+ * using namespace print_str;
  *
- * void fillStringA(PrintString& message) {
+ * void fillStringA(PrintStr& message) {
  *   message.print("hello, ");
  *   message.println("world!");
  * }
  *
- * void fillStringB(PrintString& message) {
+ * void fillStringB(PrintStr& message) {
  *   message.print("There are ");
  *   message.print(42);
  *   message.println(" apples");
  * }
  *
  * void someFunction() {
- *   PrintString<32> message;
+ *   PrintStr<32> message;
  *   fillStringA(message)
  *   const char* cstr = message.getCstr();
  *   // do stuff with cstr
@@ -216,23 +216,23 @@ class PrintStringBase: public Print {
  *         length is 65534 characters.
  */
 template <uint16_t SIZE>
-class PrintString: public PrintStringBase {
+class PrintStr: public PrintStrBase {
   public:
-    PrintString(): PrintStringBase(SIZE, actualBuf_) {}
+    PrintStr(): PrintStrBase(SIZE, actualBuf_) {}
 
   private:
     char actualBuf_[SIZE];
 };
 
 /**
- * An alternate implementation of `PrintString` that allocates the character
+ * An alternate implementation of `PrintStr` that allocates the character
  * array in the heap, instead of the stack. This allows the creation of
- * `PrintString` which are much larger than the available stack size. For an
+ * `PrintStr` which are much larger than the available stack size. For an
  * ESP8266 for example, the maximum stack size is about 4kB, even though there
  * is 80kB of static RAM available.
  *
- * The name `PrintStringN` was the best I could think of that was relatively
- * short, similar to `PrintString`, and conveyed the idea that the memory is
+ * The name `PrintStrN` was the best I could think of that was relatively
+ * short, similar to `PrintStr`, and conveyed the idea that the memory is
  * allocated on the heap, which allows the `size` parameter to be a runtime
  * value, instead of a compile-time value.
  *
@@ -241,14 +241,14 @@ class PrintString: public PrintStringBase {
  * function, the object will be automatically destroyed, and destruuctor will
  * automatically reclaim the character array on the heap. If no other heap
  * allocation is performed, then this object should cause no heap
- * fragmentation, just like the `PrintString` object which uses only the stack.
+ * fragmentation, just like the `PrintStr` object which uses only the stack.
  */
-class PrintStringN: public PrintStringBase {
+class PrintStrN: public PrintStrBase {
   public:
-    PrintStringN(uint16_t size):
-      PrintStringBase(size, new char[size]) {}
+    PrintStrN(uint16_t size):
+      PrintStrBase(size, new char[size]) {}
 
-    ~PrintStringN() {
+    ~PrintStrN() {
       delete[] buf_;
     }
 };

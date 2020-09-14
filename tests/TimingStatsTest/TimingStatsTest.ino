@@ -7,7 +7,7 @@ using namespace aunit;
 using namespace timing_stats;
 
 //----------------------------------------------------------------------------
-// Test PrintString can handle strings >= 255 but <= 65534.
+// Test TimingStats
 //----------------------------------------------------------------------------
 
 test(TimingStatsTest, one) {

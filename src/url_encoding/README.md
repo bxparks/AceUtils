@@ -23,9 +23,9 @@ objects. Instead, these functions print to the `output` parameter implementing
 the `Print` interface.
 
 The most convenient implementation of the `Print` interface
-is the [PrintString](../print_string) class provided in the `AceUtils` library,
+is the [PrintStr](../print_str) class provided in the `AceUtils` library,
 which allows the encoded or decoded string to be captured in memory. The
-`PrintString` object can be converted into a normal c-string (`const char*`)
+`PrintStr` object can be converted into a normal c-string (`const char*`)
 using the `getCstr()` method. It's also possible to pass a `Serial` object as
 the `output` if that is more convenient since `Serial` also implements the
 `Print` interface.
@@ -34,10 +34,10 @@ the `output` if that is more convenient since `Serial` also implements the
 
 ```C++
 #include <Arduino.h>
-#include <PrintString.h>
+#include <PrintStr.h>
 #include <UrlEncoding.h>
 
-using namespace print_string;
+using namespace print_str;
 using namespace url_encoding;
 
 const char MESSAGE[] = "0aA %";
@@ -50,7 +50,7 @@ void encodeToSerial() {
 }
 
 void encodeToMemory() {
-  PrintString<20> printString;
+  PrintStr<20> printString;
   formUrlEncode(printString, MESSAGE);
   Serial.println(printString.getCstr());
 }
@@ -61,7 +61,7 @@ void decodeToSerial() {
 }
 
 void decodeToMemory() {
-  PrintString<20> printString;
+  PrintStr<20> printString;
   formUrlDecode(printString, ENCODED_MESSAGE);
   Serial.println(printString.getCstr());
 }
@@ -88,9 +88,9 @@ following way:
 
 * Fix buffer overrun bug for decoding strings which are malformed.
 * Apply consistent style and code formatting.
-* Use the `PrintString` object instead of `String` to avoid repeated
+* Use the `PrintStr` object instead of `String` to avoid repeated
 allocation of small strings which causes heap fragmentation.
-* Remove the calls to `yield()` on every iteration because using `PrintString`
+* Remove the calls to `yield()` on every iteration because using `PrintStr`
 makes this implementation 5-6 times faster, so there is little danger of
 triggering the Watchdog Timer reset on a ESP8266. (See below).
 
@@ -104,7 +104,7 @@ processors. If a single function consumes more than 20-40 milliseconds without
 calling the `yield()` function on an ESP8266, the processor is automatically
 reset by the WDT.
 
-This code in this library uses `PrintString` class instead of a `String` class.
+This code in this library uses `PrintStr` class instead of a `String` class.
 Performance benchmarks at
 [examples/url_encoding/AutoBenchmark](../../examples/url_encoding/AutoBenchmark/)
 show that the new code is 5-6 times faster than the old code on an ESP8266. For

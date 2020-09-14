@@ -3,8 +3,9 @@ From https://github.com/zenmanenergy/ESP8266-Arduino-Examples/blob/master/helloW
 
 From https://github.com/TwilioDevEd/twilio_esp8266_arduino_example
 
-Modified by Brian T. Park 2020 to compare the runtime of these routines
-to the AceUtils UrlEncoding utilities which use the PrintString utility classes instead of String to avoid heap fragmentation.
+Modified by Brian T. Park 2020 to compare the runtime of these routines to the
+AceUtils UrlEncoding utilities which use the PrintStr utility classes instead
+of String to avoid heap fragmentation.
 */
 
 #include "url_coding.hpp"

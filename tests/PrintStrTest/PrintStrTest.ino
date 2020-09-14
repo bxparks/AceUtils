@@ -1,10 +1,10 @@
-#line 2 "PrintStringTest.ino"
+#line 2 "PrintStrTest.ino"
 
 #include <AUnit.h>
-#include <PrintString.h>
+#include <PrintStr.h>
 
 using namespace aunit;
-using namespace print_string;
+using namespace print_str;
 
 //----------------------------------------------------------------------------
 // Helpers
@@ -26,102 +26,102 @@ static void truncateString(int length) {
 }
 
 //----------------------------------------------------------------------------
-// Test that PrintString<SiZE> can handle strings >= 255 but <= 65534.
+// Test that PrintStr<SiZE> can handle strings >= 255 but <= 65534.
 // In practice, the SIZE is limited by the maximum stack size, which can be
 // far smaller than the amount of static RAM avaiable. For example. ESP8266 has
 // a max stack size of 4kB, even though it has 80kB of RAM.
 //----------------------------------------------------------------------------
 
-test(PrintStringTest, flush) {
-  PrintString<10> printString;
-  size_t n = printString.print('a');
+test(PrintStrTest, flush) {
+  PrintStr<10> printStr;
+  size_t n = printStr.print('a');
   assertEqual((size_t) 1, n);
-  assertEqual((size_t) 1, printString.length());
+  assertEqual((size_t) 1, printStr.length());
 
-  printString.flush();
-  assertEqual("", printString.getCstr());
+  printStr.flush();
+  assertEqual("", printStr.getCstr());
 }
 
-test(PrintStringTest, print_underSized) {
+test(PrintStrTest, print_underSized) {
   fillString();
-  PrintString<310> printString;
-  size_t n = printString.print(STRING);
+  PrintStr<310> printStr;
+  size_t n = printStr.print(STRING);
 
   // Verify that the entire STRING got copied
   assertEqual((size_t) BUF_SIZE - 1, n);
-  assertEqual((size_t) BUF_SIZE - 1, printString.length());
-  assertEqual(STRING, printString.getCstr());
+  assertEqual((size_t) BUF_SIZE - 1, printStr.length());
+  assertEqual(STRING, printStr.getCstr());
 }
 
-test(PrintStringTest, print_overSized) {
+test(PrintStrTest, print_overSized) {
   fillString();
-  PrintString<270> printString;
-  size_t n = printString.print(STRING);
+  PrintStr<270> printStr;
+  size_t n = printStr.print(STRING);
 
   // Verify that the STRING was truncated to 269
   assertEqual((size_t) 269, n);
-  assertEqual((size_t) 269, printString.length());
+  assertEqual((size_t) 269, printStr.length());
   truncateString(269);
-  assertEqual(STRING, printString.getCstr());
+  assertEqual(STRING, printStr.getCstr());
 }
 
-test(PrintStringTest, write_overSized) {
+test(PrintStrTest, write_overSized) {
   fillString();
-  PrintString<270> printString;
-  size_t n = printString.write((const uint8_t*) STRING, BUF_SIZE - 1);
+  PrintStr<270> printStr;
+  size_t n = printStr.write((const uint8_t*) STRING, BUF_SIZE - 1);
 
   assertEqual((size_t) 269, n);
-  assertEqual((size_t) 269, printString.length());
+  assertEqual((size_t) 269, printStr.length());
   truncateString(269);
-  assertEqual(STRING, printString.getCstr());
+  assertEqual(STRING, printStr.getCstr());
 }
 
 //----------------------------------------------------------------------------
-// Test PrintStringN(size) which creates the char array buffer on the heap.
+// Test PrintStrN(size) which creates the char array buffer on the heap.
 //----------------------------------------------------------------------------
 
-test(PrintStringNTest, flush) {
-  PrintStringN printString(10);
-  size_t n = printString.print('a');
+test(PrintStrNTest, flush) {
+  PrintStrN printStr(10);
+  size_t n = printStr.print('a');
   assertEqual((size_t) 1, n);
-  assertEqual((size_t) 1, printString.length());
+  assertEqual((size_t) 1, printStr.length());
 
-  printString.flush();
-  assertEqual("", printString.getCstr());
+  printStr.flush();
+  assertEqual("", printStr.getCstr());
 }
 
-test(PrintStringNTest, print_underSized) {
+test(PrintStrNTest, print_underSized) {
   fillString();
-  PrintStringN printString(310);
-  size_t n = printString.print(STRING);
+  PrintStrN printStr(310);
+  size_t n = printStr.print(STRING);
 
   // Verify that the entire STRING got copied
   assertEqual((size_t) BUF_SIZE - 1, n);
-  assertEqual((size_t) BUF_SIZE - 1, printString.length());
-  assertEqual(STRING, printString.getCstr());
+  assertEqual((size_t) BUF_SIZE - 1, printStr.length());
+  assertEqual(STRING, printStr.getCstr());
 }
 
-test(PrintStringNTest, print_overSized) {
+test(PrintStrNTest, print_overSized) {
   fillString();
-  PrintStringN printString(270);
-  size_t n = printString.print(STRING);
+  PrintStrN printStr(270);
+  size_t n = printStr.print(STRING);
 
   // Verify that the STRING was truncated to 269
   assertEqual((size_t) 269, n);
-  assertEqual((size_t) 269, printString.length());
+  assertEqual((size_t) 269, printStr.length());
   truncateString(269);
-  assertEqual(STRING, printString.getCstr());
+  assertEqual(STRING, printStr.getCstr());
 }
 
-test(PrintStringNTest, write_overSized) {
+test(PrintStrNTest, write_overSized) {
   fillString();
-  PrintStringN printString(270);
-  size_t n = printString.write((const uint8_t*) STRING, BUF_SIZE - 1);
+  PrintStrN printStr(270);
+  size_t n = printStr.write((const uint8_t*) STRING, BUF_SIZE - 1);
 
   assertEqual((size_t) 269, n);
-  assertEqual((size_t) 269, printString.length());
+  assertEqual((size_t) 269, printStr.length());
   truncateString(269);
-  assertEqual(STRING, printString.getCstr());
+  assertEqual(STRING, printStr.getCstr());
 }
 
 //----------------------------------------------------------------------------

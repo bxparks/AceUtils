@@ -37,9 +37,9 @@ of why the `yield()` call was removed from `<UrlEncoding.h>` routines.
 * 16 MHz ATmega328P
 
 ```
-sizeof(PrintStringBase): 10
-sizeof(PrintStringN): 10
-sizeof(PrintString<8>): 18
+sizeof(PrintStrBase): 10
+sizeof(PrintStrN): 10
+sizeof(PrintStr<8>): 18
 --------------------------+--------+--------+--------+--------+
 Description               | micros | us/1000|    min |    max |
 --------------------------+--------+--------+--------+--------+
@@ -77,9 +77,9 @@ Num iterations: 20
 * 80 MHz ESP8266
 
 ```
-sizeof(PrintStringBase): 16
-sizeof(PrintStringN): 16
-sizeof(PrintString<8>): 24
+sizeof(PrintStrBase): 16
+sizeof(PrintStrN): 16
+sizeof(PrintStr<8>): 24
 --------------------------+--------+--------+--------+--------+
 Description               | micros | us/1000|    min |    max |
 --------------------------+--------+--------+--------+--------+
@@ -123,9 +123,9 @@ Num iterations: 20
 * 240 MHz ESP32
 
 ```
-sizeof(PrintStringBase): 16
-sizeof(PrintStringN): 16
-sizeof(PrintString<8>): 24
+sizeof(PrintStrBase): 16
+sizeof(PrintStrN): 16
+sizeof(PrintStr<8>): 24
 --------------------------+--------+--------+--------+--------+
 Description               | micros | us/1000|    min |    max |
 --------------------------+--------+--------+--------+--------+
@@ -170,9 +170,9 @@ Num iterations: 20
 * Intel Core i7-3840QM CPU @ 2.80GHz
 
 ```
-sizeof(PrintStringBase): 24
-sizeof(PrintStringN): 24
-sizeof(PrintString<8>): 32
+sizeof(PrintStrBase): 24
+sizeof(PrintStrN): 24
+sizeof(PrintStr<8>): 32
 --------------------------+--------+--------+--------+--------+
 Description               | micros | us/1000|    min |    max |
 --------------------------+--------+--------+--------+--------+

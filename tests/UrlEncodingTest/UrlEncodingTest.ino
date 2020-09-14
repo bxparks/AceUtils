@@ -1,11 +1,11 @@
 #line 2 "UrlEncodingTest.ino"
 
 #include <AUnit.h>
-#include <PrintString.h>
+#include <PrintStr.h>
 #include <UrlEncoding.h>
 
 using namespace aunit;
-using namespace print_string;
+using namespace print_str;
 using namespace url_encoding;
 
 //----------------------------------------------------------------------------
@@ -13,16 +13,16 @@ using namespace url_encoding;
 //----------------------------------------------------------------------------
 
 test(formUrlEncode, normal) {
-  PrintString<10> printString;
-  formUrlEncode(printString, "0aA %");
-  assertEqual("0aA+%25", printString.getCstr());
+  PrintStr<10> printStr;
+  formUrlEncode(printStr, "0aA %");
+  assertEqual("0aA+%25", printStr.getCstr());
 }
 
 test(formUrlEncode, tooLong) {
-  PrintString<10> printString;
-  // truncated to 9 characters because PrintString is only 10-characters big
-  formUrlEncode(printString, "0aA %0123456");
-  assertEqual("0aA+%2501", printString.getCstr());
+  PrintStr<10> printStr;
+  // truncated to 9 characters because PrintStr is only 10-characters big
+  formUrlEncode(printStr, "0aA %0123456");
+  assertEqual("0aA+%2501", printStr.getCstr());
 }
 
 //----------------------------------------------------------------------------
@@ -30,30 +30,30 @@ test(formUrlEncode, tooLong) {
 //----------------------------------------------------------------------------
 
 test(formUrlDecode, normal) {
-  PrintString<10> printString;
-  formUrlDecode(printString, "0aA+%25");
-  assertEqual("0aA %", printString.getCstr());
+  PrintStr<10> printStr;
+  formUrlDecode(printStr, "0aA+%25");
+  assertEqual("0aA %", printStr.getCstr());
 }
 
 test(formUrlDecode, truncated1) {
-  PrintString<10> printString;
+  PrintStr<10> printStr;
   // Missing 2-digit of hex after %, which is ignored.
-  formUrlDecode(printString, "0aA+%2");
-  assertEqual("0aA ", printString.getCstr());
+  formUrlDecode(printStr, "0aA+%2");
+  assertEqual("0aA ", printStr.getCstr());
 }
 
 test(formUrlDecode, truncated2) {
-  PrintString<10> printString;
+  PrintStr<10> printStr;
   // Missing 2-digit of hex after %, which is ignored.
-  formUrlDecode(printString, "0aA+%");
-  assertEqual("0aA ", printString.getCstr());
+  formUrlDecode(printStr, "0aA+%");
+  assertEqual("0aA ", printStr.getCstr());
 }
 
 test(formUrlDecode, invalidHex) {
-  PrintString<10> printString;
+  PrintStr<10> printStr;
   // Missing 2-digit of hex after %, which is ignored.
-  formUrlDecode(printString, "0aA+%0Z");
-  assertEqual("0aA ", printString.getCstr());
+  formUrlDecode(printStr, "0aA+%0Z");
+  assertEqual("0aA ", printStr.getCstr());
 }
 
 //----------------------------------------------------------------------------

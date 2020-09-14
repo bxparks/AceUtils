@@ -3,7 +3,7 @@
 An implementation of `Print` that writes to an in-memory buffer supporting
 strings less than 65535 in length. It is intended to be an alternative to the
 `String` class to help avoid heap fragmentation due to repeated creation and
-deletion of small String objects. The 'PrintString' object inherit the methods
+deletion of small String objects. The 'PrintStr' object inherit the methods
 from the 'Print' interface which can be used to build an internal string
 representation of various objects. Instead of using the `operator+=()` or the
 `concat()` method, use the `print()`, `println()` (or sometimes the `printf()`
@@ -12,9 +12,9 @@ NUL-terminated c-string representation can be retrieved using `getCstr()`.
 
 ## Usage
 
-There are 2 implementations of `PrintString`:
+There are 2 implementations of `PrintStr`:
 
-* `PrintString<uint16_t SiZE>` is a templatized class where the character array
+* `PrintStr<uint16_t SiZE>` is a templatized class where the character array
   buffer is created on the stack.
     * The `SiZE` parameter is a compile-time constant and given as a template
       parameter.
@@ -24,7 +24,7 @@ There are 2 implementations of `PrintString`:
       the total static RAM is 80kB.
     * In practice, `SIZE` should probably be less than about 400-500.
     * This version is recommended for small strings, say less than 100.
-* `PrintStringN(uint16_t size)` is a non-templatized class which creates
+* `PrintStrN(uint16_t size)` is a non-templatized class which creates
   the character array buffer on the heap.
     * The `size` parameter can be either a compile-time or runtime value.
     * The `size` parameter is given in the constructor.
@@ -32,30 +32,30 @@ There are 2 implementations of `PrintString`:
       closer to the maximum size of static RAM, compared to the size of the
       stack.
 
-### `PrintStringBase`
+### `PrintStrBase`
 
-All `PrintString` subclasses inherit from the `PrintStringBase` class,
+All `PrintStr` subclasses inherit from the `PrintStrBase` class,
 which also inherits from the Arduino `Print` class.
 
-Since all subclasses of `PrintString` also implement the `Print` interface, you
+Since all subclasses of `PrintStr` also implement the `Print` interface, you
 can write functions that accept a bare `Print` (or a `Print&` reference), and
 write the implementation code inside the function as if you were writing to a
 normal `Print` object such as the usual `Serial` object.
 
-However, if you need access to the `PrintStringBase.length()` method, which
+However, if you need access to the `PrintStrBase.length()` method, which
 returns the string length in the current buffer, you need to use the
-`PrintStringBase` (or PrintStringBase&` reference), instead of using the
+`PrintStrBase` (or PrintStrBase&` reference), instead of using the
 `Print`, because the `Print` class does not implement that `length()` method.
 
-### `PrintString<SiZE>` Example
+### `PrintStr<SiZE>` Example
 
 ```C++
 #include <Arduino.h>
-#include <PrintString.h>
+#include <PrintStr.h>
 
-using namesapce print_string;
+using namesapce print_str;
 
-void buildMessage(PrintStringBase& message) {
+void buildMessage(PrintStrBase& message) {
   if (message.length() > 0) {
     message.print("; ");
   }
@@ -70,7 +70,7 @@ void doSomething(const char* message) {
 }
 
 void doStuff() {
-  PrintString<30> message;  // <----------- ONLY DiFFERENCE
+  PrintStr<30> message;  // <----------- ONLY DiFFERENCE
   buildMessage(message);
 
   const char* cstr = message.getCstr();
@@ -82,17 +82,17 @@ void doStuff() {
 }
 ```
 
-### `PrintStringN(size)` Example
+### `PrintStrN(size)` Example
 
-Here is the version using `PrintStringN` class:
+Here is the version using `PrintStrN` class:
 
 ```C++
 #include <Arduino.h>
-#include <PrintString.h>
+#include <PrintStr.h>
 
-using namesapce print_string;
+using namesapce print_str;
 
-void buildMessage(PrintStringBase& message) {
+void buildMessage(PrintStrBase& message) {
   if (message.length() > 0) {
     message.print("; ");
   }
@@ -107,7 +107,7 @@ void doSomething(const char* message) {
 }
 
 void doStuff() {
-  PrintStringN message(30); // <----------- ONLY DiFFERENCE
+  PrintStrN message(30); // <----------- ONLY DiFFERENCE
   buildMessage(message);
 
   const char* cstr = message.getCstr();

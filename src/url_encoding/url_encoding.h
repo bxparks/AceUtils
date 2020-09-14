@@ -34,7 +34,7 @@ namespace url_encoding {
  *
  * The result is printed to the `output` that implements the `Print` interface.
  * The `output` could be the `Serial` object, but more frequently, it is
- * useful to use an in-memory buffer such as `PrintString`. This allows us to
+ * useful to use an in-memory buffer such as `PrintStr`. This allows us to
  * avoid using a String object, which decreases the risk of heap fragmentation.
  *
  * See https://en.wikipedia.org/wiki/Percent-encoding and
