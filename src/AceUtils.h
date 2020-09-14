@@ -18,6 +18,6 @@
  */
 
 // Version format: "xx.yy.zz" -> xxyyzz without leading 0
-#define ACE_UTILS_VERSION 100
-#define ACE_UTILS_VERSION_STRING "0.1"
+#define ACE_UTILS_VERSION 200
+#define ACE_UTILS_VERSION_STRING "0.2"
 

@@ -1,6 +1,7 @@
 # Changelog
 
 * Unreleased
+* v0.2 (2020-09-14)
     * Add `timing_stats` utility.
     * Add `print_utils` utility.
     * Rename `PrintString` to `PrintStr` to avoid name conflict with an
