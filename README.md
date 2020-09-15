@@ -37,7 +37,7 @@ documentation for each utility in their respective `README.md` file:
     * Useful utilities on `Print` objects such as `Serial`. Includes
       `printfTo()`, `printPad2To()` to `printPad5To()` functions.
 
-**Version**: 0.1 (2020-08-27)
+**Version**: 0.2 (2020-09-14)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
