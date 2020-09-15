@@ -29,12 +29,13 @@ namespace url_encoding {
 
 /**
  * Encode the str using an encoding suitable for GET parameters and forms in
- * the body of a POST that expects a application/x-www-form-urlencoded  type. A
+ * the body of a POST that expects a application/x-www-form-urlencoded type. A
  * ' ' is converted into a '+' and non-alphanumerics are percent-encoded.
  *
- * The result is printed to the 'output', which could be an in-memory buffer
- * such as MemPrint. This allows us to avoid using a String object, which
- * decreases the problems associated with heap fragmentation.
+ * The result is printed to the `output` that implements the `Print` interface.
+ * The `output` could be the `Serial` object, but more frequently, it is
+ * useful to use an in-memory buffer such as `PrintStr`. This allows us to
+ * avoid using a String object, which decreases the risk of heap fragmentation.
  *
  * See https://en.wikipedia.org/wiki/Percent-encoding and
  * https://stackoverflow.com/questions/1634271.

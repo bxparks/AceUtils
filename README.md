@@ -1,26 +1,50 @@
 # AceUtils
 
-Arduino utilities which are too small to be in separate libraries. The following
-are provided:
+This library contains Arduino utilities which are too small to be in separate
+libraries, but are used in multiple projects or other libraries. To avoid
+duplication, I have collected them into this library.
 
-* [PrintString](src/print_string/)
-    * An object of a fixed size that implements the `Print` interface so that
-      quantities can be printed into it, then extracted as human-readable
-      string. It is meant to be an alternative to the Arduino `String` class
-      without the risk of heap fragmentation because the entire `PrintString`
-      object can be created on the stack.
+The following utilities are provided. Click through the hyperlink to see the
+documentation for each utility in their respective `README.md` file:
+
+* [PrintStr](src/print_str/)
+    * `#include <PrintStr.h>`
+    * `use namespace print_str;`
+    * Provides 2 classes with an in-memory buffer that implement the `Print`
+      interface so that quantities can be printed into it. The string
+      can then be extracted as a normal c-string (`const char*`).
+        * `PrintStr<SIZE>`: Templatized class with a buffer of
+          `SIZE` bytes on the stack. `SIZE` must be known at compile-time.
+        * `PrintStrN(uint16_t size)`: A normal class which creates a buffer of
+          `size` on the heap, which is immediately reclaimed when the object
+          is no longer used. The `size` can be either run-time or compile time
+          values.
+    * Both of these are meant to be an alternative to the Arduino `String` class
+      to avoid or reduce heap fragmentation.
 * [UrlEncoding](src/url_encoding/)
+    * `#include <UrlEncoding.h>`
+    * `use namespace url_encoding;`
     * Encodes and decodes strings using "form URL encoding" which converts
       spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
+* [TimingStats](src/timing_stats/)
+    * `#include <TimingStats.h>`
+    * `use namespace timing_stats;`
+    * Helper class to collect data (often durations in milliseconds) and
+      then print out various statistics such as min, max, average, and count.
+* [PrintUtils](src/print_utils/)
+    * `#include <PrintUtils.h>`
+    * `use namespace print_utils;`
+    * Useful utilities on `Print` objects such as `Serial`. Includes
+      `printfTo()`, `printPad2To()` to `printPad5To()` functions.
 
-Version: 0.1 (2020-08-27)
+**Version**: 0.2 (2020-09-14)
 
-Changelog: [CHANGELOG.md](CHANGELOG.md)
+**Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
 ## Installation
 
 The latest stable release will be available in the Arduino IDE Library
-Manager soon. Search for "AceUtil". Click Install. (Not yet).
+Manager soon. Search for "AceUtils". Click Install. (Not yet).
 
 The development version can be installed by cloning the
 [GitHub repository](https://github.com/bxparks/AceUtils), checking out the
@@ -30,7 +54,10 @@ directory used by the Arduino IDE. (The result is a directory named
 
 ### Source Code
 
-* `src/AceUtil.h`: The main include header file.
+* `src/AceUtil.h`: A bookkeeping header file that includes the version and
+  Doxygen docs. Individual utilities have their own header files.
+* `src/*.h`: Header file for each utility listed above.
+* `examples/*`: Example code for various utilities.
 * `tests/*`: Unit tests using AUnit.
 
 ### Doxygen Docs
@@ -62,8 +89,9 @@ This library was developed and tested using:
 It should work with [PlatformIO](https://platformio.org/) but I have
 not tested it.
 
-The library works on Linux or MacOS (using both g++ and clang++ compilers) using
-the [UnixHostDuino](https://github.com/bxparks/UnixHostDuino) emulation layer.
+Many utilities work on Linux or MacOS (using both g++ and clang++ compilers)
+using the [UnixHostDuino](https://github.com/bxparks/UnixHostDuino) emulation
+layer.
 
 ### Operating System
 
@@ -73,12 +101,20 @@ them.
 
 ### Hardware
 
-The library is extensively tested on the following boards:
+Most utilities will work on various Arduino boards. I test most utilities on
+on the following boards:
 
 * Arduino Nano clone (16 MHz ATmega328P)
 * SparkFun Pro Micro clone (16 MHz ATmega32U4)
 * WeMos D1 Mini clone (ESP-12E module, 80 MHz ESP8266)
 * ESP32 dev board (ESP-WROOM-32 module, 240 MHz dual core Tensilica LX6)
+
+Some utlities work only on microcontrollers with built-in WiFi. The header
+files for those utilities will contain preprpocessor directives using `#ifdef`
+to print out a warning if the board is not one of the following:
+
+* ESP8266
+* ESP32
 
 I will occasionally test on the following hardware as a sanity check:
 

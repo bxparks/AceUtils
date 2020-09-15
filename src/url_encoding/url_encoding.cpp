@@ -23,17 +23,19 @@ SOFTWARE.
 */
 
 #include <Print.h>
-#include "url_encoding.h"
-
-// Inspired by
-// https://github.com/zenmanenergy/ESP8266-Arduino-Examples/blob/master/helloWorld_urlencoded/urlencode.ino.
-// Rewritten to use MemPrint instead of String.
+#include <UrlEncoding.h>
 
 namespace url_encoding {
 
 /**
  * Convert a character into percent-encoded %{hex} format in the form of
  * %{{code0}{code1}}.
+ *
+ * I tried returning the (code0, code1) pair as a uint16_t type, then breaking
+ * apart the 2 bytes in the calling routine. But that alternative was far
+ * slower than using a reference to code0 and code1. I suspect that the
+ * compiler is able to optimize away the reference and possibly inline the
+ * entire function into the calling code.
  */
 static void intToHex(char c, char& code0, char& code1) {
   char c1 = (c & 0xf);
@@ -69,11 +71,14 @@ static char hexToInt(char c) {
   if (c >= '0' && c <= '9') {
     return c - '0';
   }
-  if (c >= 'a' && c <= 'f') {
-    return c - 'a' + 10;
-  }
+
+  // Handle 'A'-'F' before 'a'-'f' since percent encoding with capital letters
+  // are expected to be the norm.
   if (c >= 'A' && c <= 'F') {
     return c - 'A' + 10;
+  }
+  if (c >= 'a' && c <= 'f') {
+    return c - 'a' + 10;
   }
   return 0;
 }
@@ -81,24 +86,24 @@ static char hexToInt(char c) {
 void formUrlDecode(Print& output, const char* str) {
   while (true) {
     char c = *str;
+    str++;
     if (c == '\0') break;
 
     if (c == '+') {
       c = ' ';
     } else if (c == '%') {
       // Convert %{hex} to character
-      str++;
       char code0 = *str;
+      str++;
       if (code0 == '\0') break;
 
-      str++;
       char code1 = *str;
+      str++;
       if (code1 == '\0') break;
 
       c = (hexToInt(code0) << 4) | hexToInt(code1);
     }
     output.print(c);
-    str++;
   }
 }
 
