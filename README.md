@@ -9,9 +9,8 @@ welcome to use them.
 This library contains the following utilities:
 
 * [PrintStr](src/print_str/)
-    * Usage:
-        * `#include <PrintStr.h>`
-        * `use namespace print_str;`
+    * `#include <PrintStr.h>`
+    * `use namespace print_str;`
     * Provides 2 classes with an in-memory buffer that implement the `Print`
       interface so that quantities can be printed into it. The string
       can then be extracted as a normal c-string (`const char*`).
@@ -24,25 +23,22 @@ This library contains the following utilities:
     * Both of these are meant to be an alternative to the Arduino `String` class
       to avoid or reduce heap fragmentation.
 * [UrlEncoding](src/url_encoding/)
-    * Usage:
-        * `#include <UrlEncoding.h>`
-        * `use namespace url_encoding;`
+    * `#include <UrlEncoding.h>`
+    * `use namespace url_encoding;`
     * Encodes and decodes strings using "form URL encoding" which converts
       spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
 * [TimingStats](src/timing_stats/)
-    * Usage:
-        * `#include <TimingStats.h>`
-        * `use namespace timing_stats;`
+    * `#include <TimingStats.h>`
+    * `use namespace timing_stats;`
     * Helper class to collect data (often durations in milliseconds) and
       then print out various statistics such as min, max, average, and count.
 * [PrintUtils](src/print_utils/)
-    * Usage
-        * `#include <PrintUtils.h>`
-        * `use namespace print_utils;`
+    * `#include <PrintUtils.h>`
+    * `use namespace print_utils;`
     * Useful utilities on `Print` objects such as `Serial`. Includes
       `printfTo()`, `printPad2To()` to `printPad5To()` functions.
 
-**Version**: 0.2 (2020-09-14)
+**Version**: 0.2.1 (2020-09-17)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
