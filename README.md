@@ -1,11 +1,12 @@
 # AceUtils
 
 This library contains Arduino utilities which are too small to be in separate
-libraries, but are used in multiple projects or other libraries. To avoid
-duplication, I have collected them into this library.
+libraries, but I use them in multiple projects or libraries. To avoid
+duplication, I have collected them into this library. Many of these are not
+meant for public consumption, but if you find them useful, then you are
+welcome to use them.
 
-The following utilities are provided. Click through the hyperlink to see the
-documentation for each utility in their respective `README.md` file:
+This library contains the following utilities:
 
 * [PrintStr](src/print_str/)
     * `#include <PrintStr.h>`
@@ -37,7 +38,7 @@ documentation for each utility in their respective `README.md` file:
     * Useful utilities on `Print` objects such as `Serial`. Includes
       `printfTo()`, `printPad2To()` to `printPad5To()` functions.
 
-**Version**: 0.2 (2020-09-14)
+**Version**: 0.2.1 (2020-09-17)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 

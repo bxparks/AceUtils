@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">0.2.1</span>
    </div>
    <div id="projectbrief">Useful Arduino utilties which are too small for separate libraries.</div>
   </td>
@@ -123,14 +123,38 @@ $(function() {
 <div class="line">}</div>
 </div><!-- fragment --><h2><code>PrintStrN(size)</code> Example</h2>
 <p>Here is the version using <code>PrintStrN</code> class:</p>
-<p>```C++ #include &lt;Arduino.h&gt; #include &lt;PrintStr.h&gt;</p>
-<p>using namesapce print_str;</p>
-<p>void buildMessage(PrintStrBase&amp; message) { if (message.length() &gt; 0) { message.print("; "); } message.print("x="); message.print(3); message.print("; s=") message.print("a-string"); }</p>
-<p>void doSomething(const char* message) { // Do something with message }</p>
-<p>void doStuff() { PrintStrN message(30); // &lt;--------&mdash; ONLY DiFFERENCE buildMessage(message);</p>
-<p>const char* cstr = message.getCstr(); doSomething(cstr);</p>
-<p>message.flush(); buildMessage(message); ... } </p>
-</div></div><!-- contents -->
+<div class="fragment"><div class="line"> {C++}</div>
+<div class="line">#include &lt;Arduino.h&gt;</div>
+<div class="line">#include &lt;PrintStr.h&gt;</div>
+<div class="line"> </div>
+<div class="line">using namesapce print_str;</div>
+<div class="line"> </div>
+<div class="line">void buildMessage(PrintStrBase&amp; message) {</div>
+<div class="line">  if (message.length() &gt; 0) {</div>
+<div class="line">    message.print(&quot;; &quot;);</div>
+<div class="line">  }</div>
+<div class="line">  message.print(&quot;x=&quot;);</div>
+<div class="line">  message.print(3);</div>
+<div class="line">  message.print(&quot;; s=&quot;)</div>
+<div class="line">  message.print(&quot;a-string&quot;);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">void doSomething(const char* message) {</div>
+<div class="line">  // Do something with message</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">void doStuff() {</div>
+<div class="line">  PrintStrN message(30); // &lt;----------- ONLY DiFFERENCE</div>
+<div class="line">  buildMessage(message);</div>
+<div class="line"> </div>
+<div class="line">  const char* cstr = message.getCstr();</div>
+<div class="line">  doSomething(cstr);</div>
+<div class="line"> </div>
+<div class="line">  message.flush();</div>
+<div class="line">  buildMessage(message);</div>
+<div class="line">  ...</div>
+<div class="line">}</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
