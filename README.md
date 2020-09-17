@@ -1,15 +1,17 @@
 # AceUtils
 
 This library contains Arduino utilities which are too small to be in separate
-libraries, but are used in multiple projects or other libraries. To avoid
-duplication, I have collected them into this library.
+libraries, but I use them in multiple projects or libraries. To avoid
+duplication, I have collected them into this library. Many of these are not
+meant for public consumption, but if you find them useful, then you are
+welcome to use them.
 
-The following utilities are provided. Click through the hyperlink to see the
-documentation for each utility in their respective `README.md` file:
+This library contains the following utilities:
 
 * [PrintStr](src/print_str/)
-    * `#include <PrintStr.h>`
-    * `use namespace print_str;`
+    * Usage:
+        * `#include <PrintStr.h>`
+        * `use namespace print_str;`
     * Provides 2 classes with an in-memory buffer that implement the `Print`
       interface so that quantities can be printed into it. The string
       can then be extracted as a normal c-string (`const char*`).
@@ -22,18 +24,21 @@ documentation for each utility in their respective `README.md` file:
     * Both of these are meant to be an alternative to the Arduino `String` class
       to avoid or reduce heap fragmentation.
 * [UrlEncoding](src/url_encoding/)
-    * `#include <UrlEncoding.h>`
-    * `use namespace url_encoding;`
+    * Usage:
+        * `#include <UrlEncoding.h>`
+        * `use namespace url_encoding;`
     * Encodes and decodes strings using "form URL encoding" which converts
       spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
 * [TimingStats](src/timing_stats/)
-    * `#include <TimingStats.h>`
-    * `use namespace timing_stats;`
+    * Usage:
+        * `#include <TimingStats.h>`
+        * `use namespace timing_stats;`
     * Helper class to collect data (often durations in milliseconds) and
       then print out various statistics such as min, max, average, and count.
 * [PrintUtils](src/print_utils/)
-    * `#include <PrintUtils.h>`
-    * `use namespace print_utils;`
+    * Usage
+        * `#include <PrintUtils.h>`
+        * `use namespace print_utils;`
     * Useful utilities on `Print` objects such as `Serial`. Includes
       `printfTo()`, `printPad2To()` to `printPad5To()` functions.
 
