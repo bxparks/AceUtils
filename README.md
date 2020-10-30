@@ -8,20 +8,6 @@ welcome to use them.
 
 This library contains the following utilities:
 
-* [PrintStr](src/print_str/)
-    * `#include <PrintStr.h>`
-    * `use namespace print_str;`
-    * Provides 2 classes with an in-memory buffer that implement the `Print`
-      interface so that quantities can be printed into it. The string
-      can then be extracted as a normal c-string (`const char*`).
-        * `PrintStr<SIZE>`: Templatized class with a buffer of
-          `SIZE` bytes on the stack. `SIZE` must be known at compile-time.
-        * `PrintStrN(uint16_t size)`: A normal class which creates a buffer of
-          `size` on the heap, which is immediately reclaimed when the object
-          is no longer used. The `size` can be either run-time or compile time
-          values.
-    * Both of these are meant to be an alternative to the Arduino `String` class
-      to avoid or reduce heap fragmentation.
 * [UrlEncoding](src/url_encoding/)
     * `#include <UrlEncoding.h>`
     * `use namespace url_encoding;`
