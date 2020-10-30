@@ -1,28 +1,13 @@
 # AceUtils
 
 This library contains Arduino utilities which are too small to be in separate
-libraries, but I use them in multiple projects or libraries. To avoid
-duplication, I have collected them into this library. Many of these are not
-meant for public consumption, but if you find them useful, then you are
-welcome to use them.
+libraries. Unlike the AceCommon (https://github.com/bxparks/AceCommon) library
+which must be self-contained and not depend on any other external library, the
+AceUtils library will often depend on other libraries.
 
-This library contains the following utilities:
-
-* [UrlEncoding](src/url_encoding/)
-    * `#include <UrlEncoding.h>`
-    * `use namespace url_encoding;`
-    * Encodes and decodes strings using "form URL encoding" which converts
-      spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
-* [TimingStats](src/timing_stats/)
-    * `#include <TimingStats.h>`
-    * `use namespace timing_stats;`
-    * Helper class to collect data (often durations in milliseconds) and
-      then print out various statistics such as min, max, average, and count.
-* [PrintUtils](src/print_utils/)
-    * `#include <PrintUtils.h>`
-    * `use namespace print_utils;`
-    * Useful utilities on `Print` objects such as `Serial`. Includes
-      `printfTo()`, `printPad2To()` to `printPad5To()` functions.
+**NOTE**: As of 2020-10-29, this library is currently empty. Code that used to
+be here has been moved to the AceCommon library. I do have plans on adding stuff
+to this library in the near future.
 
 **Version**: 0.2.1 (2020-09-17)
 
@@ -31,7 +16,7 @@ This library contains the following utilities:
 ## Installation
 
 The latest stable release will be available in the Arduino IDE Library
-Manager soon. Search for "AceUtils". Click Install. (Not yet).
+Manager soon. Search for "AceUtils".
 
 The development version can be installed by cloning the
 [GitHub repository](https://github.com/bxparks/AceUtils), checking out the
