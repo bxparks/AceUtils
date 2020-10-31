@@ -5,9 +5,10 @@ libraries. Unlike the AceCommon (https://github.com/bxparks/AceCommon) library
 which must be self-contained and not depend on any other external library, the
 AceUtils library will often depend on other libraries.
 
-**NOTE**: As of 2020-10-29, this library is currently empty. Code that used to
-be here has been moved to the AceCommon library. I do have plans on adding stuff
-to this library in the near future.
+* CrcEeprom
+    * `#include <CrcEeprom.h>`
+    * `using namespace crc_eeprom`
+    * Depends on the FastCRC (https://github.com/FrankBoesing/FastCRC) library.
 
 **Version**: 0.2.1 (2020-09-17)
 
@@ -41,7 +42,7 @@ and to lookup the signatures of the methods in those classes.
 
 ## Usage
 
-See the `README.md` for each of the various utilties listed above.
+Due to the lack of time, the documentation is mostly in the code right now.
 
 ## System Requirements
 
@@ -55,7 +56,7 @@ This library was developed and tested using:
 * [SparkFun AVR Boards 1.1.12](https://github.com/sparkfun/Arduino_Boards)
 * [SparkFun SAMD Boards 1.6.2](https://github.com/sparkfun/Arduino_Boards)
 * [ESP8266 Arduino 2.7.4](https://github.com/esp8266/Arduino)
-* [ESP32 Arduino 1.0.2](https://github.com/espressif/arduino-esp32)
+* [ESP32 Arduino 1.0.4](https://github.com/espressif/arduino-esp32)
 * [Teensydino 1.46](https://www.pjrc.com/teensy/td_download.html)
 
 It should work with [PlatformIO](https://platformio.org/) but I have
