@@ -1,5 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classprint__str_1_1PrintStrN.html" title="An alternate implementation of PrintStr that allocates the character array in the heap,..." alt="" coords="5,13,148,39"/>
-<area shape="rect" id="node2" href="$classprint__str_1_1PrintStrBase.html" title="Base class for all template instances of the PrintStr&lt;SIZE&gt; class." alt="" coords="196,13,360,39"/>
-<area shape="rect" id="node3" href="$classprint__str_1_1PrintStr.html" title="An implementation of Print that writes to an in&#45;memory buffer supporting strings less than 65535 in l..." alt="" coords="408,5,540,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,64,91,91"/>
+<area shape="rect" id="node2" href="$classcli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,..." alt="" coords="145,5,328,32"/>
+<area shape="rect" id="node3" href="$classcli_1_1CommandManager.html" title="A convenience wrapper around a CommandDispatcher that hides complexity of creating,..." alt="" coords="139,57,335,98"/>
+<area shape="rect" id="node4" href="$classcli_1_1StreamLineReader.html" title="An AceRoutine coroutine that reads lines (terminated by &#39;\n&#39; or &#39;\r&#39; from the Stream device,..." alt="" coords="154,123,319,149"/>
 </map>

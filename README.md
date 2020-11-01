@@ -1,51 +1,35 @@
 # AceUtils
 
 This library contains Arduino utilities which are too small to be in separate
-libraries, but I use them in multiple projects or libraries. To avoid
-duplication, I have collected them into this library. Many of these are not
-meant for public consumption, but if you find them useful, then you are
-welcome to use them.
+libraries, but too high-level (with external dependencies) to be included in the
+AceCommon (https://github.com/bxparks/AceCommon) library. The AceCommon library
+must remain self-contained without any external dependencies. The utilities in
+AceUtils will generally have dependencies to my other libraries (e.g. AceCommon,
+AceTime, AceRoutine, etc) or third party libraries.
 
-This library contains the following utilities:
+* CrcEeprom
+    * `#include <CrcEeprom.h>`
+    * `using crc_eeprom::CrcEeprom`
+    * summary: Store data structures in EEPROM with a CRC check.
+    * depends on:
+        * FastCRC (https://github.com/FrankBoesing/FastCRC)
+* CommandLineInterface
+    * [src/cli/README.md](src/cli/README.md)
+    * `#include <CommandLineInterface.h>`
+    * `using namespace cli`
+    * summary: Implement a command line interface over the Serial port.
+    * depends on:
+        * AceRoutine (https://github.com/bxparks/AceRoutine)
+        * AceCommon (https://github.com/bxparks/AceCommon)
 
-* [PrintStr](src/print_str/)
-    * `#include <PrintStr.h>`
-    * `use namespace print_str;`
-    * Provides 2 classes with an in-memory buffer that implement the `Print`
-      interface so that quantities can be printed into it. The string
-      can then be extracted as a normal c-string (`const char*`).
-        * `PrintStr<SIZE>`: Templatized class with a buffer of
-          `SIZE` bytes on the stack. `SIZE` must be known at compile-time.
-        * `PrintStrN(uint16_t size)`: A normal class which creates a buffer of
-          `size` on the heap, which is immediately reclaimed when the object
-          is no longer used. The `size` can be either run-time or compile time
-          values.
-    * Both of these are meant to be an alternative to the Arduino `String` class
-      to avoid or reduce heap fragmentation.
-* [UrlEncoding](src/url_encoding/)
-    * `#include <UrlEncoding.h>`
-    * `use namespace url_encoding;`
-    * Encodes and decodes strings using "form URL encoding" which converts
-      spaces `' '` into `'+'`, and non-alphnumerics into percent-hex digits.
-* [TimingStats](src/timing_stats/)
-    * `#include <TimingStats.h>`
-    * `use namespace timing_stats;`
-    * Helper class to collect data (often durations in milliseconds) and
-      then print out various statistics such as min, max, average, and count.
-* [PrintUtils](src/print_utils/)
-    * `#include <PrintUtils.h>`
-    * `use namespace print_utils;`
-    * Useful utilities on `Print` objects such as `Serial`. Includes
-      `printfTo()`, `printPad2To()` to `printPad5To()` functions.
-
-**Version**: 0.2.1 (2020-09-17)
+**Version**: 0.3 (2020-11-01)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
 ## Installation
 
 The latest stable release will be available in the Arduino IDE Library
-Manager soon. Search for "AceUtils". Click Install. (Not yet).
+Manager. Search for "AceUtils". Click Install.
 
 The development version can be installed by cloning the
 [GitHub repository](https://github.com/bxparks/AceUtils), checking out the
@@ -68,9 +52,20 @@ The [docs/](docs/) directory contains the
 This may be useful to navigate the various classes in this library
 and to lookup the signatures of the methods in those classes.
 
+### Examples
+
+* [examples/CrcEepromDemo](examples/CrcEepromDemo)
+    * Demo of `CrcEeprom` class.
+* [examples/CommandLineShell](examples/CommandLineShell)
+    * Demo of the `<CommandLineInterface.h>` classes to implement a command line
+      interface that accepts a number of commands on the serial port. In other
+      words, it is a primitive "shell". The shell is non-blocking and uses
+      coroutines so that other coroutines continue to run.
+
 ## Usage
 
-See the `README.md` for each of the various utilties listed above.
+The documentation is mostly in the code right now. I will add more as time
+allows.
 
 ## System Requirements
 
@@ -84,7 +79,7 @@ This library was developed and tested using:
 * [SparkFun AVR Boards 1.1.12](https://github.com/sparkfun/Arduino_Boards)
 * [SparkFun SAMD Boards 1.6.2](https://github.com/sparkfun/Arduino_Boards)
 * [ESP8266 Arduino 2.7.4](https://github.com/esp8266/Arduino)
-* [ESP32 Arduino 1.0.2](https://github.com/espressif/arduino-esp32)
+* [ESP32 Arduino 1.0.4](https://github.com/espressif/arduino-esp32)
 * [Teensydino 1.46](https://www.pjrc.com/teensy/td_download.html)
 
 It should work with [PlatformIO](https://platformio.org/) but I have

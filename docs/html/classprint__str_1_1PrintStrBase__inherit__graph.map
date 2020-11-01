@@ -1,6 +1,0 @@
-<map id="print_str::PrintStrBase" name="print_str::PrintStrBase">
-<area shape="rect" id="node1" title="Base class for all template instances of the PrintStr&lt;SIZE&gt; class." alt="" coords="69,80,233,107"/>
-<area shape="rect" id="node3" href="$classprint__str_1_1PrintStr.html" title="An implementation of Print that writes to an in&#45;memory buffer supporting strings less than 65535 in l..." alt="" coords="5,155,137,196"/>
-<area shape="rect" id="node4" href="$classprint__str_1_1PrintStrN.html" title="An alternate implementation of PrintStr that allocates the character array in the heap,..." alt="" coords="161,162,304,189"/>
-<area shape="rect" id="node2" title=" " alt="" coords="125,5,177,32"/>
-</map>
