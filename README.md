@@ -1,9 +1,11 @@
 # AceUtils
 
 This library contains Arduino utilities which are too small to be in separate
-libraries. Unlike the AceCommon (https://github.com/bxparks/AceCommon) library
-which must be self-contained and not depend on any other external library, the
-AceUtils library will often depend on other libraries.
+libraries, but too high-level (with external dependencies) to be included in the
+AceCommon (https://github.com/bxparks/AceCommon) library. The AceCommon library
+must remain self-contained without any external dependencies. The utilities in
+AceUtils will generally have dependencies to my other libraries (e.g. AceCommon,
+AceTime, AceRoutine, etc) or third party libraries.
 
 * CrcEeprom
     * `#include <CrcEeprom.h>`
@@ -20,7 +22,7 @@ AceUtils library will often depend on other libraries.
         * AceRoutine (https://github.com/bxparks/AceRoutine)
         * AceCommon (https://github.com/bxparks/AceCommon)
 
-**Version**: 0.2.1 (2020-09-17)
+**Version**: 0.3 (2020-11-01)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
