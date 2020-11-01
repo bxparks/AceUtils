@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['getavg_2',['getAvg',['../classtiming__stats_1_1TimingStats.html#a8b1348dad5b7865c50d900c2bf2f2733',1,'timing_stats::TimingStats']]],
-  ['getcount_3',['getCount',['../classtiming__stats_1_1TimingStats.html#a550262cb1ee2b1a75157e5d88c2f9289',1,'timing_stats::TimingStats']]],
-  ['getcounter_4',['getCounter',['../classtiming__stats_1_1TimingStats.html#a94d66ea66d818e910e385db9a5cf05fa',1,'timing_stats::TimingStats']]],
-  ['getcstr_5',['getCstr',['../classprint__str_1_1PrintStrBase.html#a936c38da7e21faa0cf0bbd17b626f111',1,'print_str::PrintStrBase']]],
-  ['getexpdecayavg_6',['getExpDecayAvg',['../classtiming__stats_1_1TimingStats.html#a19a673ac96b261d846ccad45398eebfa',1,'timing_stats::TimingStats']]],
-  ['getmax_7',['getMax',['../classtiming__stats_1_1TimingStats.html#a81195b874811b1be47879ab2be1ef99d',1,'timing_stats::TimingStats']]],
-  ['getmin_8',['getMin',['../classtiming__stats_1_1TimingStats.html#ad1f5a0558a434e01f4acde1a50c24630',1,'timing_stats::TimingStats']]]
+  ['commanddispatcher_2',['CommandDispatcher',['../classcli_1_1CommandDispatcher.html',1,'cli::CommandDispatcher'],['../classcli_1_1CommandDispatcher.html#a0f2bc88cffc59bed575a9661813ebf70',1,'cli::CommandDispatcher::CommandDispatcher()']]],
+  ['commandhandler_3',['CommandHandler',['../classcli_1_1CommandHandler.html',1,'cli::CommandHandler'],['../classcli_1_1CommandHandler.html#abaef28b1829c1fe4f11dfc0f8153f4e8',1,'cli::CommandHandler::CommandHandler(const char *name, const char *helpString)'],['../classcli_1_1CommandHandler.html#a1835b409772c9bcdd5cffc6e3f52d10b',1,'cli::CommandHandler::CommandHandler(const __FlashStringHelper *name, const __FlashStringHelper *helpString)']]],
+  ['commandmanager_4',['CommandManager',['../classcli_1_1CommandManager.html',1,'cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;'],['../classcli_1_1CommandManager.html#a92d60f788acef58a2b09b74225b4ab21',1,'cli::CommandManager::CommandManager()']]],
+  ['crceeprom_5',['CrcEeprom',['../classcrc__eeprom_1_1CrcEeprom.html',1,'crc_eeprom']]],
+  ['command_20line_20interface_6',['Command Line Interface',['../md__home_brian_src_AceUtils_src_cli_README.html',1,'']]]
 ];

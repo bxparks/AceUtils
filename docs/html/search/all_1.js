@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['buf_5f_1',['buf_',['../classprint__str_1_1PrintStrBase.html#aa92f3c298a80b83cd97bdc9d4e652aa1',1,'print_str::PrintStrBase']]]
+  ['begin_1',['begin',['../classcrc__eeprom_1_1CrcEeprom.html#ae786559e68fc643e377592b8c0d056a4',1,'crc_eeprom::CrcEeprom']]]
 ];

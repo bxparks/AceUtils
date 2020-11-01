@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['url_20encoding_18',['Url Encoding',['../md__home_brian_src_AceUtils_src_url_encoding_README.html',1,'']]],
-  ['update_19',['update',['../classtiming__stats_1_1TimingStats.html#a0628f373f9b20a64c6c34cae8ef10dd7',1,'timing_stats::TimingStats']]]
+  ['printhelp_17',['printHelp',['../classcli_1_1CommandDispatcher.html#ab2f1c68e5c2334e46e4474905ea8d672',1,'cli::CommandDispatcher']]],
+  ['printlineerror_18',['printLineError',['../classcli_1_1CommandDispatcher.html#a0eeb37ecba5cfcf683753af443465987',1,'cli::CommandDispatcher']]]
 ];

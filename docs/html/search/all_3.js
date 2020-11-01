@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['length_9',['length',['../classprint__str_1_1PrintStrBase.html#a0911bc15a5fcd42c3e65f59bdddec11a',1,'print_str::PrintStrBase']]]
+  ['findandruncommand_7',['findAndRunCommand',['../classcli_1_1CommandDispatcher.html#a75d938737d913bacf298424ead78ece8',1,'cli::CommandDispatcher']]],
+  ['findcommand_8',['findCommand',['../classcli_1_1CommandDispatcher.html#abb91486d151eebed9c38c8415cdb05d8',1,'cli::CommandDispatcher']]]
 ];

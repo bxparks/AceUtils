@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.2.1</span>
+   &#160;<span id="projectnumber">0.3</span>
    </div>
-   <div id="projectbrief">Useful Arduino utilties which are too small for separate libraries.</div>
+   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to have external dependencies to other libraries.</div>
   </td>
  </tr>
  </tbody>
@@ -70,16 +70,27 @@ $(function() {
 <div class="textblock">
 <p><a href="hierarchy.html">Go to the textual class hierarchy</a></p>
 </div><table border="0" cellspacing="10" cellpadding="0">
-<tr><td><img src="inherit_graph_0.png" border="0" usemap="#print__str_1_1PrintStrBase" alt=""/>
-<map name="print__str_1_1PrintStrBase" id="print__str_1_1PrintStrBase">
-<area shape="rect" href="classprint__str_1_1PrintStrN.html" title="An alternate implementation of PrintStr that allocates the character array in the heap,..." alt="" coords="5,13,148,39"/>
-<area shape="rect" href="classprint__str_1_1PrintStrBase.html" title="Base class for all template instances of the PrintStr&lt;SIZE&gt; class." alt="" coords="196,13,360,39"/>
-<area shape="rect" href="classprint__str_1_1PrintStr.html" title="An implementation of Print that writes to an in&#45;memory buffer supporting strings less than 65535 in l..." alt="" coords="408,5,540,47"/>
+<tr><td><img src="inherit_graph_0.png" border="0" usemap="#cli_1_1CommandDispatcher" alt=""/>
+<map name="cli_1_1CommandDispatcher" id="cli_1_1CommandDispatcher">
+<area shape="rect" title=" " alt="" coords="5,64,91,91"/>
+<area shape="rect" href="classcli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,..." alt="" coords="145,5,328,32"/>
+<area shape="rect" href="classcli_1_1CommandManager.html" title="A convenience wrapper around a CommandDispatcher that hides complexity of creating,..." alt="" coords="139,57,335,98"/>
+<area shape="rect" href="classcli_1_1StreamLineReader.html" title="An AceRoutine coroutine that reads lines (terminated by &#39;\n&#39; or &#39;\r&#39; from the Stream device,..." alt="" coords="154,123,319,149"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_1.png" border="0" usemap="#timing__stats_1_1TimingStats" alt=""/>
-<map name="timing__stats_1_1TimingStats" id="timing__stats_1_1TimingStats">
-<area shape="rect" href="classtiming__stats_1_1TimingStats.html" title="Helper class to collect timing statistics such as min, max, average, and exponential&#45;decay average." alt="" coords="5,5,195,32"/>
+<tr><td><img src="inherit_graph_1.png" border="0" usemap="#cli_1_1CommandHandler" alt=""/>
+<map name="cli_1_1CommandHandler" id="cli_1_1CommandHandler">
+<area shape="rect" href="classcli_1_1CommandHandler.html" title="Signature for a command handler." alt="" coords="5,5,168,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_2.png" border="0" usemap="#cli_1_1InputLine" alt=""/>
+<map name="cli_1_1InputLine" id="cli_1_1InputLine">
+<area shape="rect" href="structcli_1_1InputLine.html" title="Message sent from StreamLineReader to CommandDispatcher coroutines through Channel&lt;InputLine&gt; channel..." alt="" coords="5,5,111,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_3.png" border="0" usemap="#crc__eeprom_1_1CrcEeprom" alt=""/>
+<map name="crc__eeprom_1_1CrcEeprom" id="crc__eeprom_1_1CrcEeprom">
+<area shape="rect" href="classcrc__eeprom_1_1CrcEeprom.html" title="Thin wrapper around the EEPROM object (from the the built&#45;in EEPROM library) to read and write a give..." alt="" coords="5,5,183,32"/>
 </map>
 </td></tr>
 </table>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['reset_32',['reset',['../classtiming__stats_1_1TimingStats.html#a3c7ab77ffa2629c6125488830fb0f183',1,'timing_stats::TimingStats']]]
+  ['findandruncommand_36',['findAndRunCommand',['../classcli_1_1CommandDispatcher.html#a75d938737d913bacf298424ead78ece8',1,'cli::CommandDispatcher']]],
+  ['findcommand_37',['findCommand',['../classcli_1_1CommandDispatcher.html#abb91486d151eebed9c38c8415cdb05d8',1,'cli::CommandDispatcher']]]
 ];
