@@ -7,8 +7,18 @@ AceUtils library will often depend on other libraries.
 
 * CrcEeprom
     * `#include <CrcEeprom.h>`
-    * `using namespace crc_eeprom`
-    * Depends on the FastCRC (https://github.com/FrankBoesing/FastCRC) library.
+    * `using crc_eeprom::CrcEeprom`
+    * summary: Store data structures in EEPROM with a CRC check.
+    * depends on:
+        * FastCRC (https://github.com/FrankBoesing/FastCRC)
+* CommandLineInterface
+    * [src/cli/README.md](src/cli/README.md)
+    * `#include <CommandLineInterface.h>`
+    * `using namespace cli`
+    * summary: Implement a command line interface over the Serial port.
+    * depends on:
+        * AceRoutine (https://github.com/bxparks/AceRoutine)
+        * AceCommon (https://github.com/bxparks/AceCommon)
 
 **Version**: 0.2.1 (2020-09-17)
 
@@ -17,7 +27,7 @@ AceUtils library will often depend on other libraries.
 ## Installation
 
 The latest stable release will be available in the Arduino IDE Library
-Manager soon. Search for "AceUtils".
+Manager. Search for "AceUtils". Click Install.
 
 The development version can be installed by cloning the
 [GitHub repository](https://github.com/bxparks/AceUtils), checking out the
@@ -40,9 +50,20 @@ The [docs/](docs/) directory contains the
 This may be useful to navigate the various classes in this library
 and to lookup the signatures of the methods in those classes.
 
+### Examples
+
+* [examples/CrcEepromDemo](examples/CrcEepromDemo)
+    * Demo of `CrcEeprom` class.
+* [examples/CommandLineShell](examples/CommandLineShell)
+    * Demo of the `<CommandLineInterface.h>` classes to implement a command line
+      interface that accepts a number of commands on the serial port. In other
+      words, it is a primitive "shell". The shell is non-blocking and uses
+      coroutines so that other coroutines continue to run.
+
 ## Usage
 
-Due to the lack of time, the documentation is mostly in the code right now.
+The documentation is mostly in the code right now. I will add more as time
+allows.
 
 ## System Requirements
 
