@@ -2,6 +2,9 @@
 #include "crc16ccitt.h"
 #include "crc32.h"
 
+// Cannot compile this on UnixHostDuino
+#if ! defined(UNIX_HOST_DUINO)
+
 // TODO: Move the underyling implementations (crc16ccitt(), crc32(), etc)
 // to AceCommon, or maybe even a new library, AceCrc.
 
@@ -22,3 +25,5 @@ uint32_t CrcEeprom::crc32(const void* data, uint16_t dataSize) {
 }
 
 }
+
+#endif
