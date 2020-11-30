@@ -20,7 +20,6 @@
 
 #include <EEPROM.h>
 #include <string.h> // memcpy()
-#include "crc16ccitt.h"
 
 namespace crc_eeprom {
 
