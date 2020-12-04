@@ -19,6 +19,7 @@
 #endif
 
 #include <EEPROM.h>
+#include <AceCRC.h> // crc32_nibble
 #include <string.h> // memcpy()
 
 namespace crc_eeprom {
@@ -36,25 +37,27 @@ namespace crc_eeprom {
  */
 class CrcEeprom {
   public:
-    typedef uint32_t (*Crc32Calculator)(const void* data, uint16_t dataSize);
-    typedef uint16_t (*Crc16Calculator)(const void* data, uint16_t dataSize);
+    /**
+     * Function pointer to the CRC32 calculator. For example,
+     * `ace_crc::crc32_nibble::crc_calculate` or
+     * `ace_crc::crc32_byte::crc_calculate`.
+     */
+    typedef uint32_t (*Crc32Calculator)(const void* data, size_t dataSize);
+
+    /** Size of the crc32 type, uint32_t. Should always be 4. */
+    const size_t kCrcSize = sizeof(uint32_t);
 
     /**
-     * Constructor that uses a Crc16Calculator. The default
-     * CrcEeprom::crc16ccitt() method is used by default.
+     * Constructor with an optional Crc32Calculator parameter. By default, the
+     * Crc32Calculator will be set to `ace_crc::crc32_nibble::crc_calculate()`
+     * which uses a 4-bit (16 element) lookup table and has a good balance
+     * between flash memory consumption and speed. You can choose to provide an
+     * alternate CRC32 calculator for faster speed or for smaller flash memory
+     * consumption.
      */
-    explicit CrcEeprom(Crc16Calculator crcCalc = crc16ccitt)
-      : mCrc16Calculator(crcCalc),
-        mCrcCalculatorSize(2)
-      {}
-
-    /**
-     * Constructor that uses a Crc32Calculator. An example is the
-     * CrcEeprom::crc32() method.
-     */
-    explicit CrcEeprom(Crc32Calculator crcCalc)
-      : mCrc32Calculator(crcCalc),
-        mCrcCalculatorSize(4)
+    explicit CrcEeprom(
+        Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate)
+      : mCrc32Calculator(crcCalc)
       {}
 
     /**
@@ -62,20 +65,25 @@ class CrcEeprom {
      * does nothing for AVR and others.
      */
 #if defined(ESP8266) || defined(ESP32)
-    void begin(uint16_t size) {
+    void begin(size_t size) {
       EEPROM.begin(size);
     }
 #else
-    void begin(uint16_t /*size*/) {
+    void begin(size_t /*size*/) {
     }
 #endif
 
     /**
      * Write the data with its CRC. Returns the number of bytes written.
+     * The type of `address` is `int` for consistency with the API of the
+     * EEPROM library.
      */
-    uint16_t writeWithCrc(int address, const void* const data,
-        const uint16_t dataSize) const {
-      uint16_t byteCount = dataSize;
+    size_t writeWithCrc(
+        int address,
+        const void* const data,
+        const size_t dataSize
+    ) const {
+      size_t byteCount = dataSize;
       const uint8_t* d = (const uint8_t*) data;
 
       // write data blcok
@@ -84,32 +92,24 @@ class CrcEeprom {
       }
 
       // write CRC at the end of the data block
-      if (mCrcCalculatorSize == 2) {
-        uint8_t buf[2];
-        uint16_t crc = (*mCrc16Calculator)(data, dataSize);
-        memcpy(buf, &crc, 2);
-        write(address++, buf[0]);
-        write(address++, buf[1]);
-      } else {
-        uint8_t buf[4];
-        uint32_t crc = (*mCrc32Calculator)(data, dataSize);
-        memcpy(buf, &crc, 4);
-        write(address++, buf[0]);
-        write(address++, buf[1]);
-        write(address++, buf[2]);
-        write(address++, buf[3]);
-      }
+      uint32_t crc = (*mCrc32Calculator)(data, dataSize);
+      EEPROM.put(address, crc);
       bool success = commit();
-      return (success) ? dataSize + mCrcCalculatorSize : 0;
+      return (success) ? dataSize + kCrcSize : 0;
     }
 
     /**
      * Read the data from EEPROM along with its CRC. Return true if the CRC of
      * the data retrieved matches the CRC of the data when it was written.
+     * The type of `address` is `int` for consistency with the API of the
+     * EEPROM library.
      */
-    bool readWithCrc(int address, void* const data,
-        const uint16_t dataSize) const {
-      uint16_t byteCount = dataSize;
+    bool readWithCrc(
+        int address,
+        void* const data,
+        const size_t dataSize
+    ) const {
+      size_t byteCount = dataSize;
       uint8_t* d = (uint8_t*) data;
 
       // read data block
@@ -118,32 +118,11 @@ class CrcEeprom {
       }
 
       // Read data and verify same CRC
-      if (mCrcCalculatorSize == 2) {
-        uint8_t buf[2];
-        buf[0] = read(address++);
-        buf[1] = read(address++);
-        uint16_t retrievedCrc;
-        memcpy(&retrievedCrc, buf, 2);
-        uint16_t expectedCrc = (*mCrc16Calculator)(data, dataSize);
-        return expectedCrc == retrievedCrc;
-      } else {
-        uint8_t buf[4];
-        buf[0] = read(address++);
-        buf[1] = read(address++);
-        buf[2] = read(address++);
-        buf[3] = read(address++);
-        uint32_t retrievedCrc;
-        memcpy(&retrievedCrc, buf, 4);
-        uint32_t expectedCrc = (*mCrc32Calculator)(data, dataSize);
-        return expectedCrc == retrievedCrc;
-      }
+      uint32_t retrievedCrc;
+      EEPROM.get(address, retrievedCrc);
+      uint32_t expectedCrc = (*mCrc32Calculator)(data, dataSize);
+      return expectedCrc == retrievedCrc;
     }
-
-    /** A CRC calculator that uses the CRC16-CCITT algorithm. */
-    static uint16_t crc16ccitt(const void* data, uint16_t dataSize);
-
-    /** A CRC calculator that uses the CRC32 algorithm. */
-    static uint32_t crc32(const void* data, uint16_t dataSize);
 
   private:
     void write(int address, uint8_t val) const {
@@ -166,12 +145,7 @@ class CrcEeprom {
 #endif
     }
 
-    union {
-      Crc16Calculator const mCrc16Calculator;
-      Crc32Calculator const mCrc32Calculator;
-    };
-    uint8_t const mCrcCalculatorSize; // 2 or 4
-
+    Crc32Calculator const mCrc32Calculator;
 };
 
 }
