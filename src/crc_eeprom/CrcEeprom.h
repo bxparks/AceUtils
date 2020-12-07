@@ -22,6 +22,7 @@
 #include <AceCRC.h> // crc32_nibble
 #include <string.h> // memcpy()
 
+namespace ace_utils {
 namespace crc_eeprom {
 
 /**
@@ -148,8 +149,9 @@ class CrcEeprom {
     Crc32Calculator const mCrc32Calculator;
 };
 
-}
+} // crc_eeprom
+} // ace_utils
 
-#endif
+#endif // ! defined(UNIX_HOST_DUINO)
 
-#endif
+#endif // defined(ACE_UTILS_CRC_EEPROM_H)
