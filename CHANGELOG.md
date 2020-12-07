@@ -12,6 +12,8 @@
         * `ace_utils::mode_group::GroupNavigator`
         * a data-driven mechanism to encode and navigate the hierarchy of view
           and change modes of the display of a clock controlled by 2 buttons.
+    * rename `CommandLineInterface.h` to `AceUtilsCli.h`
+        * move `cli/*` classes into `ace_utils::cli::` namespace
 * 0.3 (2020-11-01)
     * Move `CrcEeprom` class from AceTime library.
     * Move `CommandLineInterface` package from AceRoutine library.

@@ -1,4 +1,4 @@
-# Command Line Interface
+# Command Line Interface (CLI)
 
 These classes implement a non-blocking command line interface on the Serial
 port. In ther words, you can implement a primitive "shell" for the Arduino.
@@ -62,9 +62,9 @@ An Arduino `.ino` file that uses the CLI classes to implement a commmand line
 shell will look something like this:
 
 ```C++
-#include <CommandLineInterface.h>
+#include <AceUtilsCli.h>
 
-using namespace cli;
+using namespace ace_utils::cli;
 
 class FooCommand: public CommandHandler {
   FooCommand():

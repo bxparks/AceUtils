@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include "CommandDispatcher.h"
 
+namespace ace_utils {
 namespace cli {
 
 // Same whitespace characters used by isspace() in the standard C99 library.
@@ -130,4 +131,5 @@ void CommandDispatcher::findAndRunCommand(
   mPrinter.println(cmd);
 }
 
-}
+} // cli
+} // ace_utils
