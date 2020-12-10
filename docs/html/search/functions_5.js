@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['isargequal_44',['isArgEqual',['../classcli_1_1CommandHandler.html#a27e420b66f4c44b126221b535c19dc21',1,'cli::CommandHandler::isArgEqual(const char *arg, const char *token)'],['../classcli_1_1CommandHandler.html#a813c6556e80fd5d7ae1623f2583cd2b9',1,'cli::CommandHandler::isArgEqual(const char *arg, const __FlashStringHelper *token)']]]
+  ['isargequal_62',['isArgEqual',['../classace__utils_1_1cli_1_1CommandHandler.html#ab664de864c17a35e0bbb6c75176684cb',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const char *token)'],['../classace__utils_1_1cli_1_1CommandHandler.html#aecf6a79d06930a7d91c8862274af698a',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const __FlashStringHelper *token)']]]
 ];

@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.3</span>
+   &#160;<span id="projectnumber">0.4</span>
    </div>
-   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to have external dependencies to other libraries.</div>
+   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
  </tr>
  </tbody>
@@ -95,59 +95,61 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">SOFTWARE.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef CLI_COMMAND_MANAGER_H</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define CLI_COMMAND_MANAGER_H</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef ACE_UTILS_CLI_COMMAND_MANAGER_H</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define ACE_UTILS_CLI_COMMAND_MANAGER_H</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;AceRoutine.h&gt;</span> <span class="comment">// Coroutine, Channel</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;CommandDispatcher.h&quot;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;StreamLineReader.h&quot;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>cli {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>8_t BUF_SIZE, u<span class="keywordtype">int</span>8_t ARGV_SIZE&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="classcli_1_1CommandManager.html">   81</a></span>&#160;<span class="keyword">class </span><a class="code" href="classcli_1_1CommandManager.html">CommandManager</a>: <span class="keyword">public</span> ace_routine::Coroutine {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classcli_1_1CommandManager.html#a92d60f788acef58a2b09b74225b4ab21">   95</a></span>&#160;    <a class="code" href="classcli_1_1CommandManager.html#a92d60f788acef58a2b09b74225b4ab21">CommandManager</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1CommandHandler.html">CommandHandler</a>* <span class="keyword">const</span>* commands, uint8_t numCommands,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            Stream&amp; serial, <span class="keyword">const</span> <span class="keywordtype">char</span>* prompt = <span class="keyword">nullptr</span>):</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        mCommands(commands),</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        mNumCommands(numCommands),</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        mSerial(serial),</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        mPrompt(prompt),</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        mStreamLineReader(mChannel, mSerial, mLineBuffer, BUF_SIZE),</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        mDispatcher(mChannel, mSerial, mCommands, mNumCommands,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            mArgv, ARGV_SIZE, mPrompt) {}</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">int</span> runCoroutine()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      mStreamLineReader.runCoroutine();</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      mDispatcher.runCoroutine();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="classcli_1_1CommandManager.html#a2a9d8785bdb06bdbfe94a1287c4e7331">  112</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="classcli_1_1CommandDispatcher.html">CommandDispatcher</a>* <a class="code" href="classcli_1_1CommandManager.html#a2a9d8785bdb06bdbfe94a1287c4e7331">getDispatcher</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;mDispatcher; }</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">const</span> <a class="code" href="classcli_1_1CommandHandler.html">CommandHandler</a>* <span class="keyword">const</span>* <span class="keyword">const</span> mCommands;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    uint8_t <span class="keyword">const</span> mNumCommands;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    Stream&amp; mSerial;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> mPrompt;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    ace_routine::Channel&lt;InputLine&gt; mChannel;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="classcli_1_1StreamLineReader.html">StreamLineReader</a> mStreamLineReader;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="classcli_1_1CommandDispatcher.html">CommandDispatcher</a> mDispatcher;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">char</span> mLineBuffer[BUF_SIZE];</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* mArgv[ARGV_SIZE];</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;};</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>ace_utils {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>cli {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>8_t BUF_SIZE, u<span class="keywordtype">int</span>8_t ARGV_SIZE&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandManager.html">   82</a></span>&#160;<span class="keyword">class </span><a class="code" href="classace__utils_1_1cli_1_1CommandManager.html">CommandManager</a>: <span class="keyword">public</span> ace_routine::Coroutine {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandManager.html#a367a2cbd734cac13b875a7fa44224ff5">   96</a></span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1CommandManager.html#a367a2cbd734cac13b875a7fa44224ff5">CommandManager</a>(<span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html">CommandHandler</a>* <span class="keyword">const</span>* commands, uint8_t numCommands,</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            Stream&amp; serial, <span class="keyword">const</span> <span class="keywordtype">char</span>* prompt = <span class="keyword">nullptr</span>):</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        mCommands(commands),</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        mNumCommands(numCommands),</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        mSerial(serial),</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        mPrompt(prompt),</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        mStreamLineReader(mChannel, mSerial, mLineBuffer, BUF_SIZE),</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        mDispatcher(mChannel, mSerial, mCommands, mNumCommands,</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            mArgv, ARGV_SIZE, mPrompt) {}</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">int</span> runCoroutine()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      mStreamLineReader.runCoroutine();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      mDispatcher.runCoroutine();</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandManager.html#af767cc67f79958fdf7d260d2737af7c9">  113</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html">CommandDispatcher</a>* <a class="code" href="classace__utils_1_1cli_1_1CommandManager.html#af767cc67f79958fdf7d260d2737af7c9">getDispatcher</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;mDispatcher; }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html">CommandHandler</a>* <span class="keyword">const</span>* <span class="keyword">const</span> mCommands;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    uint8_t <span class="keyword">const</span> mNumCommands;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    Stream&amp; mSerial;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> mPrompt;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    ace_routine::Channel&lt;InputLine&gt; mChannel;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1StreamLineReader.html">StreamLineReader</a> mStreamLineReader;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html">CommandDispatcher</a> mDispatcher;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">char</span> mLineBuffer[BUF_SIZE];</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* mArgv[ARGV_SIZE];</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <span class="comment">// cli</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// ace_utils</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html">cli::CommandDispatcher</a></div><div class="ttdoc">A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8h_source.html#l00051">CommandDispatcher.h:51</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandManager_html"><div class="ttname"><a href="classcli_1_1CommandManager.html">cli::CommandManager</a></div><div class="ttdoc">A convenience wrapper around a CommandDispatcher that hides complexity of creating,...</div><div class="ttdef"><b>Definition:</b> <a href="CommandManager_8h_source.html#l00081">CommandManager.h:81</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandManager_html_a92d60f788acef58a2b09b74225b4ab21"><div class="ttname"><a href="classcli_1_1CommandManager.html#a92d60f788acef58a2b09b74225b4ab21">cli::CommandManager::CommandManager</a></div><div class="ttdeci">CommandManager(const CommandHandler *const *commands, uint8_t numCommands, Stream &amp;serial, const char *prompt=nullptr)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> <a href="CommandManager_8h_source.html#l00095">CommandManager.h:95</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandManager_html_a2a9d8785bdb06bdbfe94a1287c4e7331"><div class="ttname"><a href="classcli_1_1CommandManager.html#a2a9d8785bdb06bdbfe94a1287c4e7331">cli::CommandManager::getDispatcher</a></div><div class="ttdeci">const CommandDispatcher * getDispatcher() const</div><div class="ttdoc">Return the CommandDispatcher.</div><div class="ttdef"><b>Definition:</b> <a href="CommandManager_8h_source.html#l00112">CommandManager.h:112</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandHandler_html"><div class="ttname"><a href="classcli_1_1CommandHandler.html">cli::CommandHandler</a></div><div class="ttdoc">Signature for a command handler.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00046">CommandHandler.h:46</a></div></div>
-<div class="ttc" id="aclasscli_1_1StreamLineReader_html"><div class="ttname"><a href="classcli_1_1StreamLineReader.html">cli::StreamLineReader</a></div><div class="ttdoc">An AceRoutine coroutine that reads lines (terminated by '\n' or '\r' from the Stream device,...</div><div class="ttdef"><b>Definition:</b> <a href="StreamLineReader_8h_source.html#l00039">StreamLineReader.h:39</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandHandler_html"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandHandler.html">ace_utils::cli::CommandHandler</a></div><div class="ttdoc">Signature for a command handler.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00047">CommandHandler.h:47</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandManager_html"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandManager.html">ace_utils::cli::CommandManager</a></div><div class="ttdoc">A convenience wrapper around a CommandDispatcher that hides complexity of creating,...</div><div class="ttdef"><b>Definition:</b> <a href="CommandManager_8h_source.html#l00082">CommandManager.h:82</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1StreamLineReader_html"><div class="ttname"><a href="classace__utils_1_1cli_1_1StreamLineReader.html">ace_utils::cli::StreamLineReader</a></div><div class="ttdoc">An AceRoutine coroutine that reads lines (terminated by '\n' or '\r' from the Stream device,...</div><div class="ttdef"><b>Definition:</b> <a href="StreamLineReader_8h_source.html#l00040">StreamLineReader.h:40</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html">ace_utils::cli::CommandDispatcher</a></div><div class="ttdoc">A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8h_source.html#l00052">CommandDispatcher.h:52</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandManager_html_a367a2cbd734cac13b875a7fa44224ff5"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandManager.html#a367a2cbd734cac13b875a7fa44224ff5">ace_utils::cli::CommandManager::CommandManager</a></div><div class="ttdeci">CommandManager(const CommandHandler *const *commands, uint8_t numCommands, Stream &amp;serial, const char *prompt=nullptr)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> <a href="CommandManager_8h_source.html#l00096">CommandManager.h:96</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandManager_html_af767cc67f79958fdf7d260d2737af7c9"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandManager.html#af767cc67f79958fdf7d260d2737af7c9">ace_utils::cli::CommandManager::getDispatcher</a></div><div class="ttdeci">const CommandDispatcher * getDispatcher() const</div><div class="ttdoc">Return the CommandDispatcher.</div><div class="ttdef"><b>Definition:</b> <a href="CommandManager_8h_source.html#l00113">CommandManager.h:113</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

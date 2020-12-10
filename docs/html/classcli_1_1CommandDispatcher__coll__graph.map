@@ -1,5 +1,0 @@
-<map id="cli::CommandDispatcher" name="cli::CommandDispatcher">
-<area shape="rect" id="node1" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,..." alt="" coords="30,95,213,121"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,91,32"/>
-<area shape="rect" id="node3" href="$classcli_1_1CommandHandler.html" title="Signature for a command handler." alt="" coords="115,5,277,32"/>
-</map>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['tokenize_51',['tokenize',['../classcli_1_1CommandDispatcher.html#a857ff79c55fe46c73119feb54b2c4f69',1,'cli::CommandDispatcher']]]
+  ['setup_70',['setup',['../classace__utils_1_1mode__group_1_1ModeNavigator.html#a8fcc09eaa24f32eed4d3bb9bcef48f0c',1,'ace_utils::mode_group::ModeNavigator']]],
+  ['streamlinereader_71',['StreamLineReader',['../classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1',1,'ace_utils::cli::StreamLineReader']]]
 ];
