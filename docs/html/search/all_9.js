@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['streamlinereader_22',['StreamLineReader',['../classcli_1_1StreamLineReader.html',1,'cli::StreamLineReader'],['../classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7',1,'cli::StreamLineReader::StreamLineReader()']]]
+  ['nummodes_27',['numModes',['../structace__utils_1_1mode__group_1_1ModeGroup.html#a43fc6a7df3927f0d3d16f0c33901b0e5',1,'ace_utils::mode_group::ModeGroup']]]
 ];

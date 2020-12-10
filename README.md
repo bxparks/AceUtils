@@ -1,5 +1,7 @@
 # AceUtils
 
+![AUnit Tests](https://github.com/bxparks/AceUtils/workflows/AUnit%20Tests/badge.svg)
+
 This library contains Arduino utilities which are too small to be in separate
 libraries, but too high-level (with external dependencies) to be included in the
 AceCommon (https://github.com/bxparks/AceCommon) library. The AceCommon library
@@ -8,21 +10,33 @@ AceUtils will generally have dependencies to my other libraries (e.g. AceCommon,
 AceTime, AceRoutine, etc) or third party libraries.
 
 * CrcEeprom
-    * `#include <CrcEeprom.h>`
-    * `using crc_eeprom::CrcEeprom`
-    * summary: Store data structures in EEPROM with a CRC check.
-    * depends on:
-        * FastCRC (https://github.com/FrankBoesing/FastCRC)
-* CommandLineInterface
+    * `#include <AceUtilsCrcEeprom.h>`
+    * `using ace_utils::crc_eeprom::CrcEeprom`
+    * Summary:
+        * Store data structures in EEPROM with a CRC check.
+    * Depends on:
+        * AceCRC (https://github.com/bxparks/AceCRC)
+* Command Line Interface (CLI)
     * [src/cli/README.md](src/cli/README.md)
-    * `#include <CommandLineInterface.h>`
-    * `using namespace cli`
-    * summary: Implement a command line interface over the Serial port.
-    * depends on:
+    * `#include <AceUtilsCli.h>`
+    * `using namespace ace_utils::cli`
+    * Summary:
+        * Implement a command line interface over the Serial port.
+    * Depends on:
         * AceRoutine (https://github.com/bxparks/AceRoutine)
         * AceCommon (https://github.com/bxparks/AceCommon)
+* ModeGroup
+    * `#include <AceUtilsModeGroup.h>`
+    * `using ace_utils::mode_group::ModeGroup`
+    * `using ace_utils::mode_group::ModeNavigator`
+    * Summary:
+        * A data-driven mechanism to encode and navigate the hierarchy of
+          view and change modes of the display of a clock controlled by 2
+          buttons.
+    * Depends on:
+        * (none)
 
-**Version**: 0.3 (2020-11-01)
+**Version**: 0.4 (2020-12-09)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
@@ -66,6 +80,21 @@ and to lookup the signatures of the methods in those classes.
 
 The documentation is mostly in the code right now. I will add more as time
 allows.
+
+Unlike most of my other libraries, the header files of various submodules are
+**not** consolidated into the main `AceUtils.h` header file. The reason is that
+many of the submodules are unrelated to each other, and have dependencies on
+different external libraries. If I included all the subheaders into `AceUtils.h`
+then the end user would be force to install the union of all external libraries
+which are needed by the entire collection. By splitting each module into
+separate headers (e.g. `AceUtilsCrcEeprom.h`, `AceUtilsModeGroup.h`), the
+external dependencies are minimized.
+
+The header file of all submodules will begin with the prefix `AceUtils{xxx}.h`,
+for example, `AceUtilsModeGroup.h`.
+
+All modules are placed in separate namespaces, under the `ace_utils::` top-level
+namespace.
 
 ## System Requirements
 

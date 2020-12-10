@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef CLI_INPUT_LINE_H
-#define CLI_INPUT_LINE_H
+#ifndef ACE_UTILS_CLI_INPUT_LINE_H
+#define ACE_UTILS_CLI_INPUT_LINE_H
 
+namespace ace_utils {
 namespace cli {
 
 /**
@@ -40,6 +41,7 @@ struct InputLine {
   char* line; // will be modified in-situ by strtok()
 };
 
-}
+} // cli
+} // ace_utils
 
 #endif

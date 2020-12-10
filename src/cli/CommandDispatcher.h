@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef CLI_COMMAND_DISPATCHER_H
-#define CLI_COMMAND_DISPATCHER_H
+#ifndef ACE_UTILS_CLI_COMMAND_DISPATCHER_H
+#define ACE_UTILS_CLI_COMMAND_DISPATCHER_H
 
 #include <AceRoutine.h> // Coroutine, Channel
 #include "CommandHandler.h"
@@ -32,6 +32,7 @@ SOFTWARE.
 class Print;
 class __FlashStringHelper;
 
+namespace ace_utils {
 namespace cli {
 
 /**
@@ -183,6 +184,7 @@ class CommandDispatcher: public ace_routine::Coroutine {
     const char* const mPrompt;
 };
 
-}
+} // cli
+} // ace_utils
 
 #endif

@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.3</span>
+   &#160;<span id="projectnumber">0.4</span>
    </div>
-   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to have external dependencies to other libraries.</div>
+   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
  </tr>
  </tbody>
@@ -103,121 +103,123 @@ $(function() {
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;CommandDispatcher.h&quot;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>cli {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// Same whitespace characters used by isspace() in the standard C99 library.</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> CommandDispatcher::DELIMS[] = <span class="stringliteral">&quot; \f\r\n\t\v&quot;</span>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classcli_1_1CommandDispatcher.html#a0eeb37ecba5cfcf683753af443465987">   38</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classcli_1_1CommandDispatcher.html#a0eeb37ecba5cfcf683753af443465987">CommandDispatcher::printLineError</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* line, uint8_t statusCode)<span class="keyword"></span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">    const </span>{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keywordflow">if</span> (statusCode == STATUS_BUFFER_OVERFLOW) {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;BufferOverflow: &quot;</span>));</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    mPrinter.println(line);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (statusCode == STATUS_FLUSH_TO_EOL) {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;FlushToEOL: &quot;</span>));</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    mPrinter.println(line);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;UnknownError: &quot;</span>));</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    mPrinter.print(statusCode);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;: &quot;</span>));</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    mPrinter.println(line);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  }</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classcli_1_1CommandDispatcher.html#a38a6973e8a181c48db1b988c3dbd61df">   54</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classcli_1_1CommandDispatcher.html#a38a6973e8a181c48db1b988c3dbd61df">CommandDispatcher::helpCommandHandler</a>(</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    Print&amp; printer, <span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span>* argv)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keywordflow">if</span> (argc == 2) {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd = argv[1];</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// check for &quot;help help&quot;</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">if</span> (strcmp(cmd, <span class="stringliteral">&quot;help&quot;</span>) == 0) {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      printer.println(F(<span class="stringliteral">&quot;Usage: help [command]&quot;</span>));</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">bool</span> found = <a class="code" href="classcli_1_1CommandDispatcher.html#a4c3f9282cfad17a75cce145a5566a01b">helpSpecific</a>(printer, cmd);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">if</span> (found) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    printer.print(F(<span class="stringliteral">&quot;Unknown command: &quot;</span>));</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    printer.println(cmd);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    printer.println(F(<span class="stringliteral">&quot;Commands:&quot;</span>));</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    printer.println(F(<span class="stringliteral">&quot;  help [command]&quot;</span>));</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="classcli_1_1CommandDispatcher.html#aa176113e9282337b422303b8e592d74c">helpAll</a>(printer);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="classcli_1_1CommandDispatcher.html#aa176113e9282337b422303b8e592d74c">   76</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classcli_1_1CommandDispatcher.html#aa176113e9282337b422303b8e592d74c">CommandDispatcher::helpAll</a>(Print&amp; printer)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; mNumCommands; i++) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">const</span> <a class="code" href="classcli_1_1CommandHandler.html">CommandHandler</a>* command = mCommands[i];</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    printer.print(<span class="stringliteral">&quot;  &quot;</span>);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="classcli_1_1CommandDispatcher.html#ab2f1c68e5c2334e46e4474905ea8d672">printHelp</a>(printer, command);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="classcli_1_1CommandDispatcher.html#a4c3f9282cfad17a75cce145a5566a01b">   84</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classcli_1_1CommandDispatcher.html#a4c3f9282cfad17a75cce145a5566a01b">CommandDispatcher::helpSpecific</a>(Print&amp; printer, <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keyword">const</span> <a class="code" href="classcli_1_1CommandHandler.html">CommandHandler</a>* command = <a class="code" href="classcli_1_1CommandDispatcher.html#abb91486d151eebed9c38c8415cdb05d8">findCommand</a>(cmd);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordflow">if</span> (command != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    printer.print(F(<span class="stringliteral">&quot;Usage: &quot;</span>));</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="classcli_1_1CommandDispatcher.html#ab2f1c68e5c2334e46e4474905ea8d672">printHelp</a>(printer, command);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classcli_1_1CommandDispatcher.html#ab2f1c68e5c2334e46e4474905ea8d672">   94</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classcli_1_1CommandDispatcher.html#ab2f1c68e5c2334e46e4474905ea8d672">CommandDispatcher::printHelp</a>(</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    Print&amp; printer, <span class="keyword">const</span> <a class="code" href="classcli_1_1CommandHandler.html">CommandHandler</a>* command) {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  command-&gt;<a class="code" href="classcli_1_1CommandHandler.html#ab714420ffd069731fd247188ee55ffa2">getName</a>().printTo(printer);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordflow">if</span> (!command-&gt;<a class="code" href="classcli_1_1CommandHandler.html#a5c2c32c736eb58788d33c5c3111ad98a">getHelpString</a>().isNull()) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    printer.print(<span class="charliteral">&#39; &#39;</span>);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    command-&gt;<a class="code" href="classcli_1_1CommandHandler.html#a5c2c32c736eb58788d33c5c3111ad98a">getHelpString</a>().printTo(printer);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    printer.println();</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    printer.println();</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="classcli_1_1CommandDispatcher.html#a32801d659383d2c6b608913d2364e6d1">  106</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classcli_1_1CommandDispatcher.html#a32801d659383d2c6b608913d2364e6d1">CommandDispatcher::runCommand</a>(<span class="keywordtype">char</span>* line)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="comment">// Tokenize the line.</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">int</span> argc = <a class="code" href="classcli_1_1CommandDispatcher.html#a857ff79c55fe46c73119feb54b2c4f69">tokenize</a>(line, mArgv, mArgvSize);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordflow">if</span> (argc == 0) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd = mArgv[0];</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="comment">// Handle the built-in &#39;help&#39; command.</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordflow">if</span> (strcmp(cmd, <span class="stringliteral">&quot;help&quot;</span>) == 0) {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="classcli_1_1CommandDispatcher.html#a38a6973e8a181c48db1b988c3dbd61df">helpCommandHandler</a>(mPrinter, argc, mArgv);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  }</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <a class="code" href="classcli_1_1CommandDispatcher.html#a75d938737d913bacf298424ead78ece8">findAndRunCommand</a>(cmd, argc, mArgv);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="classcli_1_1CommandDispatcher.html#a75d938737d913bacf298424ead78ece8">  121</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classcli_1_1CommandDispatcher.html#a75d938737d913bacf298424ead78ece8">CommandDispatcher::findAndRunCommand</a>(</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd, <span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span>* argv)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keyword">const</span> <a class="code" href="classcli_1_1CommandHandler.html">CommandHandler</a>* command = <a class="code" href="classcli_1_1CommandDispatcher.html#abb91486d151eebed9c38c8415cdb05d8">findCommand</a>(cmd);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordflow">if</span> (command != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    command-&gt;<a class="code" href="classcli_1_1CommandHandler.html#ab657950f83a11fffc7cbb3d2d0f12946">run</a>(mPrinter, argc, argv);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  mPrinter.print(F(<span class="stringliteral">&quot;Unknown command: &quot;</span>));</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  mPrinter.println(cmd);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>ace_utils {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>cli {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// Same whitespace characters used by isspace() in the standard C99 library.</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> CommandDispatcher::DELIMS[] = <span class="stringliteral">&quot; \f\r\n\t\v&quot;</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a0db9822394faea14916353985c9ff7b0">   39</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a0db9822394faea14916353985c9ff7b0">CommandDispatcher::printLineError</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* line, uint8_t statusCode)<span class="keyword"></span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">    const </span>{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="keywordflow">if</span> (statusCode == STATUS_BUFFER_OVERFLOW) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;BufferOverflow: &quot;</span>));</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    mPrinter.println(line);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (statusCode == STATUS_FLUSH_TO_EOL) {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;FlushToEOL: &quot;</span>));</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    mPrinter.println(line);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;UnknownError: &quot;</span>));</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    mPrinter.print(statusCode);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    mPrinter.print(F(<span class="stringliteral">&quot;: &quot;</span>));</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    mPrinter.println(line);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandDispatcher.html#af91ec1340b0b62e43dab869316cf9b22">   55</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#af91ec1340b0b62e43dab869316cf9b22">CommandDispatcher::helpCommandHandler</a>(</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    Print&amp; printer, <span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span>* argv)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keywordflow">if</span> (argc == 2) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd = argv[1];</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// check for &quot;help help&quot;</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">if</span> (strcmp(cmd, <span class="stringliteral">&quot;help&quot;</span>) == 0) {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      printer.println(F(<span class="stringliteral">&quot;Usage: help [command]&quot;</span>));</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">bool</span> found = <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#aaba7e9cf696e4a84e0611cf9c9d40607">helpSpecific</a>(printer, cmd);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span> (found) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    printer.print(F(<span class="stringliteral">&quot;Unknown command: &quot;</span>));</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    printer.println(cmd);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    printer.println(F(<span class="stringliteral">&quot;Commands:&quot;</span>));</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    printer.println(F(<span class="stringliteral">&quot;  help [command]&quot;</span>));</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a517055113aecc022baed1fa53742ee7c">helpAll</a>(printer);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a517055113aecc022baed1fa53742ee7c">   77</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a517055113aecc022baed1fa53742ee7c">CommandDispatcher::helpAll</a>(Print&amp; printer)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; mNumCommands; i++) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html">CommandHandler</a>* command = mCommands[i];</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    printer.print(<span class="stringliteral">&quot;  &quot;</span>);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ac9a7dea42f2dc74729e524e71c5b9d54">printHelp</a>(printer, command);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandDispatcher.html#aaba7e9cf696e4a84e0611cf9c9d40607">   85</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#aaba7e9cf696e4a84e0611cf9c9d40607">CommandDispatcher::helpSpecific</a>(Print&amp; printer, <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html">CommandHandler</a>* command = <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ad59ab4795f6834ccf252dce8b0682c52">findCommand</a>(cmd);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordflow">if</span> (command != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    printer.print(F(<span class="stringliteral">&quot;Usage: &quot;</span>));</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ac9a7dea42f2dc74729e524e71c5b9d54">printHelp</a>(printer, command);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ac9a7dea42f2dc74729e524e71c5b9d54">   95</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ac9a7dea42f2dc74729e524e71c5b9d54">CommandDispatcher::printHelp</a>(</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    Print&amp; printer, <span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html">CommandHandler</a>* command) {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  command-&gt;<a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html#a4a2832aa6b28f490661214a1cf9ab4b6">getName</a>().printTo(printer);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keywordflow">if</span> (!command-&gt;<a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html#a44b81af723307175744e02a0517b52b3">getHelpString</a>().isNull()) {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    printer.print(<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    command-&gt;<a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html#a44b81af723307175744e02a0517b52b3">getHelpString</a>().printTo(printer);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    printer.println();</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    printer.println();</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ae20ae336f3740b1faceecdf0babfa55e">  107</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ae20ae336f3740b1faceecdf0babfa55e">CommandDispatcher::runCommand</a>(<span class="keywordtype">char</span>* line)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="comment">// Tokenize the line.</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">int</span> argc = <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a535d819984ddd20524a00837d14bfa1a">tokenize</a>(line, mArgv, mArgvSize);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keywordflow">if</span> (argc == 0) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd = mArgv[0];</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="comment">// Handle the built-in &#39;help&#39; command.</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordflow">if</span> (strcmp(cmd, <span class="stringliteral">&quot;help&quot;</span>) == 0) {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#af91ec1340b0b62e43dab869316cf9b22">helpCommandHandler</a>(mPrinter, argc, mArgv);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a97631715e21c262544a228377688d593">findAndRunCommand</a>(cmd, argc, mArgv);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a97631715e21c262544a228377688d593">  122</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a97631715e21c262544a228377688d593">CommandDispatcher::findAndRunCommand</a>(</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* cmd, <span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span>* argv)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html">CommandHandler</a>* command = <a class="code" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ad59ab4795f6834ccf252dce8b0682c52">findCommand</a>(cmd);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  <span class="keywordflow">if</span> (command != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    command-&gt;<a class="code" href="classace__utils_1_1cli_1_1CommandHandler.html#a82e846fdd080bfb36b13a1f903cb7def">run</a>(mPrinter, argc, argv);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  }</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  mPrinter.print(F(<span class="stringliteral">&quot;Unknown command: &quot;</span>));</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  mPrinter.println(cmd);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;}</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;} <span class="comment">// cli</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;} <span class="comment">// ace_utils</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_a857ff79c55fe46c73119feb54b2c4f69"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#a857ff79c55fe46c73119feb54b2c4f69">cli::CommandDispatcher::tokenize</a></div><div class="ttdeci">static uint8_t tokenize(char *line, const char **argv, uint8_t argvSize)</div><div class="ttdoc">Tokenize the line, separating tokens delimited by whitespace (space, formfeed, carriage return,...</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8h_source.html#l00094">CommandDispatcher.h:94</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_ab2f1c68e5c2334e46e4474905ea8d672"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#ab2f1c68e5c2334e46e4474905ea8d672">cli::CommandDispatcher::printHelp</a></div><div class="ttdeci">static void printHelp(Print &amp;printer, const CommandHandler *command)</div><div class="ttdoc">Print help string for the given command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00094">CommandDispatcher.cpp:94</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_a0eeb37ecba5cfcf683753af443465987"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#a0eeb37ecba5cfcf683753af443465987">cli::CommandDispatcher::printLineError</a></div><div class="ttdeci">void printLineError(const char *line, uint8_t statusCode) const</div><div class="ttdoc">Print the input line that caused an error along with its status code.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00038">CommandDispatcher.cpp:38</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_a4c3f9282cfad17a75cce145a5566a01b"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#a4c3f9282cfad17a75cce145a5566a01b">cli::CommandDispatcher::helpSpecific</a></div><div class="ttdeci">bool helpSpecific(Print &amp;printer, const char *cmd) const</div><div class="ttdoc">Print helpString of specific cmd.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00084">CommandDispatcher.cpp:84</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_a32801d659383d2c6b608913d2364e6d1"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#a32801d659383d2c6b608913d2364e6d1">cli::CommandDispatcher::runCommand</a></div><div class="ttdeci">void runCommand(char *line) const</div><div class="ttdoc">Tokenize the given line and run the command handler.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00106">CommandDispatcher.cpp:106</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandHandler_html"><div class="ttname"><a href="classcli_1_1CommandHandler.html">cli::CommandHandler</a></div><div class="ttdoc">Signature for a command handler.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00046">CommandHandler.h:46</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandHandler_html_a5c2c32c736eb58788d33c5c3111ad98a"><div class="ttname"><a href="classcli_1_1CommandHandler.html#a5c2c32c736eb58788d33c5c3111ad98a">cli::CommandHandler::getHelpString</a></div><div class="ttdeci">ace_common::FCString getHelpString() const</div><div class="ttdoc">Return the help string of the command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00070">CommandHandler.h:70</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandHandler_html_ab657950f83a11fffc7cbb3d2d0f12946"><div class="ttname"><a href="classcli_1_1CommandHandler.html#ab657950f83a11fffc7cbb3d2d0f12946">cli::CommandHandler::run</a></div><div class="ttdeci">virtual void run(Print &amp;printer, int argc, const char *const *argv) const =0</div><div class="ttdoc">Run the command.</div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_a75d938737d913bacf298424ead78ece8"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#a75d938737d913bacf298424ead78ece8">cli::CommandDispatcher::findAndRunCommand</a></div><div class="ttdeci">void findAndRunCommand(const char *cmd, int argc, const char *const *argv) const</div><div class="ttdoc">Find and run the given command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00121">CommandDispatcher.cpp:121</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_aa176113e9282337b422303b8e592d74c"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#aa176113e9282337b422303b8e592d74c">cli::CommandDispatcher::helpAll</a></div><div class="ttdeci">void helpAll(Print &amp;printer) const</div><div class="ttdoc">Print help on all commands.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00076">CommandDispatcher.cpp:76</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_abb91486d151eebed9c38c8415cdb05d8"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#abb91486d151eebed9c38c8415cdb05d8">cli::CommandDispatcher::findCommand</a></div><div class="ttdeci">const CommandHandler * findCommand(const char *cmd) const</div><div class="ttdoc">Find the CommandHandler of the given command name.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8h_source.html#l00134">CommandDispatcher.h:134</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandDispatcher_html_a38a6973e8a181c48db1b988c3dbd61df"><div class="ttname"><a href="classcli_1_1CommandDispatcher.html#a38a6973e8a181c48db1b988c3dbd61df">cli::CommandDispatcher::helpCommandHandler</a></div><div class="ttdeci">void helpCommandHandler(Print &amp;printer, int argc, const char *const *argv) const</div><div class="ttdoc">Handle the 'help' command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00054">CommandDispatcher.cpp:54</a></div></div>
-<div class="ttc" id="aclasscli_1_1CommandHandler_html_ab714420ffd069731fd247188ee55ffa2"><div class="ttname"><a href="classcli_1_1CommandHandler.html#ab714420ffd069731fd247188ee55ffa2">cli::CommandHandler::getName</a></div><div class="ttdeci">ace_common::FCString getName() const</div><div class="ttdoc">Return the name of the command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00067">CommandHandler.h:67</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandHandler_html_a4a2832aa6b28f490661214a1cf9ab4b6"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandHandler.html#a4a2832aa6b28f490661214a1cf9ab4b6">ace_utils::cli::CommandHandler::getName</a></div><div class="ttdeci">ace_common::FCString getName() const</div><div class="ttdoc">Return the name of the command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00068">CommandHandler.h:68</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandHandler_html"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandHandler.html">ace_utils::cli::CommandHandler</a></div><div class="ttdoc">Signature for a command handler.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00047">CommandHandler.h:47</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_a97631715e21c262544a228377688d593"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#a97631715e21c262544a228377688d593">ace_utils::cli::CommandDispatcher::findAndRunCommand</a></div><div class="ttdeci">void findAndRunCommand(const char *cmd, int argc, const char *const *argv) const</div><div class="ttdoc">Find and run the given command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00122">CommandDispatcher.cpp:122</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_ae20ae336f3740b1faceecdf0babfa55e"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#ae20ae336f3740b1faceecdf0babfa55e">ace_utils::cli::CommandDispatcher::runCommand</a></div><div class="ttdeci">void runCommand(char *line) const</div><div class="ttdoc">Tokenize the given line and run the command handler.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00107">CommandDispatcher.cpp:107</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_ac9a7dea42f2dc74729e524e71c5b9d54"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#ac9a7dea42f2dc74729e524e71c5b9d54">ace_utils::cli::CommandDispatcher::printHelp</a></div><div class="ttdeci">static void printHelp(Print &amp;printer, const CommandHandler *command)</div><div class="ttdoc">Print help string for the given command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00095">CommandDispatcher.cpp:95</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandHandler_html_a44b81af723307175744e02a0517b52b3"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandHandler.html#a44b81af723307175744e02a0517b52b3">ace_utils::cli::CommandHandler::getHelpString</a></div><div class="ttdeci">ace_common::FCString getHelpString() const</div><div class="ttdoc">Return the help string of the command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandHandler_8h_source.html#l00071">CommandHandler.h:71</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_af91ec1340b0b62e43dab869316cf9b22"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#af91ec1340b0b62e43dab869316cf9b22">ace_utils::cli::CommandDispatcher::helpCommandHandler</a></div><div class="ttdeci">void helpCommandHandler(Print &amp;printer, int argc, const char *const *argv) const</div><div class="ttdoc">Handle the 'help' command.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00055">CommandDispatcher.cpp:55</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_a517055113aecc022baed1fa53742ee7c"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#a517055113aecc022baed1fa53742ee7c">ace_utils::cli::CommandDispatcher::helpAll</a></div><div class="ttdeci">void helpAll(Print &amp;printer) const</div><div class="ttdoc">Print help on all commands.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00077">CommandDispatcher.cpp:77</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandHandler_html_a82e846fdd080bfb36b13a1f903cb7def"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandHandler.html#a82e846fdd080bfb36b13a1f903cb7def">ace_utils::cli::CommandHandler::run</a></div><div class="ttdeci">virtual void run(Print &amp;printer, int argc, const char *const *argv) const =0</div><div class="ttdoc">Run the command.</div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_ad59ab4795f6834ccf252dce8b0682c52"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#ad59ab4795f6834ccf252dce8b0682c52">ace_utils::cli::CommandDispatcher::findCommand</a></div><div class="ttdeci">const CommandHandler * findCommand(const char *cmd) const</div><div class="ttdoc">Find the CommandHandler of the given command name.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8h_source.html#l00135">CommandDispatcher.h:135</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_a535d819984ddd20524a00837d14bfa1a"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#a535d819984ddd20524a00837d14bfa1a">ace_utils::cli::CommandDispatcher::tokenize</a></div><div class="ttdeci">static uint8_t tokenize(char *line, const char **argv, uint8_t argvSize)</div><div class="ttdoc">Tokenize the line, separating tokens delimited by whitespace (space, formfeed, carriage return,...</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8h_source.html#l00095">CommandDispatcher.h:95</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_aaba7e9cf696e4a84e0611cf9c9d40607"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#aaba7e9cf696e4a84e0611cf9c9d40607">ace_utils::cli::CommandDispatcher::helpSpecific</a></div><div class="ttdeci">bool helpSpecific(Print &amp;printer, const char *cmd) const</div><div class="ttdoc">Print helpString of specific cmd.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00085">CommandDispatcher.cpp:85</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1CommandDispatcher_html_a0db9822394faea14916353985c9ff7b0"><div class="ttname"><a href="classace__utils_1_1cli_1_1CommandDispatcher.html#a0db9822394faea14916353985c9ff7b0">ace_utils::cli::CommandDispatcher::printLineError</a></div><div class="ttdeci">void printLineError(const char *line, uint8_t statusCode) const</div><div class="ttdoc">Print the input line that caused an error along with its status code.</div><div class="ttdef"><b>Definition:</b> <a href="CommandDispatcher_8cpp_source.html#l00039">CommandDispatcher.cpp:39</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

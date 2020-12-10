@@ -22,13 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef CLI_STREAM_LINE_READER_H
-#define CLI_STREAM_LINE_READER_H
+#ifndef ACE_UTILS_CLI_STREAM_LINE_READER_H
+#define ACE_UTILS_CLI_STREAM_LINE_READER_H
 
 #include <Arduino.h> // Stream
 #include <AceRoutine.h>
 #include "InputLine.h"
 
+namespace ace_utils {
 namespace cli {
 
 /**
@@ -107,6 +108,7 @@ class StreamLineReader: public ace_routine::Coroutine {
     bool mFlushLine = false;
 };
 
-}
+} // cli
+} // ace_utils
 
 #endif

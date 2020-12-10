@@ -22,13 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef CLI_COMMAND_MANAGER_H
-#define CLI_COMMAND_MANAGER_H
+#ifndef ACE_UTILS_CLI_COMMAND_MANAGER_H
+#define ACE_UTILS_CLI_COMMAND_MANAGER_H
 
 #include <AceRoutine.h> // Coroutine, Channel
 #include "CommandDispatcher.h"
 #include "StreamLineReader.h"
 
+namespace ace_utils {
 namespace cli {
 
 /**
@@ -123,6 +124,7 @@ class CommandManager: public ace_routine::Coroutine {
     const char* mArgv[ARGV_SIZE];
 };
 
-}
+} // cli
+} // ace_utils
 
 #endif

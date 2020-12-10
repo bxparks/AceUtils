@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.3</span>
+   &#160;<span id="projectnumber">0.4</span>
    </div>
-   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to have external dependencies to other libraries.</div>
+   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
  </tr>
  </tbody>
@@ -65,70 +65,88 @@ $(function() {
 <div class="contents">
 &#160;<ul>
 <li>begin()
-: <a class="el" href="classcrc__eeprom_1_1CrcEeprom.html#ae786559e68fc643e377592b8c0d056a4">crc_eeprom::CrcEeprom</a>
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#afa98dd019e95fad991a77296eec0e728">ace_utils::crc_eeprom::CrcEeprom</a>
+</li>
+<li>changeGroup()
+: <a class="el" href="classace__utils_1_1mode__group_1_1ModeNavigator.html#adaae7dc240a20a8dc623a5168fee4981">ace_utils::mode_group::ModeNavigator</a>
+</li>
+<li>changeMode()
+: <a class="el" href="classace__utils_1_1mode__group_1_1ModeNavigator.html#a20914625815dbedaa60d12d407e7bf89">ace_utils::mode_group::ModeNavigator</a>
 </li>
 <li>CommandDispatcher()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a0f2bc88cffc59bed575a9661813ebf70">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ad1ab7be3d70937bf978c6ab2d2ceaf9b">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>CommandHandler()
-: <a class="el" href="classcli_1_1CommandHandler.html#abaef28b1829c1fe4f11dfc0f8153f4e8">cli::CommandHandler</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a846e22124c7239103bc75bc0baf0e598">ace_utils::cli::CommandHandler</a>
 </li>
 <li>CommandManager()
-: <a class="el" href="classcli_1_1CommandManager.html#a92d60f788acef58a2b09b74225b4ab21">cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandManager.html#a367a2cbd734cac13b875a7fa44224ff5">ace_utils::cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;</a>
+</li>
+<li>CrcEeprom()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#ad6f0e26adae30c2397313dc1547d0cfb">ace_utils::crc_eeprom::CrcEeprom</a>
 </li>
 <li>findAndRunCommand()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a75d938737d913bacf298424ead78ece8">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a97631715e21c262544a228377688d593">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>findCommand()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#abb91486d151eebed9c38c8415cdb05d8">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ad59ab4795f6834ccf252dce8b0682c52">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>getDispatcher()
-: <a class="el" href="classcli_1_1CommandManager.html#a2a9d8785bdb06bdbfe94a1287c4e7331">cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandManager.html#af767cc67f79958fdf7d260d2737af7c9">ace_utils::cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;</a>
 </li>
 <li>getHelpString()
-: <a class="el" href="classcli_1_1CommandHandler.html#a5c2c32c736eb58788d33c5c3111ad98a">cli::CommandHandler</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a44b81af723307175744e02a0517b52b3">ace_utils::cli::CommandHandler</a>
 </li>
 <li>getName()
-: <a class="el" href="classcli_1_1CommandHandler.html#ab714420ffd069731fd247188ee55ffa2">cli::CommandHandler</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a4a2832aa6b28f490661214a1cf9ab4b6">ace_utils::cli::CommandHandler</a>
 </li>
 <li>helpAll()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#aa176113e9282337b422303b8e592d74c">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a517055113aecc022baed1fa53742ee7c">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>helpCommandHandler()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a38a6973e8a181c48db1b988c3dbd61df">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#af91ec1340b0b62e43dab869316cf9b22">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>helpSpecific()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a4c3f9282cfad17a75cce145a5566a01b">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#aaba7e9cf696e4a84e0611cf9c9d40607">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>isArgEqual()
-: <a class="el" href="classcli_1_1CommandHandler.html#a27e420b66f4c44b126221b535c19dc21">cli::CommandHandler</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#ab664de864c17a35e0bbb6c75176684cb">ace_utils::cli::CommandHandler</a>
+</li>
+<li>mode()
+: <a class="el" href="classace__utils_1_1mode__group_1_1ModeNavigator.html#a9e8dd63c1d9aaf46400e4d8a2f04f8fe">ace_utils::mode_group::ModeNavigator</a>
+</li>
+<li>ModeNavigator()
+: <a class="el" href="classace__utils_1_1mode__group_1_1ModeNavigator.html#aab97f3a22f4e9212356880285f6bfbb3">ace_utils::mode_group::ModeNavigator</a>
 </li>
 <li>printHelp()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#ab2f1c68e5c2334e46e4474905ea8d672">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ac9a7dea42f2dc74729e524e71c5b9d54">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>printLineError()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a0eeb37ecba5cfcf683753af443465987">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a0db9822394faea14916353985c9ff7b0">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>readWithCrc()
-: <a class="el" href="classcrc__eeprom_1_1CrcEeprom.html#ab4a5be6ae0e9b20de51556dea7f882a9">crc_eeprom::CrcEeprom</a>
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a82c85ef76e886c832438a71d5d4e7e9b">ace_utils::crc_eeprom::CrcEeprom</a>
 </li>
 <li>run()
-: <a class="el" href="classcli_1_1CommandHandler.html#ab657950f83a11fffc7cbb3d2d0f12946">cli::CommandHandler</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a82e846fdd080bfb36b13a1f903cb7def">ace_utils::cli::CommandHandler</a>
 </li>
 <li>runCommand()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a32801d659383d2c6b608913d2364e6d1">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ae20ae336f3740b1faceecdf0babfa55e">ace_utils::cli::CommandDispatcher</a>
+</li>
+<li>setup()
+: <a class="el" href="classace__utils_1_1mode__group_1_1ModeNavigator.html#a8fcc09eaa24f32eed4d3bb9bcef48f0c">ace_utils::mode_group::ModeNavigator</a>
 </li>
 <li>StreamLineReader()
-: <a class="el" href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">cli::StreamLineReader</a>
+: <a class="el" href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">ace_utils::cli::StreamLineReader</a>
 </li>
 <li>tokenize()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a857ff79c55fe46c73119feb54b2c4f69">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a535d819984ddd20524a00837d14bfa1a">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>writeWithCrc()
-: <a class="el" href="classcrc__eeprom_1_1CrcEeprom.html#ac7d3db46c842eed64e3672eb19787cf6">crc_eeprom::CrcEeprom</a>
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#adb4a02090c1bfc668cf86cbb12e713c0">ace_utils::crc_eeprom::CrcEeprom</a>
 </li>
 <li>~CommandDispatcher()
-: <a class="el" href="classcli_1_1CommandDispatcher.html#a7e680654e4c8814eff5b7dac67ac2111">cli::CommandDispatcher</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a787df24c1781164b5d926032071a6e4e">ace_utils::cli::CommandDispatcher</a>
 </li>
 </ul>
 </div><!-- contents -->

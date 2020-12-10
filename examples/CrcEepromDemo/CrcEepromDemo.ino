@@ -2,9 +2,12 @@
  * Demo of CrcEeprom class.
  */
 
-#include <CrcEeprom.h>
+#include <AceUtilsCrcEeprom.h>
+using ace_utils::crc_eeprom::CrcEeprom;
 
-using namespace crc_eeprom;
+#if defined(ESP32) && ! defined(SERIAL_PORT_MONITOR)
+#define SERIAL_PORT_MONITOR Serial
+#endif
 
 struct Info {
   int startTime = 100;

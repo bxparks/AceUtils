@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.3</span>
+   &#160;<span id="projectnumber">0.4</span>
    </div>
-   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to have external dependencies to other libraries.</div>
+   <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
  </tr>
  </tbody>
@@ -95,78 +95,80 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">SOFTWARE.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef CLI_STREAM_LINE_READER_H</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define CLI_STREAM_LINE_READER_H</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef ACE_UTILS_CLI_STREAM_LINE_READER_H</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define ACE_UTILS_CLI_STREAM_LINE_READER_H</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;Arduino.h&gt;</span> <span class="comment">// Stream</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;AceRoutine.h&gt;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;InputLine.h&quot;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>cli {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classcli_1_1StreamLineReader.html">   39</a></span>&#160;<span class="keyword">class </span><a class="code" href="classcli_1_1StreamLineReader.html">StreamLineReader</a>: <span class="keyword">public</span> ace_routine::Coroutine {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">   51</a></span>&#160;    <a class="code" href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">StreamLineReader</a>(ace_routine::Channel&lt;InputLine&gt;&amp; channel, Stream&amp; stream,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordtype">char</span>* buffer, <span class="keywordtype">int</span> bufferSize):</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      mChannel(channel),</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      mStream(stream),</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      mBuf(buffer),</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      mBufSize(bufferSize)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {}</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">int</span> runCoroutine()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <a class="code" href="structcli_1_1InputLine.html">InputLine</a> input;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="keywordtype">char</span> c;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      COROUTINE_LOOP() {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        COROUTINE_AWAIT(mStream.available() &gt; 0);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">while</span> (mStream.available() &gt; 0) {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;          c = mStream.read();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;          mBuf[mIndex] = c;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;          mIndex++;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;          <span class="keywordflow">if</span> (mIndex &gt;= mBufSize - 1) {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            input.status = InputLine::kStatusOverflow;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            input.line = mBuf;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            mFlushLine = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            resetBuffer();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            COROUTINE_CHANNEL_WRITE(mChannel, input);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;          } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\n&#39;</span> || c == <span class="charliteral">&#39;\r&#39;</span>) {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            input.status =</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                mFlushLine ? InputLine::kStatusOverflow : InputLine::kStatusOk;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            input.line = mBuf;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            mFlushLine = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            resetBuffer();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            COROUTINE_CHANNEL_WRITE(mChannel, input);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;          }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Disable copy-constructor and assignment operator</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">StreamLineReader</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">StreamLineReader</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">StreamLineReader</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">StreamLineReader</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> resetBuffer() {</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      mBuf[mIndex] = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      mIndex = 0;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    ace_routine::Channel&lt;InputLine&gt;&amp; mChannel;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    Stream&amp; mStream;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">char</span>* <span class="keyword">const</span> mBuf;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">int</span> <span class="keyword">const</span> mBufSize;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">int</span> mIndex = 0;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">bool</span> mFlushLine = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;}</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>ace_utils {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>cli {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1StreamLineReader.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classace__utils_1_1cli_1_1StreamLineReader.html">StreamLineReader</a>: <span class="keyword">public</span> ace_routine::Coroutine {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">   52</a></span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">StreamLineReader</a>(ace_routine::Channel&lt;InputLine&gt;&amp; channel, Stream&amp; stream,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">char</span>* buffer, <span class="keywordtype">int</span> bufferSize):</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      mChannel(channel),</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      mStream(stream),</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      mBuf(buffer),</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      mBufSize(bufferSize)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">int</span> runCoroutine()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <a class="code" href="structace__utils_1_1cli_1_1InputLine.html">InputLine</a> input;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <span class="keywordtype">char</span> c;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      COROUTINE_LOOP() {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        COROUTINE_AWAIT(mStream.available() &gt; 0);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">while</span> (mStream.available() &gt; 0) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;          c = mStream.read();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;          mBuf[mIndex] = c;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;          mIndex++;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;          <span class="keywordflow">if</span> (mIndex &gt;= mBufSize - 1) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            input.status = InputLine::kStatusOverflow;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            input.line = mBuf;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            mFlushLine = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            resetBuffer();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            COROUTINE_CHANNEL_WRITE(mChannel, input);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;          } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\n&#39;</span> || c == <span class="charliteral">&#39;\r&#39;</span>) {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            input.status =</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                mFlushLine ? InputLine::kStatusOverflow : InputLine::kStatusOk;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            input.line = mBuf;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            mFlushLine = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            resetBuffer();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            COROUTINE_CHANNEL_WRITE(mChannel, input);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;          }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Disable copy-constructor and assignment operator</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">StreamLineReader</a>(<span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">StreamLineReader</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">StreamLineReader</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">StreamLineReader</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">void</span> resetBuffer() {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      mBuf[mIndex] = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      mIndex = 0;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    ace_routine::Channel&lt;InputLine&gt;&amp; mChannel;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    Stream&amp; mStream;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">char</span>* <span class="keyword">const</span> mBuf;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">int</span> <span class="keyword">const</span> mBufSize;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">int</span> mIndex = 0;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">bool</span> mFlushLine = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;} <span class="comment">// cli</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;} <span class="comment">// ace_utils</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructcli_1_1InputLine_html"><div class="ttname"><a href="structcli_1_1InputLine.html">cli::InputLine</a></div><div class="ttdoc">Message sent from StreamLineReader to CommandDispatcher coroutines through Channel&lt;InputLine&gt; channel...</div><div class="ttdef"><b>Definition:</b> <a href="InputLine_8h_source.html#l00035">InputLine.h:35</a></div></div>
-<div class="ttc" id="aclasscli_1_1StreamLineReader_html"><div class="ttname"><a href="classcli_1_1StreamLineReader.html">cli::StreamLineReader</a></div><div class="ttdoc">An AceRoutine coroutine that reads lines (terminated by '\n' or '\r' from the Stream device,...</div><div class="ttdef"><b>Definition:</b> <a href="StreamLineReader_8h_source.html#l00039">StreamLineReader.h:39</a></div></div>
-<div class="ttc" id="aclasscli_1_1StreamLineReader_html_a1bb326fd74f0234f43083237f8e98ab7"><div class="ttname"><a href="classcli_1_1StreamLineReader.html#a1bb326fd74f0234f43083237f8e98ab7">cli::StreamLineReader::StreamLineReader</a></div><div class="ttdeci">StreamLineReader(ace_routine::Channel&lt; InputLine &gt; &amp;channel, Stream &amp;stream, char *buffer, int bufferSize)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> <a href="StreamLineReader_8h_source.html#l00051">StreamLineReader.h:51</a></div></div>
+<div class="ttc" id="astructace__utils_1_1cli_1_1InputLine_html"><div class="ttname"><a href="structace__utils_1_1cli_1_1InputLine.html">ace_utils::cli::InputLine</a></div><div class="ttdoc">Message sent from StreamLineReader to CommandDispatcher coroutines through Channel&lt;InputLine&gt; channel...</div><div class="ttdef"><b>Definition:</b> <a href="InputLine_8h_source.html#l00036">InputLine.h:36</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1StreamLineReader_html_ad16d26a6e4286dc4fc2015fe9c68fee1"><div class="ttname"><a href="classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1">ace_utils::cli::StreamLineReader::StreamLineReader</a></div><div class="ttdeci">StreamLineReader(ace_routine::Channel&lt; InputLine &gt; &amp;channel, Stream &amp;stream, char *buffer, int bufferSize)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> <a href="StreamLineReader_8h_source.html#l00052">StreamLineReader.h:52</a></div></div>
+<div class="ttc" id="aclassace__utils_1_1cli_1_1StreamLineReader_html"><div class="ttname"><a href="classace__utils_1_1cli_1_1StreamLineReader.html">ace_utils::cli::StreamLineReader</a></div><div class="ttdoc">An AceRoutine coroutine that reads lines (terminated by '\n' or '\r' from the Stream device,...</div><div class="ttdef"><b>Definition:</b> <a href="StreamLineReader_8h_source.html#l00040">StreamLineReader.h:40</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

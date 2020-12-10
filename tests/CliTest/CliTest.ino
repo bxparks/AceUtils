@@ -3,10 +3,10 @@
 #include <Arduino.h> // Print
 #include <AceCommon.h> // FCString
 #include <AUnitVerbose.h>
-#include <CommandLineInterface.h>
+#include <AceUtilsCli.h>
 
 using namespace aunit;
-using namespace cli;
+using namespace ace_utils::cli;
 using ace_common::FCString;
 
 // ---------------------------------------------------------------------------

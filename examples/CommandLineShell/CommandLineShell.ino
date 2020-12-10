@@ -14,14 +14,14 @@
 
 #include <Arduino.h>
 #include <AceRoutine.h>
-#include <CommandLineInterface.h>
+#include <AceUtilsCli.h>
 
 #if defined(UNIX_HOST_DUINO)
   #include <unistd.h>
 #endif
 
 using namespace ace_routine;
-using namespace cli;
+using namespace ace_utils::cli;
 
 // Every board except ESP32 defines SERIAL_PORT_MONITOR..
 #if defined(ESP32)

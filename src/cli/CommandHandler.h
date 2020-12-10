@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef CLI_COMMAND_HANDLER_H
-#define CLI_COMMAND_HANDLER_H
+#ifndef ACE_UTILS_CLI_COMMAND_HANDLER_H
+#define ACE_UTILS_CLI_COMMAND_HANDLER_H
 
 #include <AceCommon.h> // FCString
 
@@ -38,6 +38,7 @@ class Print;
  */
 #define SHIFT_ARGC_ARGV(argc, argv) do { argc--; argv++; } while (false)
 
+namespace ace_utils {
 namespace cli {
 
 /**
@@ -96,6 +97,7 @@ class CommandHandler {
     ace_common::FCString const mHelpString;
 };
 
-}
+} // cli
+} // ace_utils
 
 #endif
