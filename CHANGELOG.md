@@ -1,6 +1,7 @@
 # Changelog
 
 * Unreleased
+* 0.4 (2020-12-09)
     * update `AceUtilsCrcEeprom.h`
         * Replace FastCRC with AceCRC library for a reduction of 4-5 kB of flash
           memory. Allow alternate CRC calculators to be passed in as a
