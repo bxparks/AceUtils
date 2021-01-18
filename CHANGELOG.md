@@ -1,6 +1,10 @@
 # Changelog
 
 * Unreleased
+    * Convert `SHIFT_ARGC_ARGV()` macro in `src/cli/CommandHandler.h` to
+      an inlined static function `CommandHandler::shiftArgcArgv()` using
+      references. I forgot that I was programming in C++ when I created the
+      macro. Add `SHIFT_ARGC_ARGV()` function for backwards compatibility.
 * 0.4 (2020-12-09)
     * update `AceUtilsCrcEeprom.h`
         * Replace FastCRC with AceCRC library for a reduction of 4-5 kB of flash

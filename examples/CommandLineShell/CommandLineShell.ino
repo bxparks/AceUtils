@@ -157,8 +157,8 @@ class FreeCommand: public CommandHandler {
 
 /**
  * Change the blinking LED on and off delay parameters. If no argument given,
- * simply print out the current values. Demonstrates the use of
- * SHIFT_ARGC_ARGV() macro and the isArgEqual() helper method.
+ * simply print out the current values. Demonstrates the use of shiftArgcArgv()
+ * and the isArgEqual() helper method.
  */
 class DelayCommand: public CommandHandler {
   public:
@@ -180,12 +180,12 @@ class DelayCommand: public CommandHandler {
         return;
       }
 
-      SHIFT_ARGC_ARGV(argc, argv);
+      shiftArgcArgv(argc, argv);
       if (isArgEqual(argv[0], F("on"))) {
-        SHIFT_ARGC_ARGV(argc, argv);
+        shiftArgcArgv(argc, argv);
         ledOnDelay = atoi(argv[0]);
       } else if (isArgEqual(argv[0], F("off"))) {
-        SHIFT_ARGC_ARGV(argc, argv);
+        shiftArgcArgv(argc, argv);
         ledOffDelay = atoi(argv[0]);
       } else {
         printer.print(F("Unknown argument: "));

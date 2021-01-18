@@ -118,8 +118,8 @@ void loop() {
 Within the `CommandHandler`, there are several helper routines which are useful
 for processing the `argc` and `argv` arguments:
 
-* `SHIFT_ARGC_ARGV(argc, argv)` macro shifts the input tokens by 1, incrementing
-  `argv` and decrementing `argc`
+* `shiftArgcArgv(argc, argv)` shifts the input tokens by 1 token to the left,
+  by incrementing `argv` and decrementing `argc`
 * `bool isArgEqual(const char*, const char*);`
 * `bool isArgEqual(const char*, const __FlashHelperString*);`
 
@@ -144,7 +144,7 @@ class DelayCommand: public CommandHandler {
       return;
     }
 
-    SHIFT_ARGC_ARGV(argc, argv);
+    shiftArgcArgv(argc, argv);
     if (isArgEqual(argv[0], "on")) {
       int delay = atoi(argv[1]));
       printer.print(F("Executing: delay on "));
