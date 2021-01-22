@@ -6,8 +6,8 @@
 #ifndef ACE_UTILS_CRC_EEPROM_H
 #define ACE_UTILS_CRC_EEPROM_H
 
-// Cannot compile this on UnixHostDuino
-#if ! defined(UNIX_HOST_DUINO)
+// Cannot compile this on EpoxyDuino
+#if ! defined(EPOXY_DUINO)
 
 // EEPROM is supported only on certain Arduino boards. In particular, many
 // (most?) Arduino Zero compatible boards cannot support EEPROM even on Flash
@@ -152,6 +152,6 @@ class CrcEeprom {
 } // crc_eeprom
 } // ace_utils
 
-#endif // ! defined(UNIX_HOST_DUINO)
+#endif // ! defined(EPOXY_DUINO)
 
 #endif // defined(ACE_UTILS_CRC_EEPROM_H)

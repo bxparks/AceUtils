@@ -16,7 +16,7 @@
 #include <AceRoutine.h>
 #include <AceUtilsCli.h>
 
-#if defined(UNIX_HOST_DUINO)
+#if defined(EPOXY_DUINO)
   #include <unistd.h>
 #endif
 
@@ -103,7 +103,7 @@ unsigned long freeMemory() {
   return system_get_free_heap_size();
 #elif defined(ESP32)
   return ESP.getFreeHeap();
-#elif defined(UNIX_HOST_DUINO)
+#elif defined(EPOXY_DUINO)
   long pages = sysconf(_SC_PHYS_PAGES);
   long page_size = sysconf(_SC_PAGE_SIZE);
   return pages * page_size;
@@ -157,8 +157,8 @@ class FreeCommand: public CommandHandler {
 
 /**
  * Change the blinking LED on and off delay parameters. If no argument given,
- * simply print out the current values. Demonstrates the use of
- * SHIFT_ARGC_ARGV() macro and the isArgEqual() helper method.
+ * simply print out the current values. Demonstrates the use of shiftArgcArgv()
+ * and the isArgEqual() helper method.
  */
 class DelayCommand: public CommandHandler {
   public:
@@ -180,12 +180,12 @@ class DelayCommand: public CommandHandler {
         return;
       }
 
-      SHIFT_ARGC_ARGV(argc, argv);
+      shiftArgcArgv(argc, argv);
       if (isArgEqual(argv[0], F("on"))) {
-        SHIFT_ARGC_ARGV(argc, argv);
+        shiftArgcArgv(argc, argv);
         ledOnDelay = atoi(argv[0]);
       } else if (isArgEqual(argv[0], F("off"))) {
-        SHIFT_ARGC_ARGV(argc, argv);
+        shiftArgcArgv(argc, argv);
         ledOffDelay = atoi(argv[0]);
       } else {
         printer.print(F("Unknown argument: "));
@@ -216,7 +216,7 @@ CommandManager<BUF_SIZE, ARGV_SIZE> commandManager(
 //---------------------------------------------------------------------------
 
 void setup() {
-#if ! defined(UNIX_HOST_DUINO)
+#if ! defined(EPOXY_DUINO)
   delay(1000);
 #endif
   SERIAL_PORT_MONITOR.begin(115200);

@@ -36,7 +36,7 @@ AceTime, AceRoutine, etc) or third party libraries.
     * Depends on:
         * (none)
 
-**Version**: 0.4 (2020-12-09)
+**Version**: 0.4.1 (2021-01-22)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
@@ -115,7 +115,7 @@ It should work with [PlatformIO](https://platformio.org/) but I have
 not tested it.
 
 Many utilities work on Linux or MacOS (using both g++ and clang++ compilers)
-using the [UnixHostDuino](https://github.com/bxparks/UnixHostDuino) emulation
+using the [EpoxyDuino](https://github.com/bxparks/EpoxyDuino) emulation
 layer.
 
 ### Operating System

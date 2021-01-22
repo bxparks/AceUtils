@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.4</span>
+   &#160;<span id="projectnumber">0.4.1</span>
    </div>
    <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
@@ -107,6 +107,13 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a61cb84a2e3179d1647565e21b3a9c14f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a61cb84a2e3179d1647565e21b3a9c14f">shiftArgcArgv</a> (int &amp;argc, const char *const *&amp;argv)</td></tr>
+<tr class="memdesc:a61cb84a2e3179d1647565e21b3a9c14f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increment argv and decrement argc so that it appears as if the command line arguments are shifted to the <em>left</em> by one position.  <a href="classace__utils_1_1cli_1_1CommandHandler.html#a61cb84a2e3179d1647565e21b3a9c14f">More...</a><br /></td></tr>
+<tr class="separator:a61cb84a2e3179d1647565e21b3a9c14f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6399717e176c5bb95ae49b930f6ecb9a"><td class="memItemLeft" align="right" valign="top"><a id="a6399717e176c5bb95ae49b930f6ecb9a"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a6399717e176c5bb95ae49b930f6ecb9a">SHIFT_ARGC_ARGV</a> (int &amp;argc, const char *const *&amp;argv)</td></tr>
+<tr class="memdesc:a6399717e176c5bb95ae49b930f6ecb9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Backwards compatibility with previous macro implementation . <br /></td></tr>
+<tr class="separator:a6399717e176c5bb95ae49b930f6ecb9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab664de864c17a35e0bbb6c75176684cb"><td class="memItemLeft" align="right" valign="top"><a id="ab664de864c17a35e0bbb6c75176684cb"></a>
 static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#ab664de864c17a35e0bbb6c75176684cb">isArgEqual</a> (const char *arg, const char *token)</td></tr>
 <tr class="memdesc:ab664de864c17a35e0bbb6c75176684cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test for equality against token. <br /></td></tr>
@@ -119,7 +126,7 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Signature for a command handler. </p>
 
-<p class="definition">Definition at line <a class="el" href="CommandHandler_8h_source.html#l00047">47</a> of file <a class="el" href="CommandHandler_8h_source.html">CommandHandler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CommandHandler_8h_source.html#l00038">38</a> of file <a class="el" href="CommandHandler_8h_source.html">CommandHandler.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a50a4af8c63b7bcafe0ed7e8269d3da50"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50a4af8c63b7bcafe0ed7e8269d3da50">&#9670;&nbsp;</a></span>CommandHandler() <span class="overload">[1/2]</span></h2>
@@ -158,7 +165,7 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <p>Constructor. </p>
 <p>Using C strings. </p>
 
-<p class="definition">Definition at line <a class="el" href="CommandHandler_8h_source.html#l00085">85</a> of file <a class="el" href="CommandHandler_8h_source.html">CommandHandler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CommandHandler_8h_source.html#l00093">93</a> of file <a class="el" href="CommandHandler_8h_source.html">CommandHandler.h</a>.</p>
 
 </div>
 </div>
@@ -199,7 +206,7 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <p>Constructor. </p>
 <p>Using Flash strings. </p>
 
-<p class="definition">Definition at line <a class="el" href="CommandHandler_8h_source.html#l00090">90</a> of file <a class="el" href="CommandHandler_8h_source.html">CommandHandler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CommandHandler_8h_source.html#l00098">98</a> of file <a class="el" href="CommandHandler_8h_source.html">CommandHandler.h</a>.</p>
 
 </div>
 </div>
@@ -253,6 +260,47 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a61cb84a2e3179d1647565e21b3a9c14f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61cb84a2e3179d1647565e21b3a9c14f">&#9670;&nbsp;</a></span>shiftArgcArgv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ace_utils::cli::CommandHandler::shiftArgcArgv </td>
+          <td>(</td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>argc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *const *&amp;&#160;</td>
+          <td class="paramname"><em>argv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Increment argv and decrement argc so that it appears as if the command line arguments are shifted to the <em>left</em> by one position. </p>
+<p>This is useful for processing the command line tokens one at a time. Use <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#ab664de864c17a35e0bbb6c75176684cb" title="Test for equality against token.">CommandHandler::isArgEqual()</a> method to test for match against an expected token. </p>
+
+<p class="definition">Definition at line <a class="el" href="CommandHandler_8h_source.html#l00072">72</a> of file <a class="el" href="CommandHandler_8h_source.html">CommandHandler.h</a>.</p>
 
 </div>
 </div>
