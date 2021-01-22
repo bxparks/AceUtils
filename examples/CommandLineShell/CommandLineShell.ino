@@ -16,7 +16,7 @@
 #include <AceRoutine.h>
 #include <AceUtilsCli.h>
 
-#if defined(UNIX_HOST_DUINO)
+#if defined(EPOXY_DUINO)
   #include <unistd.h>
 #endif
 
@@ -103,7 +103,7 @@ unsigned long freeMemory() {
   return system_get_free_heap_size();
 #elif defined(ESP32)
   return ESP.getFreeHeap();
-#elif defined(UNIX_HOST_DUINO)
+#elif defined(EPOXY_DUINO)
   long pages = sysconf(_SC_PHYS_PAGES);
   long page_size = sysconf(_SC_PAGE_SIZE);
   return pages * page_size;
@@ -216,7 +216,7 @@ CommandManager<BUF_SIZE, ARGV_SIZE> commandManager(
 //---------------------------------------------------------------------------
 
 void setup() {
-#if ! defined(UNIX_HOST_DUINO)
+#if ! defined(EPOXY_DUINO)
   delay(1000);
 #endif
   SERIAL_PORT_MONITOR.begin(115200);
