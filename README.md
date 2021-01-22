@@ -36,7 +36,7 @@ AceTime, AceRoutine, etc) or third party libraries.
     * Depends on:
         * (none)
 
-**Version**: 0.4 (2020-12-09)
+**Version**: 0.4.1 (2021-01-22)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
