@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.4</span>
+   &#160;<span id="projectnumber">0.4.1</span>
    </div>
    <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
@@ -159,7 +159,7 @@ $(function() {
 </div><!-- fragment --><h2>Argc and Argv Parsing</h2>
 <p>Within the <code>CommandHandler</code>, there are several helper routines which are useful for processing the <code>argc</code> and <code>argv</code> arguments:</p>
 <ul>
-<li><code>SHIFT_ARGC_ARGV(argc, argv)</code> macro shifts the input tokens by 1, incrementing <code>argv</code> and decrementing <code>argc</code></li>
+<li><code>shiftArgcArgv(argc, argv)</code> shifts the input tokens by 1 token to the left, by incrementing <code>argv</code> and decrementing <code>argc</code></li>
 <li><code>bool isArgEqual(const char*, const char*);</code></li>
 <li><code>bool isArgEqual(const char*, const __FlashHelperString*);</code></li>
 </ul>
@@ -181,7 +181,7 @@ $(function() {
 <div class="line">      return;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    SHIFT_ARGC_ARGV(argc, argv);</div>
+<div class="line">    shiftArgcArgv(argc, argv);</div>
 <div class="line">    if (isArgEqual(argv[0], &quot;on&quot;)) {</div>
 <div class="line">      int delay = atoi(argv[1]));</div>
 <div class="line">      printer.print(F(&quot;Executing: delay on &quot;));</div>
