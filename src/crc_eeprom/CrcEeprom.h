@@ -46,7 +46,7 @@ class CrcEeprom {
     typedef uint32_t (*Crc32Calculator)(const void* data, size_t dataSize);
 
     /** Size of the crc32 type, uint32_t. Should always be 4. */
-    const size_t kCrcSize = sizeof(uint32_t);
+    static const size_t kCrcSize = sizeof(uint32_t);
 
     /**
      * Constructor with an optional Crc32Calculator parameter. By default, the
@@ -57,9 +57,10 @@ class CrcEeprom {
      * consumption.
      */
     explicit CrcEeprom(
-        Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate)
-      : mCrc32Calculator(crcCalc)
-      {}
+        Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate
+    ) :
+        mCrc32Calculator(crcCalc)
+    {}
 
     /**
      * Call from global setup() function. Needed for ESP8266 and ESP32,
