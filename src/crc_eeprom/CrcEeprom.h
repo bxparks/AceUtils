@@ -6,15 +6,15 @@
 #ifndef ACE_UTILS_CRC_EEPROM_H
 #define ACE_UTILS_CRC_EEPROM_H
 
-// Cannot compile this on EpoxyDuino
-#if ! defined(EPOXY_DUINO)
-
 // EEPROM is supported only on certain Arduino boards. In particular, many
 // (most?) Arduino Zero compatible boards cannot support EEPROM even on Flash
 // emulation because the version of the SAMD21 chip on the board doesn't
 // support RWW (read-while-write).
-#if !defined(AVR) && !defined(ESP8266) && !defined(ESP32) && \
-    !defined(TEENSYDUINO)
+#if !defined(AVR) \
+    && !defined(ESP8266) \
+    && !defined(ESP32) \
+    && !defined(TEENSYDUINO) \
+    && !defined(EPOXY_DUINO)
   #error Unsupported architecture
 #endif
 
@@ -66,7 +66,7 @@ class CrcEeprom {
      * Call from global setup() function. Needed for ESP8266 and ESP32,
      * does nothing for AVR and others.
      */
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
     void begin(size_t size) {
       EEPROM.begin(size);
     }
@@ -128,7 +128,7 @@ class CrcEeprom {
 
   private:
     void write(int address, uint8_t val) const {
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
       EEPROM.write(address, val);
 #else
       EEPROM.update(address, val);
@@ -140,7 +140,7 @@ class CrcEeprom {
     }
 
     bool commit() const {
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
       return EEPROM.commit();
 #else
       return true;
@@ -152,7 +152,5 @@ class CrcEeprom {
 
 } // crc_eeprom
 } // ace_utils
-
-#endif // ! defined(EPOXY_DUINO)
 
 #endif // defined(ACE_UTILS_CRC_EEPROM_H)
