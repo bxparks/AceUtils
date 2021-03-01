@@ -49,15 +49,25 @@ class CrcEeprom {
     static const size_t kCrcSize = sizeof(uint32_t);
 
     /**
-     * Constructor with an optional Crc32Calculator parameter. By default, the
-     * Crc32Calculator will be set to `ace_crc::crc32_nibble::crc_calculate()`
-     * which uses a 4-bit (16 element) lookup table and has a good balance
-     * between flash memory consumption and speed. You can choose to provide an
-     * alternate CRC32 calculator for faster speed or for smaller flash memory
-     * consumption.
+     * Constructor with an optional Crc32Calculator parameter.
+     *
+     * By default, the Crc32Calculator will be set to
+     * `ace_crc::crc32_nibble::crc_calculate()` except on ESP8266 where it will
+     * be set to `ace_crc::crc32_nibblem::crc_calculate()` because the latter
+     * is 2.7X faster on the ESP8266. Both of these algorithms use a 4-bit (16
+     * element) lookup table and has a good balance between flash memory
+     * consumption and speed. See https://github.com/bxparks/AceCRC for more
+     * details.
+     *
+     * You can choose to provide an alternate CRC32 calculator for faster speed
+     * or for smaller flash memory consumption.
      */
     explicit CrcEeprom(
+      #if defined(ESP8266)
+        Crc32Calculator crcCalc = ace_crc::crc32_nibblem::crc_calculate
+      #else
         Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate
+      #endif
     ) :
         mCrc32Calculator(crcCalc)
     {}
