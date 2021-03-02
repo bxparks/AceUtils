@@ -1,7 +1,12 @@
 /*
  * Demo of CrcEeprom class.
+ *
+ *  * Write the 'Info' struct into EEPROM using CRC check.
+ *  * Clear the struct.
+ *  * Read the struct back from EEPROM using CRC check.
  */
 
+#include <Arduino.h>
 #include <AceUtilsCrcEeprom.h>
 using ace_utils::crc_eeprom::CrcEeprom;
 
@@ -17,7 +22,10 @@ struct Info {
 CrcEeprom crcEeprom;
 
 void setup() {
+#if !defined(EPOXY_DUINO)
   delay(1000);
+#endif
+
   SERIAL_PORT_MONITOR.begin(115200);
   while (!SERIAL_PORT_MONITOR);
 
@@ -49,6 +57,10 @@ void setup() {
   SERIAL_PORT_MONITOR.print(info.startTime);
   SERIAL_PORT_MONITOR.print("; interval: ");
   SERIAL_PORT_MONITOR.println(info.interval);
+
+#if defined(EPOXY_DUINO)
+  exit(0);
+#endif
 }
 
 void loop() {}

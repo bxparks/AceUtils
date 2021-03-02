@@ -1,6 +1,18 @@
 # Changelog
 
 * Unreleased
+    * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
+      libraries from EpoxyDuino.
+    * Change default CRC32 calculator to `crc32_nibblem` for the ESP8266
+      only, since it is 2.7X faster than `crc32_nibble` on the ESP8266 platform.
+    * Add an optional `contextId` to `CrcEeprom()` constructor. This is an
+      application-provided identifier that is stored into EEPROM along with the
+      data and its CRC. When the data is read by `CrcEeprom::readWithCrc()`, the
+      `contextId` must match. This prevents data from a different application
+      that happen to have the same length from being marked as valid.
+    * Add `CrcEeprom::toContextId()` helper to generate the `contextId`.
+    * Add `CrcEeprom::toSavedSize()` to calculate the minimum size to pass to
+      `CrcEeprom::begin()`.
 * 0.4.1 (2021-01-22)
     * Convert `SHIFT_ARGC_ARGV()` macro in `src/cli/CommandHandler.h` to
       an inlined static function `CommandHandler::shiftArgcArgv()` using
