@@ -33,3 +33,9 @@
 
 # Arduino-CLI files
 build
+
+# Root directory of EpoxyFS
+epoxyfsdata
+
+# Root file of EpoxyPromAvr and EpoxyPromEsp
+epoxypromdata
