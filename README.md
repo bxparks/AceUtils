@@ -1,6 +1,6 @@
 # AceUtils
 
-![AUnit Tests](https://github.com/bxparks/AceUtils/workflows/AUnit%20Tests/badge.svg)
+[![AUnit Tests](https://github.com/bxparks/AceUtils/actions/workflows/aunit_tests.yml/badge.svg)](https://github.com/bxparks/AceUtils/actions/workflows/aunit_tests.yml)
 
 This library contains Arduino utilities which are too small to be in separate
 libraries, but too high-level (with external dependencies) to be included in the
