@@ -12,6 +12,96 @@ namespace ace_utils {
 namespace crc_eeprom {
 
 /**
+ * The base EEPROM API used by CrcEeprom class.
+ *
+ * Different platforms have implemented the `EEPROM` object in different ways.
+ * There are at least 2 different APIs: AVR-flavor (AVR, Teensy, STM32) and
+ * ESP-flavor (ESP8266, ESP32). Sometimes, it makes sense to implement both
+ * versions, for example, on the STM32 where the default `EEPROM` is horribly
+ * inefficient so a buffered version (See stm32_eeprom in this project) should
+ * be used.
+ */
+class IEepromAdapter {
+  public:
+    /**
+     * Initialize the size of the EEPROM space. On AVR-flavored EEPROM, this
+     * does nothing.
+     */
+    virtual void begin(size_t size) = 0;
+
+    /** Write thte byte at address, potentially buffered. */
+    virtual void write(size_t address, uint8_t val) = 0;
+
+    /** Return the byte at address. */
+    virtual uint8_t read(size_t address) const = 0;
+
+    /** Flush the buffer if it is used. */
+    virtual bool commit() = 0;
+};
+
+/**
+ * A wrapper class around an EEPROM class that follows the AVR-style API.
+ * @tparam E type of the EEPROM class
+ */
+template <typename E>
+class AvrEepromAdapter: public IEepromAdapter {
+  public:
+    AvrEepromAdapter(E &eeprom)
+      : mEeprom(eeprom)
+    {}
+
+    virtual void begin(size_t size) {
+      (void) size; // disable compiler warning
+    }
+
+    virtual void write(size_t address, uint8_t val) {
+      mEeprom.update(address, val);
+    }
+
+    virtual uint8_t read(size_t address) const {
+      return mEeprom.read(address);
+    }
+
+    virtual bool commit() {
+      return true;
+    }
+
+  private:
+    E& mEeprom;
+};
+
+/**
+ * A wrapper class around an EEPROM class that follows the ESP-style API.
+ * @tparam E type of the EEPROM class
+ */
+template <typename E>
+class EspEepromAdapter: public IEepromAdapter {
+  public:
+    EspEepromAdapter(E &eeprom)
+      : mEeprom(eeprom)
+    {}
+
+    virtual void begin(size_t size) {
+      mEeprom.begin(size);
+    }
+
+    virtual uint8_t read(size_t address) const {
+      return mEeprom.read(address);
+    }
+
+    virtual void write(size_t address, uint8_t val) {
+      mEeprom.write(address, val);
+    }
+
+    virtual bool commit() {
+      return mEeprom.commit();
+    }
+
+  private:
+    E& mEeprom;
+};
+
+/**
  * Thin wrapper around the EEPROM object (from the the built-in EEPROM library)
  * to read and write a given block of data along with its CRC check. When the
  * data is read back, the CRC is recomputed and checked against the CRC stored
@@ -86,6 +176,7 @@ class CrcEeprom {
      *    for details.
      */
     explicit CrcEeprom(
+      IEepromAdapter& eeprom,
       uint32_t contextId = 0,
       #if defined(ESP8266)
         Crc32Calculator crcCalc = ace_crc::crc32_nibblem::crc_calculate
@@ -93,11 +184,10 @@ class CrcEeprom {
         Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate
       #endif
     ) :
+        mEepromAdapter(eeprom),
         mContextId(contextId),
         mCrc32Calculator(crcCalc)
     {}
-
-    void begin(size_t size);
 
     /**
      * Convenience method that writes the given `data` of type `T` at given
@@ -107,7 +197,7 @@ class CrcEeprom {
      * @tparam T type of `data`
      */
     template<typename T>
-    size_t writeWithCrc(size_t address, const T& data) const {
+    size_t writeWithCrc(size_t address, const T& data) {
       return writeDataWithCrc(address, &data, sizeof(T));
     }
 
@@ -127,8 +217,7 @@ class CrcEeprom {
      * Write the data with its CRC and its `contextId`. Returns the number of
      * bytes written, or 0 if a failure occurred.
      */
-    size_t writeDataWithCrc(size_t address, const void* data, size_t dataSize)
-        const;
+    size_t writeDataWithCrc(size_t address, const void* data, size_t dataSize);
 
     /**
      * Read the data from EEPROM along with its CRC and `contextId`. Return true
@@ -138,11 +227,19 @@ class CrcEeprom {
     bool readDataWithCrc(size_t address, void* data, size_t dataSize) const;
 
   protected:
-    virtual void write(size_t address, uint8_t val) const;
+    void write(size_t address, uint8_t val) {
+      mEepromAdapter.write(address, val);
+    }
 
-    virtual uint8_t read(size_t address) const;
+    uint8_t read(size_t address) const { return mEepromAdapter.read(address); }
 
-    virtual bool commit() const;
+    bool commit() { return mEepromAdapter.commit(); }
+
+    void writeData(size_t address, const uint8_t* data, size_t size) {
+      while (size--) {
+        write(address++, *data++);
+      }
+    }
 
     void readData(size_t address, uint8_t* data, size_t size) const {
       while (size--) {
@@ -150,12 +247,7 @@ class CrcEeprom {
       }
     }
 
-    void writeData(size_t address, const uint8_t* data, size_t size) const {
-      while (size--) {
-        write(address++, *data++);
-      }
-    }
-
+    IEepromAdapter& mEepromAdapter;
     uint32_t const mContextId;
     Crc32Calculator const mCrc32Calculator;
 };

@@ -44,7 +44,10 @@ class BufferedEeprom {
 public:
   BufferedEeprom() = default;
 
-  void begin() { eeprom_buffer_fill(); }
+  void begin(size_t size) {
+    (void) size;
+    eeprom_buffer_fill();
+  }
 
   uint8_t read(int const address) {
     return eeprom_buffered_read_byte(address);

@@ -7,7 +7,9 @@
  */
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <AceUtilsCrcEeprom.h>
+using ace_utils::crc_eeprom::EspEepromAdapter;
 using ace_utils::crc_eeprom::CrcEeprom;
 
 #if defined(ESP32) && ! defined(SERIAL_PORT_MONITOR)
@@ -19,7 +21,9 @@ struct Info {
   int interval = 200;
 };
 
-CrcEeprom crcEeprom;
+// Use EspEepromAdapter because the Makefile includes the EpoxyPromEsp library.
+EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+CrcEeprom crcEeprom(eepromAdapter);
 
 void setup() {
 #if !defined(EPOXY_DUINO)
@@ -29,7 +33,7 @@ void setup() {
   SERIAL_PORT_MONITOR.begin(115200);
   while (!SERIAL_PORT_MONITOR);
 
-  crcEeprom.begin(32);
+  eepromAdapter.begin(CrcEeprom::toSavedSize(sizeof(Info)));
 
   Info info;
 

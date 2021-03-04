@@ -4,32 +4,15 @@
  */
 
 #include "CrcEeprom.h"
-#if defined(ARDUINO_ARCH_STM32)
-  #include <AceUtilsStm32BufferedEeprom.h>
-  #define EEPROM BUFFERED_EEPROM
-#else
-  #include <EEPROM.h>
-#endif
 
 namespace ace_utils {
 namespace crc_eeprom {
-
-void CrcEeprom::begin(size_t size) {
-#if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
-  EEPROM.begin(size);
-#elif defined(ARDUINO_ARCH_STM32)
-  (void) size; // disable unused variable compiler warning
-  EEPROM.begin();
-#else
-  (void) size; // disable unused variable compiler warning
-#endif
-}
 
 size_t CrcEeprom::writeDataWithCrc(
     size_t address,
     const void* const data,
     size_t const dataSize
-) const {
+) {
   const size_t address0 = address;
 
   // write the contextId
@@ -72,32 +55,6 @@ bool CrcEeprom::readDataWithCrc(
   // Verify CRC
   uint32_t expectedCrc = (*mCrc32Calculator)(data, dataSize);
   return expectedCrc == retrievedCrc;
-}
-
-void CrcEeprom::write(size_t address, uint8_t val) const {
-#if defined(ESP8266) \
-    || defined(ESP32) \
-    || defined(EPOXY_DUINO_EPOXY_PROM_ESP) \
-    || defined(ARDUINO_ARCH_STM32)
-  EEPROM.write(address, val);
-#else
-  EEPROM.update(address, val);
-#endif
-}
-
-uint8_t CrcEeprom::read(size_t address) const {
-  return EEPROM.read(address);
-}
-
-bool CrcEeprom::commit() const {
-#if defined(ESP8266) \
-    || defined(ESP32) \
-    || defined(EPOXY_DUINO_EPOXY_PROM_ESP) \
-    || defined(ARDUINO_ARCH_STM32)
-  return EEPROM.commit();
-#else
-  return true;
-#endif
 }
 
 } // crc_eeprom

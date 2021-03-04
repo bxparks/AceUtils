@@ -7,6 +7,7 @@
 
 using aunit::TestRunner;
 using ace_utils::crc_eeprom::CrcEeprom;
+using ace_utils::crc_eeprom::EspEepromAdapter;
 
 struct Info {
   int startTime;
@@ -15,8 +16,9 @@ struct Info {
 
 test(CrcEepromTest, readWrite) {
   const uint32_t contextId = CrcEeprom::toContextId('I', 'n', 'f', 'o');
-  CrcEeprom crcEeprom(contextId);
-  crcEeprom.begin(CrcEeprom::toSavedSize(sizeof(Info)));
+  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  eepromAdapter.begin(CrcEeprom::toSavedSize(sizeof(Info)));
+  CrcEeprom crcEeprom(eepromAdapter, contextId);
 
   Info info = {1, 2};
   crcEeprom.writeWithCrc(0, info);
@@ -31,8 +33,9 @@ test(CrcEepromTest, readWrite) {
 
 test(CrcEepromTest, readWriteInvalidCrc_shouldFail) {
   const uint32_t contextId = CrcEeprom::toContextId('I', 'n', 'f', 'o');
-  CrcEeprom crcEeprom(contextId);
-  crcEeprom.begin(CrcEeprom::toSavedSize(sizeof(Info)));
+  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  eepromAdapter.begin(CrcEeprom::toSavedSize(sizeof(Info)));
+  CrcEeprom crcEeprom(eepromAdapter, contextId);
 
   Info info = {1, 2};
   crcEeprom.writeWithCrc(0, info);
@@ -52,8 +55,9 @@ test(CrcEepromTest, readWriteInvalidCrc_shouldFail) {
 
 test(CrcEepromTest, readWriteInvalidContextId_shouldFail) {
   const uint32_t contextId = CrcEeprom::toContextId('I', 'n', 'f', 'o');
-  CrcEeprom crcEeprom(contextId);
-  crcEeprom.begin(CrcEeprom::toSavedSize(sizeof(Info)));
+  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  eepromAdapter.begin(CrcEeprom::toSavedSize(sizeof(Info)));
+  CrcEeprom crcEeprom(eepromAdapter, contextId);
 
   Info info = {1, 2};
   crcEeprom.writeWithCrc(0, info);
