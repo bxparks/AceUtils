@@ -35,6 +35,15 @@ AceTime, AceRoutine, etc) or third party libraries.
           buttons.
     * Depends on:
         * (none)
+* STM32 Buffered EEPROM
+    * `#include <AceUtilsStm32BufferedEeprom.h>`
+    * A version of `EEPROM` on STM32 that uses a buffer to avoid
+      writing to the flash page on every byte update. Implements an API
+      compatible with the `EEPROM` object on ESP8266 and ESP32.
+        * `BUFFERED_EEPROM.begin()`
+        * `BUFFERED_EEPROM.write()`, `read()`, `put()`, `get()`, `length()`
+        * `BUFFERED_EEPROM.commit()`
+    * Allows CrcEeprom to support STM32.
 
 **Version**: 0.4.1 (2021-01-22)
 
