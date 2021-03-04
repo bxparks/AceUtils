@@ -1,1 +1,1 @@
-#include "stm32_eeprom/BufferedEeprom.h"
+#include "stm32_eeprom/BufferedEEPROMClass.h"

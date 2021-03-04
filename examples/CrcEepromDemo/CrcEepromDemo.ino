@@ -7,8 +7,8 @@
  */
 
 #include <Arduino.h>
-#include <EEPROM.h>
 #include <AceUtilsCrcEeprom.h>
+using ace_utils::crc_eeprom::AvrEepromAdapter;
 using ace_utils::crc_eeprom::EspEepromAdapter;
 using ace_utils::crc_eeprom::CrcEeprom;
 
@@ -16,14 +16,38 @@ using ace_utils::crc_eeprom::CrcEeprom;
 #define SERIAL_PORT_MONITOR Serial
 #endif
 
+#if defined(ESP8266) || defined(ESP32)
+  #include <EEPROM.h>
+  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+
+#elif defined(EPOXY_DUINO)
+
+  // Two versions of EEPROM.h can be selected using the ARDUINO_LIBS list in
+  // the Makefile: "EpoxyPromEsp" or "EpoxyPromAvr".
+  #include <EEPROM.h>
+  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+
+#elif defined(ARDUINO_ARCH_STM32)
+
+  // STM32 can support 2 versions of EEPROM.h. The built-in <EEPROM.h> uses the
+  // AVR-flavored API. The <AceUtilsStm32BufferedEeprom.h> library provides the
+  // BufferedEEPROM object which uses the ESP-flavored API.
+  #include <AceUtilsStm32BufferedEeprom.h>
+  EspEepromAdapter<BufferedEEPROMClass> eepromAdapter(BufferedEEPROM);
+
+#else
+
+  #include <EEPROM.h>
+  AvrEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+
+#endif
+
+CrcEeprom crcEeprom(eepromAdapter, CrcEeprom::toContextId('d', 'e', 'm', 'o'));
+
 struct Info {
   int startTime = 100;
   int interval = 200;
 };
-
-// Use EspEepromAdapter because the Makefile includes the EpoxyPromEsp library.
-EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
-CrcEeprom crcEeprom(eepromAdapter);
 
 void setup() {
 #if !defined(EPOXY_DUINO)

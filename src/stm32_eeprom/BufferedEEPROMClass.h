@@ -1,12 +1,12 @@
 /*
   Copyright (c) 2021 Brian T. Park.
 
-  BufferedEeprom.h - Buffered EEPROM emulation for STM32duino Based on the
+  BufferedEEPROMClass.h - Buffered EEPROM emulation for STM32duino Based on the
   API from EEPROM.h from the ESP8266 Arduino Core.
 */
 
-#ifndef BUFFERED_EEPROM_H
-#define BUFFERED_EEPROM_H
+#ifndef BUFFERED_EEPROM_CLASS_H
+#define BUFFERED_EEPROM_CLASS_H
 
 #if defined(ARDUINO_ARCH_STM32)
 
@@ -40,9 +40,9 @@
  *  * The `begin()` method takes no arguments, instead of the `size` argument
  *    because the size of flash page is fixed.
  */
-class BufferedEeprom {
+class BufferedEEPROMClass {
 public:
-  BufferedEeprom() = default;
+  BufferedEEPROMClass() = default;
 
   void begin(size_t size) {
     (void) size;
@@ -99,8 +99,8 @@ public:
 };
 
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_EEPROM)
-extern BufferedEeprom BUFFERED_EEPROM;
+extern BufferedEEPROMClass BufferedEEPROM;
 #endif
 
 #endif // defined(ARDUINO_ARCH_STM32)
-#endif // BUFFERED_EEPROM_H
+#endif // BUFFERED_EEPROM_CLASS_H
