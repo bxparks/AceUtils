@@ -10,7 +10,8 @@
 // (most?) Arduino Zero compatible boards cannot support EEPROM even on Flash
 // emulation because the version of the SAMD21 chip on the board doesn't
 // support RWW (read-while-write).
-#if !defined(AVR) \
+#if !defined(ARDUINO_ARCH_AVR) \
+    && !defined(ARDUINO_ARCH_STM32) \
     && !defined(ESP8266) \
     && !defined(ESP32) \
     && !defined(TEENSYDUINO) \
@@ -18,7 +19,6 @@
   #error Unsupported architecture
 #endif
 
-#include <EEPROM.h>
 #include <AceCRC.h> // crc32_nibble
 
 namespace ace_utils {
@@ -134,13 +134,7 @@ class CrcEeprom {
      *    greater than or equal to the value returned by
      *    `toSavedSize(sizeof(data))`.
      */
-    void begin(size_t size) {
-#if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
-      EEPROM.begin(size);
-#else
-      (void) size; // disable unused variable compiler warning
-#endif
-    }
+    void begin(size_t size);
 
     /**
      * Write the data with its CRC and its `contextId`. Returns the number of
@@ -151,28 +145,7 @@ class CrcEeprom {
         int address,
         const void* const data,
         const size_t dataSize
-    ) const {
-      const int address0 = address;
-
-      // write the contextId
-      EEPROM.put(address, mContextId);
-      address += sizeof(mContextId);
-
-      // write data block
-      size_t byteCount = dataSize;
-      const uint8_t* d = (const uint8_t*) data;
-      while (byteCount-- > 0) {
-        write(address++, *d++);
-      }
-
-      // write CRC at the end of the data block
-      uint32_t crc = (*mCrc32Calculator)(data, dataSize);
-      EEPROM.put(address, crc);
-      address += sizeof(crc);
-
-      bool success = commit();
-      return (success) ? address - address0: 0;
-    }
+    ) const;
 
     /**
      * Read the data from EEPROM along with its CRC and `contextId`. Return true
@@ -184,50 +157,14 @@ class CrcEeprom {
         int address,
         void* const data,
         const size_t dataSize
-    ) const {
-      // read contextId
-      uint32_t retrievedContextId;
-      EEPROM.get(address, retrievedContextId);
-      if (retrievedContextId != mContextId) return false;
-      address += sizeof(retrievedContextId);
-
-      // read data block
-      size_t byteCount = dataSize;
-      uint8_t* d = (uint8_t*) data;
-      while (byteCount-- > 0) {
-        *d++ = read(address++);
-      }
-
-      // read the CRC
-      uint32_t retrievedCrc;
-      EEPROM.get(address, retrievedCrc);
-      address += sizeof(retrievedCrc);
-
-      // Verify CRC
-      uint32_t expectedCrc = (*mCrc32Calculator)(data, dataSize);
-      return expectedCrc == retrievedCrc;
-    }
+    ) const;
 
   private:
-    void write(int address, uint8_t val) const {
-#if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
-      EEPROM.write(address, val);
-#else
-      EEPROM.update(address, val);
-#endif
-    }
+    void write(int address, uint8_t val) const;
 
-    uint8_t read(int address) const {
-      return EEPROM.read(address);
-    }
+    uint8_t read(int address) const;
 
-    bool commit() const {
-#if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
-      return EEPROM.commit();
-#else
-      return true;
-#endif
-    }
+    bool commit() const;
 
     uint32_t const mContextId;
     Crc32Calculator const mCrc32Calculator;
