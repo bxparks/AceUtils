@@ -6,19 +6,6 @@
 #ifndef ACE_UTILS_CRC_EEPROM_H
 #define ACE_UTILS_CRC_EEPROM_H
 
-// EEPROM is supported only on certain Arduino boards. In particular, many
-// (most?) Arduino Zero compatible boards cannot support EEPROM even on Flash
-// emulation because the version of the SAMD21 chip on the board doesn't
-// support RWW (read-while-write).
-#if !defined(ARDUINO_ARCH_AVR) \
-    && !defined(ARDUINO_ARCH_STM32) \
-    && !defined(ESP8266) \
-    && !defined(ESP32) \
-    && !defined(TEENSYDUINO) \
-    && !defined(EPOXY_DUINO)
-  #error Unsupported architecture
-#endif
-
 #include <AceCRC.h> // crc32_nibble
 
 namespace ace_utils {
@@ -110,61 +97,64 @@ class CrcEeprom {
         mCrc32Calculator(crcCalc)
     {}
 
-    /**
-     * Call from global setup() function. A convenience method to smooth
-     * over the API differences of the EEPROM classes. Calls `EEPROM.begin()`
-     * on ESP8266/ESP32, does nothing for AVR and others.
-     *
-     * You can call `EEPROM.begin()` manually instead of calling this, but you
-     * would then have to perform the compile-time check for ESP8266, ESP32 or
-     * EpoxyPromEsp yourself, since the AVR, Teensy, STM32 and EpoxyPromAvr
-     * versions of EEPROM do not have a version of begin() that takes a size
-     * parameter.
-     *
-     * If you want to store 2 different data structures:
-     *
-     *  * Set `totalSize = toSavedSize(sizeof(data1)) +
-     *     toSavedSize(sizeof(data2))`.
-     *  * Call `begin(totalSize)`.
-     *  * Set `address1 = 0` and `address2 = toSavedSize(sizeof(data1)`.
-     *  * Call `writeWithCrc(address1, data1, sizeof(data1))`.
-     *  * Call `writeWithCrc(address2, data2, sizeof(data2))`.
-     *
-     * @param size number of bytes to reserve for the EEPROM. This should be
-     *    greater than or equal to the value returned by
-     *    `toSavedSize(sizeof(data))`.
-     */
     void begin(size_t size);
 
     /**
-     * Write the data with its CRC and its `contextId`. Returns the number of
-     * bytes written, or 0 if a failure occurred. The type of `address` is `int`
-     * for consistency with the API of the EEPROM library.
+     * Convenience method that writes the given `data` of type `T` at given
+     * `address`. The compiler figures out the `sizeof(T)` automatically before
+     * calling `writeDataWithCrc()`.
+     *
+     * @tparam T type of `data`
      */
-    size_t writeWithCrc(
-        int address,
-        const void* const data,
-        const size_t dataSize
-    ) const;
+    template<typename T>
+    size_t writeWithCrc(size_t address, const T& data) const {
+      return writeDataWithCrc(address, &data, sizeof(T));
+    }
+
+    /**
+     * Convenience function that reads the given `data` of type `T` at given
+     * `address`. The compiler figures out the `sizeof(T)` automatically before
+     * calling `readDataWithCrc()`.
+     *
+     * @tparam T type of `data`
+     */
+    template<typename T>
+    bool readWithCrc(size_t address, T& data) const {
+      return readDataWithCrc(address, &data, sizeof(T));
+    }
+
+    /**
+     * Write the data with its CRC and its `contextId`. Returns the number of
+     * bytes written, or 0 if a failure occurred.
+     */
+    size_t writeDataWithCrc(size_t address, const void* data, size_t dataSize)
+        const;
 
     /**
      * Read the data from EEPROM along with its CRC and `contextId`. Return true
      * if both the CRC of the retrieved data and its `contextId` matches the
-     * expected CRC and `contextId` when it was written. The type of `address`
-     * is `int` for consistency with the API of the EEPROM library.
+     * expected CRC and `contextId` when it was written.
      */
-    bool readWithCrc(
-        int address,
-        void* const data,
-        const size_t dataSize
-    ) const;
+    bool readDataWithCrc(size_t address, void* data, size_t dataSize) const;
 
-  private:
-    void write(int address, uint8_t val) const;
+  protected:
+    virtual void write(size_t address, uint8_t val) const;
 
-    uint8_t read(int address) const;
+    virtual uint8_t read(size_t address) const;
 
-    bool commit() const;
+    virtual bool commit() const;
+
+    void readData(size_t address, uint8_t* data, size_t size) const {
+      while (size--) {
+        *data++ = read(address++);
+      }
+    }
+
+    void writeData(size_t address, const uint8_t* data, size_t size) const {
+      while (size--) {
+        write(address++, *data++);
+      }
+    }
 
     uint32_t const mContextId;
     Crc32Calculator const mCrc32Calculator;

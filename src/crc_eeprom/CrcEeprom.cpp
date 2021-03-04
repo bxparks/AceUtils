@@ -25,65 +25,48 @@ void CrcEeprom::begin(size_t size) {
 #endif
 }
 
-/**
-  * Write the data with its CRC and its `contextId`. Returns the number of
-  * bytes written, or 0 if a failure occurred. The type of `address` is `int`
-  * for consistency with the API of the EEPROM library.
-  */
-size_t CrcEeprom::writeWithCrc(
-    int address,
+size_t CrcEeprom::writeDataWithCrc(
+    size_t address,
     const void* const data,
-    const size_t dataSize
+    size_t const dataSize
 ) const {
-  const int address0 = address;
+  const size_t address0 = address;
 
   // write the contextId
-  EEPROM.put(address, mContextId);
+  writeData(address, (const uint8_t*) &mContextId, sizeof(mContextId));
   address += sizeof(mContextId);
 
   // write data block
-  size_t byteCount = dataSize;
-  const uint8_t* d = (const uint8_t*) data;
-  while (byteCount-- > 0) {
-    write(address++, *d++);
-  }
+  writeData(address, (const uint8_t*) data, dataSize);
+  address += dataSize;
 
   // write CRC at the end of the data block
   uint32_t crc = (*mCrc32Calculator)(data, dataSize);
-  EEPROM.put(address, crc);
+  writeData(address, (const uint8_t*) &crc, sizeof(crc));
   address += sizeof(crc);
 
   bool success = commit();
   return (success) ? address - address0: 0;
 }
 
-/**
-  * Read the data from EEPROM along with its CRC and `contextId`. Return true
-  * if both the CRC of the retrieved data and its `contextId` matches the
-  * expected CRC and `contextId` when it was written. The type of `address`
-  * is `int` for consistency with the API of the EEPROM library.
-  */
-bool CrcEeprom::readWithCrc(
-    int address,
+bool CrcEeprom::readDataWithCrc(
+    size_t address,
     void* const data,
-    const size_t dataSize
+    size_t const dataSize
 ) const {
   // read contextId
   uint32_t retrievedContextId;
-  EEPROM.get(address, retrievedContextId);
+  readData(address, (uint8_t*) &retrievedContextId, sizeof(retrievedContextId));
   if (retrievedContextId != mContextId) return false;
   address += sizeof(retrievedContextId);
 
   // read data block
-  size_t byteCount = dataSize;
-  uint8_t* d = (uint8_t*) data;
-  while (byteCount-- > 0) {
-    *d++ = read(address++);
-  }
+  readData(address, (uint8_t*) data, dataSize);
+  address += dataSize;
 
   // read the CRC
   uint32_t retrievedCrc;
-  EEPROM.get(address, retrievedCrc);
+  readData(address, (uint8_t*) &retrievedCrc, sizeof(retrievedCrc));
   address += sizeof(retrievedCrc);
 
   // Verify CRC
@@ -91,7 +74,7 @@ bool CrcEeprom::readWithCrc(
   return expectedCrc == retrievedCrc;
 }
 
-void CrcEeprom::write(int address, uint8_t val) const {
+void CrcEeprom::write(size_t address, uint8_t val) const {
 #if defined(ESP8266) \
     || defined(ESP32) \
     || defined(EPOXY_DUINO_EPOXY_PROM_ESP) \
@@ -102,7 +85,7 @@ void CrcEeprom::write(int address, uint8_t val) const {
 #endif
 }
 
-uint8_t CrcEeprom::read(int address) const {
+uint8_t CrcEeprom::read(size_t address) const {
   return EEPROM.read(address);
 }
 

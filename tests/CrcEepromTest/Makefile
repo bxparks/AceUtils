@@ -2,5 +2,5 @@
 # Makefile to compile and run Arduino programs natively on Linux or MacOS.
 
 APP_NAME := CrcEepromTest
-ARDUINO_LIBS := EpoxyPromAvr AUnit AceCommon AceCRC AceUtils AceRoutine
+ARDUINO_LIBS := EpoxyPromEsp AUnit AceCommon AceCRC AceUtils AceRoutine
 include ../../../EpoxyDuino/EpoxyDuino.mk

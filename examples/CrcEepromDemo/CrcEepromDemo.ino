@@ -40,7 +40,7 @@ void setup() {
   SERIAL_PORT_MONITOR.println(info.interval);
 
   SERIAL_PORT_MONITOR.println("Writing Info struct");
-  uint16_t writtenSize = crcEeprom.writeWithCrc(0, &info, sizeof(info));
+  uint16_t writtenSize = crcEeprom.writeWithCrc(0, info);
   SERIAL_PORT_MONITOR.print("Written size: ");
   SERIAL_PORT_MONITOR.println(writtenSize);
 
@@ -48,7 +48,7 @@ void setup() {
   info.startTime = 0;
   info.interval = 0;
   SERIAL_PORT_MONITOR.println("Reading back Info struct");
-  bool isValid = crcEeprom.readWithCrc(0, &info, sizeof(info));
+  bool isValid = crcEeprom.readWithCrc(0, info);
   SERIAL_PORT_MONITOR.print("isValid: ");
   SERIAL_PORT_MONITOR.println(isValid);
 

@@ -13,6 +13,13 @@
     * Add `CrcEeprom::toContextId()` helper to generate the `contextId`.
     * Add `CrcEeprom::toSavedSize()` to calculate the minimum size to pass to
       `CrcEeprom::begin()`.
+    * **Breaking Change**: `writeWithCrc()` and `readWithCrc()` renamed to
+      `writeDataWithCrc()` and `readDataWithCrc()`.
+        * New `writeWithCrc(size_t address, const T& data)` and
+          `readWithCrc(size_t address, T& data)` are convenience template
+          functions which allows the compiler to automatically calculate the
+          `sizeof(T)` then call the underlying `writeDataWithCrc()` and
+          `readDataWithCrc()`.
 * 0.4.1 (2021-01-22)
     * Convert `SHIFT_ARGC_ARGV()` macro in `src/cli/CommandHandler.h` to
       an inlined static function `CommandHandler::shiftArgcArgv()` using

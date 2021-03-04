@@ -19,10 +19,10 @@ test(CrcEepromTest, readWrite) {
   crcEeprom.begin(CrcEeprom::toSavedSize(sizeof(Info)));
 
   Info info = {1, 2};
-  crcEeprom.writeWithCrc(0, &info, sizeof(info));
+  crcEeprom.writeWithCrc(0, info);
 
   info = {0, 0};
-  bool status = crcEeprom.readWithCrc(0, &info, sizeof(info));
+  bool status = crcEeprom.readWithCrc(0, info);
 
   assertTrue(status);
   assertEqual(1, info.startTime);
@@ -35,7 +35,7 @@ test(CrcEepromTest, readWriteInvalidCrc_shouldFail) {
   crcEeprom.begin(CrcEeprom::toSavedSize(sizeof(Info)));
 
   Info info = {1, 2};
-  crcEeprom.writeWithCrc(0, &info, sizeof(info));
+  crcEeprom.writeWithCrc(0, info);
 
   // Write directly into stored Info to invalidate the CRC
 #if defined(ESP8266) || defined(ESP32) || defined(EPOXY_DUINO_EPOXY_PROM_ESP)
@@ -46,7 +46,7 @@ test(CrcEepromTest, readWriteInvalidCrc_shouldFail) {
 #endif
 
   info = {0, 0};
-  bool status = crcEeprom.readWithCrc(0, &info, sizeof(info));
+  bool status = crcEeprom.readWithCrc(0, info);
   assertFalse(status);
 }
 
@@ -56,7 +56,7 @@ test(CrcEepromTest, readWriteInvalidContextId_shouldFail) {
   crcEeprom.begin(CrcEeprom::toSavedSize(sizeof(Info)));
 
   Info info = {1, 2};
-  crcEeprom.writeWithCrc(0, &info, sizeof(info));
+  crcEeprom.writeWithCrc(0, info);
 
   // Write directly into 'contextId' to invalidate it
   const uint32_t contextId2 = CrcEeprom::toContextId('t', 'e', 's', 't');
@@ -68,7 +68,7 @@ test(CrcEepromTest, readWriteInvalidContextId_shouldFail) {
 #endif
 
   info = {0, 0};
-  bool status = crcEeprom.readWithCrc(0, &info, sizeof(info));
+  bool status = crcEeprom.readWithCrc(0, info);
   assertFalse(status);
 }
 
