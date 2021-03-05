@@ -59,13 +59,16 @@ void setup() {
 
   eepromAdapter.begin(CrcEeprom::toSavedSize(sizeof(StoredInfo)));
 
-  size_t writtenSize = crcEeprom.writeWithCrc(0, info);
+  // Write to EEPROM w/ CRC and contextId check.
+  size_t writtenSize = crcEeprom.writeWithCrc(0, storedInfo);
+  if (!writtenSize) {
+    Serial.println("Error writing to EEPROM");
+  }
 
-  ...
-
-  bool status = crcEeprom.readWithCrc(0, info);
+  // Read from EEPROM w/ CRC and contextId check.
+  bool status = crcEeprom.readWithCrc(0, storedInfo);
   if (!status) {
-    Serial.println("Error reading EEPROM");
+    Serial.println("Error reading from EEPROM");
   }
 }
 
