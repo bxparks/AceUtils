@@ -160,6 +160,10 @@ class CrcEeprom {
      * Constructor with an optional `contextId` identifier and an
      * optional Crc32Calculator `crcCalc` function pointer.
      *
+     * @param eepromAdaper an instance of `IEepromAdapter` that encapsulates
+     *    a specific `EEPROM` instance for a given platform. The
+     *    `IEepromAdapter` provides a common API to access the different
+     *    `EEPROM` implementations on various platforms.
      * @param contextId an optional application-defined identifier of the data
      *    being stored. This prevents collisions between 2 different data which
      *    just happens to be the same size. The default is 0 for backwards
@@ -176,7 +180,7 @@ class CrcEeprom {
      *    for details.
      */
     explicit CrcEeprom(
-      IEepromAdapter& eeprom,
+      IEepromAdapter& eepromAdapter,
       uint32_t contextId = 0,
       #if defined(ESP8266)
         Crc32Calculator crcCalc = ace_crc::crc32_nibblem::crc_calculate
@@ -184,10 +188,19 @@ class CrcEeprom {
         Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate
       #endif
     ) :
-        mEepromAdapter(eeprom),
+        mEepromAdapter(eepromAdapter),
         mContextId(contextId),
         mCrc32Calculator(crcCalc)
     {}
+
+    /**
+     * Initialize the underlying eepromAdapter with the given size. Some
+     * `EEPROM` implementations will just ignore the size, or do nothing upon
+     * this call.
+     */
+    void begin(size_t size) {
+      mEepromAdapter.begin(size);
+    }
 
     /**
      * Convenience method that writes the given `data` of type `T` at given

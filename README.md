@@ -10,6 +10,7 @@ AceUtils will generally have dependencies to my other libraries (e.g. AceCommon,
 AceTime, AceRoutine, etc) or third party libraries.
 
 * CrcEeprom
+    * See [src/crc_eeprom/README.md](src/crc_eeprom/README.md).
     * `#include <AceUtilsCrcEeprom.h>`
     * `using ace_utils::crc_eeprom::CrcEeprom`
     * Summary:
