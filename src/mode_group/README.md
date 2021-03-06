@@ -21,9 +21,10 @@ time fixing subtle UI bugs.
 
 This package is used by:
 
-* OledClock
-* WorldClock
-* WorldClockLcd
+* [OneZoneClock](https://github.com/bxparks/clocks/tree/master/OneZoneClock)
+* [MultiZoneClock](https://github.com/bxparks/clocks/tree/master/MultiZoneClock)
+* [WorldClock](https://github.com/bxparks/clocks/tree/master/WorldClock)
+* [MedMinder](https://github.com/bxparks/clocks/tree/master/MedMinder)
 
 ## Usage
 
