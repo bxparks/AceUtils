@@ -2,12 +2,38 @@
 
 [![AUnit Tests](https://github.com/bxparks/AceUtils/actions/workflows/aunit_tests.yml/badge.svg)](https://github.com/bxparks/AceUtils/actions/workflows/aunit_tests.yml)
 
-This library contains Arduino utilities which are too small to be in separate
-libraries, but too high-level (with external dependencies) to be included in the
-AceCommon (https://github.com/bxparks/AceCommon) library. The AceCommon library
-must remain self-contained without any external dependencies. The utilities in
-AceUtils will generally have dependencies to my other libraries (e.g. AceCommon,
-AceTime, AceRoutine, etc) or third party libraries.
+This library contains Arduino utilities which are too small or too experimental
+to be in separate libraries, but too high-level (with external dependencies) to
+be included in the AceCommon (https://github.com/bxparks/AceCommon) library.
+There will be several types of code in this library:
+
+1) Shared utilities which are too small to be its own library, but too big to
+   copy-and-paste across multiple applications.
+2) Shared utilities which have external dependencies so cannot be included in
+   AceCommon library which must remain self-contained.
+3) Experimental code that seems useful across different Arduino applications,
+   but not yet ready to be turned into an independent Arduino library.
+
+**Caution**:
+
+Unlike my other libraries, the API of the code in this library will often change
+and evolve over time. When a particular feature becomes more stable and
+polished, and if the feature becomes substantial enough, the functionality may
+be migrated to a separate independent Arduino library. In that case, the
+original code here may become deprecated and removed to avoid the overhead of
+maintaining duplicated code.
+
+If you find something useful in this library, I suggest copying the piece of
+code instead of depending on this library. This will avoid breakages of your
+Arduino application if the API of this library is changed. To reflect the
+transient and experimental nature of this library, it is likely that the version
+will always remain in the `v0.xx.yy` form.
+
+**Version**: 0.4.1 (2021-01-22)
+
+**Changelog**: [CHANGELOG.md](CHANGELOG.md)
+
+## Features
 
 * CrcEeprom
     * See [src/crc_eeprom/README.md](src/crc_eeprom/README.md).
@@ -46,10 +72,6 @@ AceTime, AceRoutine, etc) or third party libraries.
         * `BufferedEEPROM.commit()`
     * Can be used with `CrcEeprom` through the `EspEepromAdapter`.
 
-**Version**: 0.4.1 (2021-01-22)
-
-**Changelog**: [CHANGELOG.md](CHANGELOG.md)
-
 ## Installation
 
 The latest stable release will be available in the Arduino IDE Library
@@ -59,7 +81,10 @@ The development version can be installed by cloning the
 [GitHub repository](https://github.com/bxparks/AceUtils), checking out the
 `develop` branch, then manually copying over the contents to the `./libraries`
 directory used by the Arduino IDE. (The result is a directory named
-`./libraries/AceUtils`.) The `master` branch contains the stable release.
+`./libraries/AceUtils`.)
+
+The `master` branch contains the stable release. (But see the cautionary note
+above about the instability of this library.)
 
 ### Source Code
 
@@ -141,6 +166,7 @@ on the following boards:
 
 * Arduino Nano clone (16 MHz ATmega328P)
 * SparkFun Pro Micro clone (16 MHz ATmega32U4)
+* STM32 Blue Pill (STM32F103C8, 72 MHz ARM Cortex-M3)
 * WeMos D1 Mini clone (ESP-12E module, 80 MHz ESP8266)
 * ESP32 dev board (ESP-WROOM-32 module, 240 MHz dual core Tensilica LX6)
 
@@ -153,9 +179,15 @@ to print out a warning if the board is not one of the following:
 
 I will occasionally test on the following hardware as a sanity check:
 
-* Teensy 3.2 (72 MHz ARM Cortex-M4)
 * Mini Mega 2560 (Arduino Mega 2560 compatible, 16 MHz ATmega2560)
 * SAMD21 M0 Mini (48 MHz ARM Cortex-M0+) (compatible with Arduino Zero)
+* Teensy 3.2 (72 MHz ARM Cortex-M4)
+
+The following boards are *not* supported (although sometimes, something may
+accidentally work on these boards):
+
+* megaAVR (e.g. Nano Every)
+* SAMD21 boards w/ `arduino:samd` version >= 1.8.10 (e.g. MKRZero)
 
 ## License
 
