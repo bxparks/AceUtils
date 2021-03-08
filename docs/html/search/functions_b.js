@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['writewithcrc_77',['writeWithCrc',['../classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#adb4a02090c1bfc668cf86cbb12e713c0',1,'ace_utils::crc_eeprom::CrcEeprom']]]
+  ['setup_92',['setup',['../classace__utils_1_1mode__group_1_1ModeNavigator.html#a8fcc09eaa24f32eed4d3bb9bcef48f0c',1,'ace_utils::mode_group::ModeNavigator']]],
+  ['shift_5fargc_5fargv_93',['SHIFT_ARGC_ARGV',['../classace__utils_1_1cli_1_1CommandHandler.html#a6399717e176c5bb95ae49b930f6ecb9a',1,'ace_utils::cli::CommandHandler']]],
+  ['shiftargcargv_94',['shiftArgcArgv',['../classace__utils_1_1cli_1_1CommandHandler.html#a61cb84a2e3179d1647565e21b3a9c14f',1,'ace_utils::cli::CommandHandler']]],
+  ['streamlinereader_95',['StreamLineReader',['../classace__utils_1_1cli_1_1StreamLineReader.html#ad16d26a6e4286dc4fc2015fe9c68fee1',1,'ace_utils::cli::StreamLineReader']]]
 ];

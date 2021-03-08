@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.4.1</span>
+   &#160;<span id="projectnumber">0.5.0</span>
    </div>
    <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
@@ -65,9 +65,19 @@ $(function() {
 <div class="contents">
 &#160;
 
+<h3><a id="index_a"></a>- a -</h3><ul>
+<li>AvrEepromAdapter()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1AvrEepromAdapter.html#a8791939dad50280deadc60019e035556">ace_utils::crc_eeprom::AvrEepromAdapter&lt; E &gt;</a>
+</li>
+</ul>
+
+
 <h3><a id="index_b"></a>- b -</h3><ul>
 <li>begin()
-: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#afa98dd019e95fad991a77296eec0e728">ace_utils::crc_eeprom::CrcEeprom</a>
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1AvrEepromAdapter.html#ab63f1275794c652ff1cf225a465b0989">ace_utils::crc_eeprom::AvrEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#afa98dd019e95fad991a77296eec0e728">ace_utils::crc_eeprom::CrcEeprom</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1EspEepromAdapter.html#ab50ffbfd2dee315be70a42d84baf2a91">ace_utils::crc_eeprom::EspEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html#a26622e062b7b3d49bc479d64633acd46">ace_utils::crc_eeprom::IEepromAdapter</a>
 </li>
 </ul>
 
@@ -83,13 +93,25 @@ $(function() {
 : <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ad1ab7be3d70937bf978c6ab2d2ceaf9b">ace_utils::cli::CommandDispatcher</a>
 </li>
 <li>CommandHandler()
-: <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a846e22124c7239103bc75bc0baf0e598">ace_utils::cli::CommandHandler</a>
+: <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a50a4af8c63b7bcafe0ed7e8269d3da50">ace_utils::cli::CommandHandler</a>
 </li>
 <li>CommandManager()
 : <a class="el" href="classace__utils_1_1cli_1_1CommandManager.html#a367a2cbd734cac13b875a7fa44224ff5">ace_utils::cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;</a>
 </li>
+<li>commit()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1AvrEepromAdapter.html#affad9de69e6dc55616c3f30bbd17c7ba">ace_utils::crc_eeprom::AvrEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1EspEepromAdapter.html#a9cb0ee4c0189f77c5182f8cc2f6131e0">ace_utils::crc_eeprom::EspEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html#a7e0a7eb29299bbeb9d5444f1865f81de">ace_utils::crc_eeprom::IEepromAdapter</a>
+</li>
 <li>CrcEeprom()
-: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#ad6f0e26adae30c2397313dc1547d0cfb">ace_utils::crc_eeprom::CrcEeprom</a>
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#aa7f7bbf0f1eeff6430792a4612f0fc0e">ace_utils::crc_eeprom::CrcEeprom</a>
+</li>
+</ul>
+
+
+<h3><a id="index_e"></a>- e -</h3><ul>
+<li>EspEepromAdapter()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1EspEepromAdapter.html#a34548c1e2db594d905d7b564fdd6910a">ace_utils::crc_eeprom::EspEepromAdapter&lt; E &gt;</a>
 </li>
 </ul>
 
@@ -158,14 +180,26 @@ $(function() {
 
 
 <h3><a id="index_r"></a>- r -</h3><ul>
+<li>read()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1AvrEepromAdapter.html#ae386c6508f316a1fb45ab9176f5d8aba">ace_utils::crc_eeprom::AvrEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1EspEepromAdapter.html#ac9a01cd19e235f14f9d21bb9facf0a64">ace_utils::crc_eeprom::EspEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html#a42c68c82eeea852da55bad99e0af6f4a">ace_utils::crc_eeprom::IEepromAdapter</a>
+</li>
+<li>readDataWithCrc()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a5e45d0ea63efe500a0aa240f8d6a3b06">ace_utils::crc_eeprom::CrcEeprom</a>
+</li>
 <li>readWithCrc()
-: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a82c85ef76e886c832438a71d5d4e7e9b">ace_utils::crc_eeprom::CrcEeprom</a>
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#aefa1a740fbada5780ea9d99eb7a74ec9">ace_utils::crc_eeprom::CrcEeprom</a>
 </li>
 <li>run()
 : <a class="el" href="classace__utils_1_1cli_1_1CommandHandler.html#a82e846fdd080bfb36b13a1f903cb7def">ace_utils::cli::CommandHandler</a>
 </li>
 <li>runCommand()
 : <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#ae20ae336f3740b1faceecdf0babfa55e">ace_utils::cli::CommandDispatcher</a>
+</li>
+<li>runCoroutine()
+: <a class="el" href="classace__utils_1_1cli_1_1CommandManager.html#aee686417c164a6d1a243f1d53ab7aa6d">ace_utils::cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;</a>
+, <a class="el" href="classace__utils_1_1cli_1_1StreamLineReader.html#a6171d73022c91c7f826d1aaf42357ced">ace_utils::cli::StreamLineReader</a>
 </li>
 </ul>
 
@@ -187,15 +221,29 @@ $(function() {
 
 
 <h3><a id="index_t"></a>- t -</h3><ul>
+<li>toContextId()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a87f0b2818116bf0b8998156662fb4636">ace_utils::crc_eeprom::CrcEeprom</a>
+</li>
 <li>tokenize()
 : <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html#a535d819984ddd20524a00837d14bfa1a">ace_utils::cli::CommandDispatcher</a>
+</li>
+<li>toSavedSize()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a6e402fa573e6b91a28b9da95e0080625">ace_utils::crc_eeprom::CrcEeprom</a>
 </li>
 </ul>
 
 
 <h3><a id="index_w"></a>- w -</h3><ul>
+<li>write()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1AvrEepromAdapter.html#a0b60a367cc00d98477f23a8e8063c28c">ace_utils::crc_eeprom::AvrEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1EspEepromAdapter.html#a90a42969ef27affd5846fb9a5606eff9">ace_utils::crc_eeprom::EspEepromAdapter&lt; E &gt;</a>
+, <a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html#abe82cd4fa63b4feebb5937c5e28a3a0c">ace_utils::crc_eeprom::IEepromAdapter</a>
+</li>
+<li>writeDataWithCrc()
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a89f76da5ece78edb8c526ba390ae80a9">ace_utils::crc_eeprom::CrcEeprom</a>
+</li>
 <li>writeWithCrc()
-: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#adb4a02090c1bfc668cf86cbb12e713c0">ace_utils::crc_eeprom::CrcEeprom</a>
+: <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a546566b0a440cf9b715c4de068be44fa">ace_utils::crc_eeprom::CrcEeprom</a>
 </li>
 </ul>
 
