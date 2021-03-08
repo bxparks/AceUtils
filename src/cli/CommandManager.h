@@ -103,6 +103,10 @@ class CommandManager: public ace_routine::Coroutine {
         mDispatcher(mChannel, mSerial, mCommands, mNumCommands,
             mArgv, ARGV_SIZE, mPrompt) {}
 
+    /**
+     * Main body of coroutine, dispatches to the underlying mStreamLineReader
+     * and mDispatcher.
+     */
     int runCoroutine() override {
       mStreamLineReader.runCoroutine();
       mDispatcher.runCoroutine();

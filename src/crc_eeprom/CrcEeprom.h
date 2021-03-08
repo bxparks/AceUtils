@@ -46,6 +46,7 @@ class IEepromAdapter {
 template <typename E>
 class AvrEepromAdapter: public IEepromAdapter {
   public:
+    /** Wrap around an AVR-flavored EEPROM object. */
     AvrEepromAdapter(E &eeprom)
       : mEeprom(eeprom)
     {}
@@ -77,6 +78,7 @@ class AvrEepromAdapter: public IEepromAdapter {
 template <typename E>
 class EspEepromAdapter: public IEepromAdapter {
   public:
+    /** Wrap around an ESP-flavored EEPROM object. */
     EspEepromAdapter(E &eeprom)
       : mEeprom(eeprom)
     {}
@@ -160,7 +162,7 @@ class CrcEeprom {
      * Constructor with an optional `contextId` identifier and an
      * optional Crc32Calculator `crcCalc` function pointer.
      *
-     * @param eepromAdaper an instance of `IEepromAdapter` that encapsulates
+     * @param eepromAdapter an instance of `IEepromAdapter` that encapsulates
      *    a specific `EEPROM` instance for a given platform. The
      *    `IEepromAdapter` provides a common API to access the different
      *    `EEPROM` implementations on various platforms.
@@ -239,7 +241,7 @@ class CrcEeprom {
      */
     bool readDataWithCrc(size_t address, void* data, size_t dataSize) const;
 
-  protected:
+  private:
     void write(size_t address, uint8_t val) {
       mEepromAdapter.write(address, val);
     }
@@ -260,6 +262,7 @@ class CrcEeprom {
       }
     }
 
+  private:
     IEepromAdapter& mEepromAdapter;
     uint32_t const mContextId;
     Crc32Calculator const mCrc32Calculator;

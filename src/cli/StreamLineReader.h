@@ -57,6 +57,10 @@ class StreamLineReader: public ace_routine::Coroutine {
       mBufSize(bufferSize)
     {}
 
+    /**
+     * Main body of the coroutine that reads a character from the input stream
+     * and writes it into the output channel.
+     */
     int runCoroutine() override {
       InputLine input;
       char c;
