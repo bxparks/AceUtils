@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.4.1</span>
+   &#160;<span id="projectnumber">0.5.0</span>
    </div>
    <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
@@ -70,7 +70,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ace_utils::crc_eeprom::CrcEeprom Class Reference</div>  </div>
@@ -90,30 +90,44 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad6f0e26adae30c2397313dc1547d0cfb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#ad6f0e26adae30c2397313dc1547d0cfb">CrcEeprom</a> (<a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a94b1fd4a63022713b355d45bc68de767">Crc32Calculator</a> crcCalc=ace_crc::crc32_nibble::crc_calculate)</td></tr>
-<tr class="memdesc:ad6f0e26adae30c2397313dc1547d0cfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with an optional Crc32Calculator parameter.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#ad6f0e26adae30c2397313dc1547d0cfb">More...</a><br /></td></tr>
-<tr class="separator:ad6f0e26adae30c2397313dc1547d0cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7f7bbf0f1eeff6430792a4612f0fc0e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#aa7f7bbf0f1eeff6430792a4612f0fc0e">CrcEeprom</a> (<a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html">IEepromAdapter</a> &amp;eepromAdapter, uint32_t contextId=0, <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a94b1fd4a63022713b355d45bc68de767">Crc32Calculator</a> crcCalc=ace_crc::crc32_nibblem::crc_calculate)</td></tr>
+<tr class="memdesc:aa7f7bbf0f1eeff6430792a4612f0fc0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with an optional <code>contextId</code> identifier and an optional Crc32Calculator <code>crcCalc</code> function pointer.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#aa7f7bbf0f1eeff6430792a4612f0fc0e">More...</a><br /></td></tr>
+<tr class="separator:aa7f7bbf0f1eeff6430792a4612f0fc0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa98dd019e95fad991a77296eec0e728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#afa98dd019e95fad991a77296eec0e728">begin</a> (size_t size)</td></tr>
-<tr class="memdesc:afa98dd019e95fad991a77296eec0e728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call from global setup() function.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#afa98dd019e95fad991a77296eec0e728">More...</a><br /></td></tr>
+<tr class="memdesc:afa98dd019e95fad991a77296eec0e728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the underlying eepromAdapter with the given size.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#afa98dd019e95fad991a77296eec0e728">More...</a><br /></td></tr>
 <tr class="separator:afa98dd019e95fad991a77296eec0e728"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb4a02090c1bfc668cf86cbb12e713c0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#adb4a02090c1bfc668cf86cbb12e713c0">writeWithCrc</a> (int address, const void *const data, const size_t dataSize) const</td></tr>
-<tr class="memdesc:adb4a02090c1bfc668cf86cbb12e713c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the data with its CRC.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#adb4a02090c1bfc668cf86cbb12e713c0">More...</a><br /></td></tr>
-<tr class="separator:adb4a02090c1bfc668cf86cbb12e713c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82c85ef76e886c832438a71d5d4e7e9b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a82c85ef76e886c832438a71d5d4e7e9b">readWithCrc</a> (int address, void *const data, const size_t dataSize) const</td></tr>
-<tr class="memdesc:a82c85ef76e886c832438a71d5d4e7e9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the data from EEPROM along with its CRC.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a82c85ef76e886c832438a71d5d4e7e9b">More...</a><br /></td></tr>
-<tr class="separator:a82c85ef76e886c832438a71d5d4e7e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a546566b0a440cf9b715c4de068be44fa"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a546566b0a440cf9b715c4de068be44fa"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a546566b0a440cf9b715c4de068be44fa">writeWithCrc</a> (size_t address, const T &amp;data)</td></tr>
+<tr class="memdesc:a546566b0a440cf9b715c4de068be44fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience method that writes the given <code>data</code> of type <code>T</code> at given <code>address</code>.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a546566b0a440cf9b715c4de068be44fa">More...</a><br /></td></tr>
+<tr class="separator:a546566b0a440cf9b715c4de068be44fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefa1a740fbada5780ea9d99eb7a74ec9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aefa1a740fbada5780ea9d99eb7a74ec9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#aefa1a740fbada5780ea9d99eb7a74ec9">readWithCrc</a> (size_t address, T &amp;data) const</td></tr>
+<tr class="memdesc:aefa1a740fbada5780ea9d99eb7a74ec9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience function that reads the given <code>data</code> of type <code>T</code> at given <code>address</code>.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#aefa1a740fbada5780ea9d99eb7a74ec9">More...</a><br /></td></tr>
+<tr class="separator:aefa1a740fbada5780ea9d99eb7a74ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89f76da5ece78edb8c526ba390ae80a9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a89f76da5ece78edb8c526ba390ae80a9">writeDataWithCrc</a> (size_t address, const void *data, size_t dataSize)</td></tr>
+<tr class="memdesc:a89f76da5ece78edb8c526ba390ae80a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the data with its CRC and its <code>contextId</code>.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a89f76da5ece78edb8c526ba390ae80a9">More...</a><br /></td></tr>
+<tr class="separator:a89f76da5ece78edb8c526ba390ae80a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e45d0ea63efe500a0aa240f8d6a3b06"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a5e45d0ea63efe500a0aa240f8d6a3b06">readDataWithCrc</a> (size_t address, void *data, size_t dataSize) const</td></tr>
+<tr class="memdesc:a5e45d0ea63efe500a0aa240f8d6a3b06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the data from EEPROM along with its CRC and <code>contextId</code>.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a5e45d0ea63efe500a0aa240f8d6a3b06">More...</a><br /></td></tr>
+<tr class="separator:a5e45d0ea63efe500a0aa240f8d6a3b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a2f2fcf3066d500a77cfbbf1e03437a8e"><td class="memItemLeft" align="right" valign="top">const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a2f2fcf3066d500a77cfbbf1e03437a8e">kCrcSize</a> = sizeof(uint32_t)</td></tr>
-<tr class="memdesc:a2f2fcf3066d500a77cfbbf1e03437a8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the crc32 type, uint32_t.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a2f2fcf3066d500a77cfbbf1e03437a8e">More...</a><br /></td></tr>
-<tr class="separator:a2f2fcf3066d500a77cfbbf1e03437a8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a87f0b2818116bf0b8998156662fb4636"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a87f0b2818116bf0b8998156662fb4636">toContextId</a> (char a, char b, char c, char d)</td></tr>
+<tr class="memdesc:a87f0b2818116bf0b8998156662fb4636"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert 4 characters into a uint32_t <code>contextId</code> Example &lsquo;toContextId('d&rsquo;, 'e', 'm', 'o')`.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a87f0b2818116bf0b8998156662fb4636">More...</a><br /></td></tr>
+<tr class="separator:a87f0b2818116bf0b8998156662fb4636"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e402fa573e6b91a28b9da95e0080625"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a6e402fa573e6b91a28b9da95e0080625">toSavedSize</a> (size_t dataSize)</td></tr>
+<tr class="memdesc:a6e402fa573e6b91a28b9da95e0080625"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the actual number of bytes saved to EEPROM for the given dataSize.  <a href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a6e402fa573e6b91a28b9da95e0080625">More...</a><br /></td></tr>
+<tr class="separator:a6e402fa573e6b91a28b9da95e0080625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Thin wrapper around the EEPROM object (from the the built-in EEPROM library) to read and write a given block of data along with its CRC check. </p>
-<p>The CRC is written <em>after</em> the data block, instead of at the beginning of the data block to reduce flash write wear of the bytes corresonding to the CRC. Over time, it is expected that the size of the data block will change, as fields are added or deleted. Therefore, the location of the CRC bytes will also change, which helps wear leveling. If the CRC bytes were at the beginning, those CRC byes would experience the highest level of writes, even when the data block size changes. </p>
+<p>When the data is read back, the CRC is recomputed and checked against the CRC stored in EEPROM. If they do not match, the <code><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#aefa1a740fbada5780ea9d99eb7a74ec9" title="Convenience function that reads the given data of type T at given address.">readWithCrc()</a></code> method returns false.</p>
+<p>An optional <code>contextId</code> can also be stored with the data. It is provided by the calling application to identify the context of the data being stored in the EEPROM. If another app happens to store a different data, with the same data length, the CRC would return valid even though the data is not compatible. This application-defined identifier prevents the collision.</p>
+<p>The <code>contextId</code> is written <em>before</em> the data block because the <code>contextId</code> will not change over multiple updates to the data block. This will help with wear-leveling on the AVR platforms.</p>
+<p>The CRC is written <em>after</em> the data block, instead of at the beginning of the data block to reduce flash write wear of the bytes corresonding to the CRC. Over time, it is expected that the size of the data block will change, as fields are added or deleted. Therefore, the location of the CRC bytes will also change, which helps wear-leveling. If the CRC bytes were at the beginning, those CRC byes would experience the highest level of writes, even when the data block size changes. </p>
 
-<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00039">39</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00130">130</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a94b1fd4a63022713b355d45bc68de767"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94b1fd4a63022713b355d45bc68de767">&#9670;&nbsp;</a></span>Crc32Calculator</h2>
@@ -130,13 +144,13 @@ Public Attributes</h2></td></tr>
 <p>Function pointer to the CRC32 calculator. </p>
 <p>For example, <code>ace_crc::crc32_nibble::crc_calculate</code> or <code>ace_crc::crc32_byte::crc_calculate</code>. </p>
 
-<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00046">46</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00137">137</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad6f0e26adae30c2397313dc1547d0cfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6f0e26adae30c2397313dc1547d0cfb">&#9670;&nbsp;</a></span>CrcEeprom()</h2>
+<a id="aa7f7bbf0f1eeff6430792a4612f0fc0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7f7bbf0f1eeff6430792a4612f0fc0e">&#9670;&nbsp;</a></span>CrcEeprom()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -147,9 +161,25 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">ace_utils::crc_eeprom::CrcEeprom::CrcEeprom </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a94b1fd4a63022713b355d45bc68de767">Crc32Calculator</a>&#160;</td>
-          <td class="paramname"><em>crcCalc</em> = <code>ace_crc::crc32_nibble::crc_calculate</code></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html">IEepromAdapter</a> &amp;&#160;</td>
+          <td class="paramname"><em>eepromAdapter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>contextId</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a94b1fd4a63022713b355d45bc68de767">Crc32Calculator</a>&#160;</td>
+          <td class="paramname"><em>crcCalc</em> = <code>ace_crc::crc32_nibblem::crc_calculate</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -159,10 +189,17 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor with an optional Crc32Calculator parameter. </p>
-<p>By default, the Crc32Calculator will be set to <code>ace_crc::crc32_nibble::crc_calculate()</code> which uses a 4-bit (16 element) lookup table and has a good balance between flash memory consumption and speed. You can choose to provide an alternate CRC32 calculator for faster speed or for smaller flash memory consumption. </p>
+<p>Constructor with an optional <code>contextId</code> identifier and an optional Crc32Calculator <code>crcCalc</code> function pointer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">eepromAdapter</td><td>an instance of <code><a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html" title="The base EEPROM API used by CrcEeprom class.">IEepromAdapter</a></code> that encapsulates a specific <code>EEPROM</code> instance for a given platform. The <code><a class="el" href="classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html" title="The base EEPROM API used by CrcEeprom class.">IEepromAdapter</a></code> provides a common API to access the different <code>EEPROM</code> implementations on various platforms. </td></tr>
+    <tr><td class="paramname">contextId</td><td>an optional application-defined identifier of the data being stored. This prevents collisions between 2 different data which just happens to be the same size. The default is 0 for backwards compatibility but this field is highly recommended to be defined. Use the <code><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a87f0b2818116bf0b8998156662fb4636" title="Convert 4 characters into a uint32_t contextId Example ‘toContextId(&#39;d’, &#39;e&#39;, &#39;m&#39;,...">toContextId()</a></code> function to convert 4 human-readable characters into a uint32_t. </td></tr>
+    <tr><td class="paramname">crcCalc</td><td>an optional CRC32 calculator. By default, the Crc32Calculator will be set to <code>ace_crc::crc32_nibble::crc_calculate()</code> except on ESP8266 where it will be set to <code>ace_crc::crc32_nibblem::crc_calculate()</code> because the latter is 2.7X faster on the ESP8266. Both of these algorithms use a 4-bit (16 element) lookup table and has a good balance between flash memory consumption and speed. See <a href="https://github.com/bxparks/AceCRC">https://github.com/bxparks/AceCRC</a> for details. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00059">59</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00184">184</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
 
 </div>
 </div>
@@ -191,18 +228,59 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Call from global setup() function. </p>
-<p>Needed for ESP8266 and ESP32, does nothing for AVR and others. </p>
+<p>Initialize the underlying eepromAdapter with the given size. </p>
+<p>Some <code>EEPROM</code> implementations will just ignore the size, or do nothing upon this call. </p>
 
-<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00069">69</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00203">203</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
 
 </div>
 </div>
-<a id="a82c85ef76e886c832438a71d5d4e7e9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82c85ef76e886c832438a71d5d4e7e9b">&#9670;&nbsp;</a></span>readWithCrc()</h2>
+<a id="a5e45d0ea63efe500a0aa240f8d6a3b06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e45d0ea63efe500a0aa240f8d6a3b06">&#9670;&nbsp;</a></span>readDataWithCrc()</h2>
 
 <div class="memitem">
 <div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ace_utils::crc_eeprom::CrcEeprom::readDataWithCrc </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dataSize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read the data from EEPROM along with its CRC and <code>contextId</code>. </p>
+<p>Return true if both the CRC of the retrieved data and its <code>contextId</code> matches the expected CRC and <code>contextId</code> when it was written. </p>
+
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8cpp_source.html#l00035">35</a> of file <a class="el" href="CrcEeprom_8cpp_source.html">CrcEeprom.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aefa1a740fbada5780ea9d99eb7a74ec9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefa1a740fbada5780ea9d99eb7a74ec9">&#9670;&nbsp;</a></span>readWithCrc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -210,20 +288,14 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool ace_utils::crc_eeprom::CrcEeprom::readWithCrc </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>address</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void *const&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const size_t&#160;</td>
-          <td class="paramname"><em>dataSize</em>&#160;</td>
+          <td class="paramtype">T &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -238,15 +310,21 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Read the data from EEPROM along with its CRC. </p>
-<p>Return true if the CRC of the data retrieved matches the CRC of the data when it was written. The type of <code>address</code> is <code>int</code> for consistency with the API of the EEPROM library. </p>
+<p>Convenience function that reads the given <code>data</code> of type <code>T</code> at given <code>address</code>. </p>
+<p>The compiler figures out the <code>sizeof(T)</code> automatically before calling <code><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a5e45d0ea63efe500a0aa240f8d6a3b06" title="Read the data from EEPROM along with its CRC and contextId.">readDataWithCrc()</a></code>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>type of <code>data</code> </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00108">108</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00227">227</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
 
 </div>
 </div>
-<a id="adb4a02090c1bfc668cf86cbb12e713c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb4a02090c1bfc668cf86cbb12e713c0">&#9670;&nbsp;</a></span>writeWithCrc()</h2>
+<a id="a87f0b2818116bf0b8998156662fb4636"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87f0b2818116bf0b8998156662fb4636">&#9670;&nbsp;</a></span>toContextId()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,27 +333,146 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t ace_utils::crc_eeprom::CrcEeprom::writeWithCrc </td>
+          <td class="memname">static constexpr uint32_t ace_utils::crc_eeprom::CrcEeprom::toContextId </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>d</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert 4 characters into a uint32_t <code>contextId</code> Example &lsquo;toContextId('d&rsquo;, 'e', 'm', 'o')`. </p>
+<p>On little-endian processors, the implemented formula will cause the uint32_t number to be written as (a,b,c,d) in memory, which helps debugging. </p>
+
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00145">145</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+
+</div>
+</div>
+<a id="a6e402fa573e6b91a28b9da95e0080625"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e402fa573e6b91a28b9da95e0080625">&#9670;&nbsp;</a></span>toSavedSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static constexpr size_t ace_utils::crc_eeprom::CrcEeprom::toSavedSize </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dataSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the actual number of bytes saved to EEPROM for the given dataSize. </p>
+<p>This includes the <code>contextId</code> header and the CRC. This is the minimum size that should be passed into the <a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#afa98dd019e95fad991a77296eec0e728" title="Initialize the underlying eepromAdapter with the given size.">begin()</a> method. </p>
+
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00157">157</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+
+</div>
+</div>
+<a id="a89f76da5ece78edb8c526ba390ae80a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89f76da5ece78edb8c526ba390ae80a9">&#9670;&nbsp;</a></span>writeDataWithCrc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t ace_utils::crc_eeprom::CrcEeprom::writeDataWithCrc </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>address</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const void *const&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>dataSize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write the data with its CRC and its <code>contextId</code>. </p>
+<p>Returns the number of bytes written, or 0 if a failure occurred. </p>
+
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8cpp_source.html#l00011">11</a> of file <a class="el" href="CrcEeprom_8cpp_source.html">CrcEeprom.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a546566b0a440cf9b715c4de068be44fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a546566b0a440cf9b715c4de068be44fa">&#9670;&nbsp;</a></span>writeWithCrc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t ace_utils::crc_eeprom::CrcEeprom::writeWithCrc </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -285,35 +482,22 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Write the data with its CRC. </p>
-<p>Returns the number of bytes written. The type of <code>address</code> is <code>int</code> for consistency with the API of the EEPROM library. </p>
+<p>Convenience method that writes the given <code>data</code> of type <code>T</code> at given <code>address</code>. </p>
+<p>The compiler figures out the <code>sizeof(T)</code> automatically before calling <code><a class="el" href="classace__utils_1_1crc__eeprom_1_1CrcEeprom.html#a89f76da5ece78edb8c526ba390ae80a9" title="Write the data with its CRC and its contextId.">writeDataWithCrc()</a></code>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>type of <code>data</code> </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00082">82</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a2f2fcf3066d500a77cfbbf1e03437a8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f2fcf3066d500a77cfbbf1e03437a8e">&#9670;&nbsp;</a></span>kCrcSize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const size_t ace_utils::crc_eeprom::CrcEeprom::kCrcSize = sizeof(uint32_t)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Size of the crc32 type, uint32_t. </p>
-<p>Should always be 4. </p>
-
-<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00049">49</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CrcEeprom_8h_source.html#l00215">215</a> of file <a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/brian/src/AceUtils/src/crc_eeprom/<a class="el" href="CrcEeprom_8h_source.html">CrcEeprom.h</a></li>
+<li>/home/brian/src/AceUtils/src/crc_eeprom/<a class="el" href="CrcEeprom_8cpp_source.html">CrcEeprom.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

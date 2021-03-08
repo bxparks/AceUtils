@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">AceUtils
-   &#160;<span id="projectnumber">0.4.1</span>
+   &#160;<span id="projectnumber">0.5.0</span>
    </div>
    <div id="projectbrief">Useful Arduino utilties which are too small as separate libraries, but complex enough to be shared among multiple projects, and often have external dependencies to other libraries.</div>
   </td>
@@ -104,7 +104,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a367a2cbd734cac13b875a7fa44224ff5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classace__utils_1_1cli_1_1CommandManager.html#a367a2cbd734cac13b875a7fa44224ff5">More...</a><br /></td></tr>
 <tr class="separator:a367a2cbd734cac13b875a7fa44224ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee686417c164a6d1a243f1d53ab7aa6d"><td class="memItemLeft" align="right" valign="top"><a id="aee686417c164a6d1a243f1d53ab7aa6d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>runCoroutine</b> () override</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1cli_1_1CommandManager.html#aee686417c164a6d1a243f1d53ab7aa6d">runCoroutine</a> () override</td></tr>
+<tr class="memdesc:aee686417c164a6d1a243f1d53ab7aa6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main body of coroutine, dispatches to the underlying mStreamLineReader and mDispatcher. <br /></td></tr>
 <tr class="separator:aee686417c164a6d1a243f1d53ab7aa6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af767cc67f79958fdf7d260d2737af7c9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html">CommandDispatcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classace__utils_1_1cli_1_1CommandManager.html#af767cc67f79958fdf7d260d2737af7c9">getDispatcher</a> () const</td></tr>
 <tr class="memdesc:af767cc67f79958fdf7d260d2737af7c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>.  <a href="classace__utils_1_1cli_1_1CommandManager.html#af767cc67f79958fdf7d260d2737af7c9">More...</a><br /></td></tr>
@@ -116,7 +117,7 @@ class ace_utils::cli::CommandManager&lt; BUF_SIZE, ARGV_SIZE &gt;</h3>
 
 <p>A convenience wrapper around a <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a> that hides complexity of creating, initializing and injecting the resources needed by the <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>. </p>
 <p>It is not strictly necessary to use this, but the setup is much easier using this class.</p>
-<p>This is a subclass of Coroutine, just like <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>. The runCoroutine() method simply delegates to the underlying <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>, so this class can be used as a substitute for <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>. The setupCoroutine() method should be called to initialize the name of the coroutine and insert it into the CoroutineScheduler.</p>
+<p>This is a subclass of Coroutine, just like <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>. The <a class="el" href="classace__utils_1_1cli_1_1CommandManager.html#aee686417c164a6d1a243f1d53ab7aa6d" title="Main body of coroutine, dispatches to the underlying mStreamLineReader and mDispatcher.">runCoroutine()</a> method simply delegates to the underlying <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>, so this class can be used as a substitute for <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>. The setupCoroutine() method should be called to initialize the name of the coroutine and insert it into the CoroutineScheduler.</p>
 <p>Example usage:</p>
 <div class="fragment"><div class="line"><span class="keyword">class </span>CommandA: <span class="keyword">public</span> CommandHandler {</div>
 <div class="line">  ...</div>
@@ -246,7 +247,7 @@ template&lt;uint8_t BUF_SIZE, uint8_t ARGV_SIZE&gt; </div>
 <p>Return the <a class="el" href="classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,...">CommandDispatcher</a>. </p>
 <p>VisibleForTesting. </p>
 
-<p class="definition">Definition at line <a class="el" href="CommandManager_8h_source.html#l00113">113</a> of file <a class="el" href="CommandManager_8h_source.html">CommandManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CommandManager_8h_source.html#l00117">117</a> of file <a class="el" href="CommandManager_8h_source.html">CommandManager.h</a>.</p>
 
 </div>
 </div>

@@ -5,7 +5,8 @@
 #include <AUnitVerbose.h>
 #include <AceUtilsCli.h>
 
-using namespace aunit;
+using aunit::TestRunner;
+using aunit::TestOnce;
 using namespace ace_utils::cli;
 using ace_common::FCString;
 

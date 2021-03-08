@@ -6,35 +6,126 @@
 #ifndef ACE_UTILS_CRC_EEPROM_H
 #define ACE_UTILS_CRC_EEPROM_H
 
-// Cannot compile this on EpoxyDuino
-#if ! defined(EPOXY_DUINO)
-
-// EEPROM is supported only on certain Arduino boards. In particular, many
-// (most?) Arduino Zero compatible boards cannot support EEPROM even on Flash
-// emulation because the version of the SAMD21 chip on the board doesn't
-// support RWW (read-while-write).
-#if !defined(AVR) && !defined(ESP8266) && !defined(ESP32) && \
-    !defined(TEENSYDUINO)
-  #error Unsupported architecture
-#endif
-
-#include <EEPROM.h>
 #include <AceCRC.h> // crc32_nibble
-#include <string.h> // memcpy()
 
 namespace ace_utils {
 namespace crc_eeprom {
 
 /**
+ * The base EEPROM API used by CrcEeprom class.
+ *
+ * Different platforms have implemented the `EEPROM` object in different ways.
+ * There are at least 2 different APIs: AVR-flavor (AVR, Teensy, STM32) and
+ * ESP-flavor (ESP8266, ESP32). Sometimes, it makes sense to implement both
+ * versions, for example, on the STM32 where the default `EEPROM` is horribly
+ * inefficient so a buffered version (See stm32_eeprom in this project) should
+ * be used.
+ */
+class IEepromAdapter {
+  public:
+    /**
+     * Initialize the size of the EEPROM space. On AVR-flavored EEPROM, this
+     * does nothing.
+     */
+    virtual void begin(size_t size) = 0;
+
+    /** Write thte byte at address, potentially buffered. */
+    virtual void write(size_t address, uint8_t val) = 0;
+
+    /** Return the byte at address. */
+    virtual uint8_t read(size_t address) const = 0;
+
+    /** Flush the buffer if it is used. */
+    virtual bool commit() = 0;
+};
+
+/**
+ * A wrapper class around an EEPROM class that follows the AVR-style API.
+ * @tparam E type of the EEPROM class
+ */
+template <typename E>
+class AvrEepromAdapter: public IEepromAdapter {
+  public:
+    /** Wrap around an AVR-flavored EEPROM object. */
+    AvrEepromAdapter(E &eeprom)
+      : mEeprom(eeprom)
+    {}
+
+    virtual void begin(size_t size) {
+      (void) size; // disable compiler warning
+    }
+
+    virtual void write(size_t address, uint8_t val) {
+      mEeprom.update(address, val);
+    }
+
+    virtual uint8_t read(size_t address) const {
+      return mEeprom.read(address);
+    }
+
+    virtual bool commit() {
+      return true;
+    }
+
+  private:
+    E& mEeprom;
+};
+
+/**
+ * A wrapper class around an EEPROM class that follows the ESP-style API.
+ * @tparam E type of the EEPROM class
+ */
+template <typename E>
+class EspEepromAdapter: public IEepromAdapter {
+  public:
+    /** Wrap around an ESP-flavored EEPROM object. */
+    EspEepromAdapter(E &eeprom)
+      : mEeprom(eeprom)
+    {}
+
+    virtual void begin(size_t size) {
+      mEeprom.begin(size);
+    }
+
+    virtual uint8_t read(size_t address) const {
+      return mEeprom.read(address);
+    }
+
+    virtual void write(size_t address, uint8_t val) {
+      mEeprom.write(address, val);
+    }
+
+    virtual bool commit() {
+      return mEeprom.commit();
+    }
+
+  private:
+    E& mEeprom;
+};
+
+/**
  * Thin wrapper around the EEPROM object (from the the built-in EEPROM library)
- * to read and write a given block of data along with its CRC check. The CRC is
- * written *after* the data block, instead of at the beginning of the data
- * block to reduce flash write wear of the bytes corresonding to the CRC. Over
- * time, it is expected that the size of the data block will change, as fields
- * are added or deleted. Therefore, the location of the CRC bytes will also
- * change, which helps wear leveling. If the CRC bytes were at the beginning,
- * those CRC byes would experience the highest level of writes, even when the
- * data block size changes.
+ * to read and write a given block of data along with its CRC check. When the
+ * data is read back, the CRC is recomputed and checked against the CRC stored
+ * in EEPROM. If they do not match, the `readWithCrc()` method returns false.
+ *
+ * An optional `contextId` can also be stored with the data. It is provided by
+ * the calling application to identify the context of the data being stored in
+ * the EEPROM. If another app happens to store a different data, with the same
+ * data length, the CRC would return valid even though the data is not
+ * compatible. This application-defined identifier prevents the collision.
+ *
+ * The `contextId` is written *before* the data block because the `contextId`
+ * will not change over multiple updates to the data block. This will help with
+ * wear-leveling on the AVR platforms.
+ *
+ * The CRC is written *after* the data block, instead of at the beginning of
+ * the data block to reduce flash write wear of the bytes corresonding to the
+ * CRC. Over time, it is expected that the size of the data block will change,
+ * as fields are added or deleted. Therefore, the location of the CRC bytes
+ * will also change, which helps wear-leveling. If the CRC bytes were at the
+ * beginning, those CRC byes would experience the highest level of writes, even
+ * when the data block size changes.
  */
 class CrcEeprom {
   public:
@@ -45,113 +136,139 @@ class CrcEeprom {
      */
     typedef uint32_t (*Crc32Calculator)(const void* data, size_t dataSize);
 
-    /** Size of the crc32 type, uint32_t. Should always be 4. */
-    const size_t kCrcSize = sizeof(uint32_t);
+    /**
+     * Convert 4 characters into a uint32_t `contextId` Example
+     * `toContextId('d', 'e', 'm', 'o')`. On little-endian processors, the
+     * implemented formula will cause the uint32_t number to be written as
+     * (a,b,c,d) in memory, which helps debugging.
+     */
+    static constexpr uint32_t toContextId(char a, char b, char c, char d) {
+      return ((uint32_t) d << 24)
+          | ((uint32_t) c << 16)
+          | ((uint32_t) b << 8)
+          | a;
+    }
 
     /**
-     * Constructor with an optional Crc32Calculator parameter. By default, the
-     * Crc32Calculator will be set to `ace_crc::crc32_nibble::crc_calculate()`
-     * which uses a 4-bit (16 element) lookup table and has a good balance
-     * between flash memory consumption and speed. You can choose to provide an
-     * alternate CRC32 calculator for faster speed or for smaller flash memory
-     * consumption.
+     * Return the actual number of bytes saved to EEPROM for the given dataSize.
+     * This includes the `contextId` header and the CRC. This is the minimum
+     * size that should be passed into the begin() method.
+     */
+    static constexpr size_t toSavedSize(size_t dataSize) {
+      return dataSize + 8;
+    }
+
+    /**
+     * Constructor with an optional `contextId` identifier and an
+     * optional Crc32Calculator `crcCalc` function pointer.
+     *
+     * @param eepromAdapter an instance of `IEepromAdapter` that encapsulates
+     *    a specific `EEPROM` instance for a given platform. The
+     *    `IEepromAdapter` provides a common API to access the different
+     *    `EEPROM` implementations on various platforms.
+     * @param contextId an optional application-defined identifier of the data
+     *    being stored. This prevents collisions between 2 different data which
+     *    just happens to be the same size. The default is 0 for backwards
+     *    compatibility but this field is highly recommended to be defined.
+     *    Use the `toContextId()` function to convert 4 human-readable
+     *    characters into a uint32_t.
+     * @param crcCalc an optional CRC32 calculator. By default, the
+     *    Crc32Calculator will be set to
+     *    `ace_crc::crc32_nibble::crc_calculate()` except on ESP8266 where it
+     *    will be set to `ace_crc::crc32_nibblem::crc_calculate()` because the
+     *    latter is 2.7X faster on the ESP8266. Both of these algorithms use a
+     *    4-bit (16 element) lookup table and has a good balance between flash
+     *    memory consumption and speed. See https://github.com/bxparks/AceCRC
+     *    for details.
      */
     explicit CrcEeprom(
-        Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate)
-      : mCrc32Calculator(crcCalc)
-      {}
+      IEepromAdapter& eepromAdapter,
+      uint32_t contextId = 0,
+      #if defined(ESP8266)
+        Crc32Calculator crcCalc = ace_crc::crc32_nibblem::crc_calculate
+      #else
+        Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate
+      #endif
+    ) :
+        mEepromAdapter(eepromAdapter),
+        mContextId(contextId),
+        mCrc32Calculator(crcCalc)
+    {}
 
     /**
-     * Call from global setup() function. Needed for ESP8266 and ESP32,
-     * does nothing for AVR and others.
+     * Initialize the underlying eepromAdapter with the given size. Some
+     * `EEPROM` implementations will just ignore the size, or do nothing upon
+     * this call.
      */
-#if defined(ESP8266) || defined(ESP32)
     void begin(size_t size) {
-      EEPROM.begin(size);
-    }
-#else
-    void begin(size_t /*size*/) {
-    }
-#endif
-
-    /**
-     * Write the data with its CRC. Returns the number of bytes written.
-     * The type of `address` is `int` for consistency with the API of the
-     * EEPROM library.
-     */
-    size_t writeWithCrc(
-        int address,
-        const void* const data,
-        const size_t dataSize
-    ) const {
-      size_t byteCount = dataSize;
-      const uint8_t* d = (const uint8_t*) data;
-
-      // write data blcok
-      while (byteCount-- > 0) {
-        write(address++, *d++);
-      }
-
-      // write CRC at the end of the data block
-      uint32_t crc = (*mCrc32Calculator)(data, dataSize);
-      EEPROM.put(address, crc);
-      bool success = commit();
-      return (success) ? dataSize + kCrcSize : 0;
+      mEepromAdapter.begin(size);
     }
 
     /**
-     * Read the data from EEPROM along with its CRC. Return true if the CRC of
-     * the data retrieved matches the CRC of the data when it was written.
-     * The type of `address` is `int` for consistency with the API of the
-     * EEPROM library.
+     * Convenience method that writes the given `data` of type `T` at given
+     * `address`. The compiler figures out the `sizeof(T)` automatically before
+     * calling `writeDataWithCrc()`.
+     *
+     * @tparam T type of `data`
      */
-    bool readWithCrc(
-        int address,
-        void* const data,
-        const size_t dataSize
-    ) const {
-      size_t byteCount = dataSize;
-      uint8_t* d = (uint8_t*) data;
+    template<typename T>
+    size_t writeWithCrc(size_t address, const T& data) {
+      return writeDataWithCrc(address, &data, sizeof(T));
+    }
 
-      // read data block
-      while (byteCount-- > 0) {
-        *d++ = read(address++);
+    /**
+     * Convenience function that reads the given `data` of type `T` at given
+     * `address`. The compiler figures out the `sizeof(T)` automatically before
+     * calling `readDataWithCrc()`.
+     *
+     * @tparam T type of `data`
+     */
+    template<typename T>
+    bool readWithCrc(size_t address, T& data) const {
+      return readDataWithCrc(address, &data, sizeof(T));
+    }
+
+    /**
+     * Write the data with its CRC and its `contextId`. Returns the number of
+     * bytes written, or 0 if a failure occurred.
+     */
+    size_t writeDataWithCrc(size_t address, const void* data, size_t dataSize);
+
+    /**
+     * Read the data from EEPROM along with its CRC and `contextId`. Return true
+     * if both the CRC of the retrieved data and its `contextId` matches the
+     * expected CRC and `contextId` when it was written.
+     */
+    bool readDataWithCrc(size_t address, void* data, size_t dataSize) const;
+
+  private:
+    void write(size_t address, uint8_t val) {
+      mEepromAdapter.write(address, val);
+    }
+
+    uint8_t read(size_t address) const { return mEepromAdapter.read(address); }
+
+    bool commit() { return mEepromAdapter.commit(); }
+
+    void writeData(size_t address, const uint8_t* data, size_t size) {
+      while (size--) {
+        write(address++, *data++);
       }
+    }
 
-      // Read data and verify same CRC
-      uint32_t retrievedCrc;
-      EEPROM.get(address, retrievedCrc);
-      uint32_t expectedCrc = (*mCrc32Calculator)(data, dataSize);
-      return expectedCrc == retrievedCrc;
+    void readData(size_t address, uint8_t* data, size_t size) const {
+      while (size--) {
+        *data++ = read(address++);
+      }
     }
 
   private:
-    void write(int address, uint8_t val) const {
-#if defined(ESP8266) || defined(ESP32)
-      EEPROM.write(address, val);
-#else
-      EEPROM.update(address, val);
-#endif
-    }
-
-    uint8_t read(int address) const {
-      return EEPROM.read(address);
-    }
-
-    bool commit() const {
-#if defined(ESP8266) || defined(ESP32)
-      return EEPROM.commit();
-#else
-      return true;
-#endif
-    }
-
+    IEepromAdapter& mEepromAdapter;
+    uint32_t const mContextId;
     Crc32Calculator const mCrc32Calculator;
 };
 
 } // crc_eeprom
 } // ace_utils
-
-#endif // ! defined(EPOXY_DUINO)
 
 #endif // defined(ACE_UTILS_CRC_EEPROM_H)

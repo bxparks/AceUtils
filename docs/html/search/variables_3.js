@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nummodes_82',['numModes',['../structace__utils_1_1mode__group_1_1ModeGroup.html#a43fc6a7df3927f0d3d16f0c33901b0e5',1,'ace_utils::mode_group::ModeGroup']]]
+  ['parentgroup_106',['parentGroup',['../structace__utils_1_1mode__group_1_1ModeGroup.html#a8e8e2d3b47f11a516d70d2664db9bcde',1,'ace_utils::mode_group::ModeGroup']]]
 ];

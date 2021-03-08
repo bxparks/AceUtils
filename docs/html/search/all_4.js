@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['getdispatcher_13',['getDispatcher',['../classace__utils_1_1cli_1_1CommandManager.html#af767cc67f79958fdf7d260d2737af7c9',1,'ace_utils::cli::CommandManager']]],
-  ['gethelpstring_14',['getHelpString',['../classace__utils_1_1cli_1_1CommandHandler.html#a44b81af723307175744e02a0517b52b3',1,'ace_utils::cli::CommandHandler']]],
-  ['getname_15',['getName',['../classace__utils_1_1cli_1_1CommandHandler.html#a4a2832aa6b28f490661214a1cf9ab4b6',1,'ace_utils::cli::CommandHandler']]]
+  ['findandruncommand_15',['findAndRunCommand',['../classace__utils_1_1cli_1_1CommandDispatcher.html#a97631715e21c262544a228377688d593',1,'ace_utils::cli::CommandDispatcher']]],
+  ['findcommand_16',['findCommand',['../classace__utils_1_1cli_1_1CommandDispatcher.html#ad59ab4795f6834ccf252dce8b0682c52',1,'ace_utils::cli::CommandDispatcher']]]
 ];

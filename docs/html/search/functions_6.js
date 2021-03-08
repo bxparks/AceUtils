@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['mode_65',['mode',['../classace__utils_1_1mode__group_1_1ModeNavigator.html#a9e8dd63c1d9aaf46400e4d8a2f04f8fe',1,'ace_utils::mode_group::ModeNavigator']]],
-  ['modenavigator_66',['ModeNavigator',['../classace__utils_1_1mode__group_1_1ModeNavigator.html#aab97f3a22f4e9212356880285f6bfbb3',1,'ace_utils::mode_group::ModeNavigator']]]
+  ['helpall_78',['helpAll',['../classace__utils_1_1cli_1_1CommandDispatcher.html#a517055113aecc022baed1fa53742ee7c',1,'ace_utils::cli::CommandDispatcher']]],
+  ['helpcommandhandler_79',['helpCommandHandler',['../classace__utils_1_1cli_1_1CommandDispatcher.html#af91ec1340b0b62e43dab869316cf9b22',1,'ace_utils::cli::CommandDispatcher']]],
+  ['helpspecific_80',['helpSpecific',['../classace__utils_1_1cli_1_1CommandDispatcher.html#aaba7e9cf696e4a84e0611cf9c9d40607',1,'ace_utils::cli::CommandDispatcher']]]
 ];

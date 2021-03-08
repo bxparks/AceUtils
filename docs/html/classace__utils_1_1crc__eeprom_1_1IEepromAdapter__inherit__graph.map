@@ -1,0 +1,5 @@
+<map id="ace_utils::crc_eeprom::IEepromAdapter" name="ace_utils::crc_eeprom::IEepromAdapter">
+<area shape="rect" id="node1" title="The base EEPROM API used by CrcEeprom class." alt="" coords="5,39,169,80"/>
+<area shape="rect" id="node2" href="$classace__utils_1_1crc__eeprom_1_1AvrEepromAdapter.html" title="A wrapper class around an EEPROM class that follows the AVR&#45;style API." alt="" coords="218,5,409,47"/>
+<area shape="rect" id="node3" href="$classace__utils_1_1crc__eeprom_1_1EspEepromAdapter.html" title="A wrapper class around an EEPROM class that follows the ESP&#45;style API." alt="" coords="217,71,409,112"/>
+</map>
