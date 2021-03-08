@@ -29,7 +29,7 @@ Arduino application if the API of this library is changed. To reflect the
 transient and experimental nature of this library, it is likely that the version
 will always remain in the `v0.xx.yy` form.
 
-**Version**: 0.4.1 (2021-01-22)
+**Version**: 0.5.0 (2021-03-08)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 

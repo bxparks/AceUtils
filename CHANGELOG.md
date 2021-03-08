@@ -1,6 +1,7 @@
 # Changelog
 
 * Unreleased
+* 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.
     * Change default CRC32 calculator to `crc32_nibblem` for the ESP8266
@@ -13,13 +14,30 @@
     * Add `CrcEeprom::toContextId()` helper to generate the `contextId`.
     * Add `CrcEeprom::toSavedSize()` to calculate the minimum size to pass to
       `CrcEeprom::begin()`.
-    * **Breaking Change**: `writeWithCrc()` and `readWithCrc()` renamed to
-      `writeDataWithCrc()` and `readDataWithCrc()`.
-        * New `writeWithCrc(size_t address, const T& data)` and
-          `readWithCrc(size_t address, T& data)` are convenience template
-          functions which allows the compiler to automatically calculate the
-          `sizeof(T)` then call the underlying `writeDataWithCrc()` and
-          `readDataWithCrc()`.
+    * Add `BufferedEEPROM` global object for STM32 which implements the
+      ESP-flavored API, and uses the "buffered" versions of the low-level EEPROM
+      functions.
+        * Accessed through `#include <AceUtilsStm32BufferedEeprom.h>`.
+        * The default `EEPROM` is unbuffered, which means every `EEPROM.write()`
+          operation causes the entire flash page to be wiped and rewritten.
+    * Add `EspEepromAdapter` and `AvrEepromAdapter` template classes,
+      implementing `IEepromAdapter` interface. These smooth over the API
+      differences between the AVR-flavored EEPROM API and the ESP-flavored
+      EEPROM API and allow the `CrcEeprom` class to support both API flavors.
+    * **Breaking Change**: The constructor of `CrcEeprom` now accepts an
+      instance of `IEepromAdapter`, instead of using the global `EEPROM`
+      object directly.
+        * Creating the `BufferedEEPROM` object for the STM32 meant that there
+          can be 2 `EEPROM` objects active concurrently. So the `CrcEeprom`
+          needs to be told which one to use.
+        * Add `contextId` to the `CrcEeprom` constructor, defaulting to 0x00.
+    * **Breaking Change**: Rename `CrcEeprom::writeWithCrc()` and
+      `readWithCrc()` to `writeDataWithCrc()` and `readDataWithCrc()`.
+        * Replace them with signatures which are easier to use:
+            * `writeWithCrc(size_t address, const T& data)`
+            * `readWithCrc(size_t address, T& data)`.
+        * The compiler compiler automatically figures out the `sizeof(T)` then
+          calls the underlying `writeDataWithCrc()` and `readDataWithCrc()`.
 * 0.4.1 (2021-01-22)
     * Convert `SHIFT_ARGC_ARGV()` macro in `src/cli/CommandHandler.h` to
       an inlined static function `CommandHandler::shiftArgcArgv()` using
