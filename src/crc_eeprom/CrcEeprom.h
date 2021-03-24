@@ -141,6 +141,12 @@ class CrcEeprom {
      * `toContextId('d', 'e', 'm', 'o')`. On little-endian processors, the
      * implemented formula will cause the uint32_t number to be written as
      * (a,b,c,d) in memory, which helps debugging.
+     *
+     * It turns out that this method of generating the `contextId` is not as
+     * useful as I thought it would be, because it is hard to invent new
+     * 4-letter acronyms which are unique. Instead, it seems better to just use
+     * a random 32-bit number, generated in any way that you see fit. That will
+     * have a higher chance of avoiding collisions.
      */
     static constexpr uint32_t toContextId(char a, char b, char c, char d) {
       return ((uint32_t) d << 24)
@@ -170,8 +176,10 @@ class CrcEeprom {
      *    being stored. This prevents collisions between 2 different data which
      *    just happens to be the same size. The default is 0 for backwards
      *    compatibility but this field is highly recommended to be defined.
-     *    Use the `toContextId()` function to convert 4 human-readable
-     *    characters into a uint32_t.
+     *    You can use the `toContextId()` function to convert 4 human-readable
+     *    characters into a uint32_t. But I have actually found it more useful
+     *    to just generate a random 32-bit number and use that for a given
+     *    application.
      * @param crcCalc an optional CRC32 calculator. By default, the
      *    Crc32Calculator will be set to
      *    `ace_crc::crc32_nibble::crc_calculate()` except on ESP8266 where it

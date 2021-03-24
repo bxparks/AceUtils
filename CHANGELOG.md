@@ -1,6 +1,8 @@
 # Changelog
 
 * Unreleased
+    * `CrcEeprom`: Recommend using a 32-bit random number for the `contextId`
+      instead of using `toContextId()` helper function.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.
