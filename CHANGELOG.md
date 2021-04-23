@@ -3,6 +3,11 @@
 * Unreleased
     * `CrcEeprom`: Recommend using a 32-bit random number for the `contextId`
       instead of using `toContextId()` helper function.
+    * Rename `AceUtilsStm32BufferedEeprom.h` to `AceUtilsBufferedEepromStm32.h`.
+    * Rename `IEepromAdapter` to `EepromInterface`; `EspEepromAdapter` to
+      `EspStyleEeprom`; `AvrEepromAdapter` to `AvrStyleEeprom`.
+    * Rename `EpoxyPromAvr` to `EpoxyEepromAvr`; `EpoxyPromEsp` to
+      `EpoxyEepromEsp`; tracks the changes in EpoxyDuino library.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.

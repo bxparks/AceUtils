@@ -63,14 +63,14 @@ will always remain in the `v0.xx.yy` form.
     * Depends on:
         * (none)
 * STM32 Buffered EEPROM
-    * `#include <AceUtilsStm32BufferedEeprom.h>`
+    * `#include <AceUtilsBufferedEepromStm32.h>`
     * A version of `EEPROM` on STM32 that uses a buffer to avoid
       writing to the flash page on every byte update. Implements an API
       compatible with the `EEPROM` object on ESP8266 and ESP32.
         * `BufferedEEPROM.begin()`
         * `BufferedEEPROM.write()`, `read()`, `put()`, `get()`, `length()`
         * `BufferedEEPROM.commit()`
-    * Can be used with `CrcEeprom` through the `EspEepromAdapter`.
+    * Can be used with `CrcEeprom` through the `EspStyleEeprom`.
 
 ## Installation
 

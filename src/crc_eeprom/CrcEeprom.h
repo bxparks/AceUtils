@@ -3,105 +3,14 @@
  * Copyright (c) 2018 Brian T. Park
  */
 
-#ifndef ACE_UTILS_CRC_EEPROM_H
-#define ACE_UTILS_CRC_EEPROM_H
+#ifndef ACE_UTILS_CRC_EEPROM_CRC_EEPROM_H
+#define ACE_UTILS_CRC_EEPROM_CRC_EEPROM_H
 
 #include <AceCRC.h> // crc32_nibble
+#include "EepromInterface.h" // EepromInterface
 
 namespace ace_utils {
 namespace crc_eeprom {
-
-/**
- * The base EEPROM API used by CrcEeprom class.
- *
- * Different platforms have implemented the `EEPROM` object in different ways.
- * There are at least 2 different APIs: AVR-flavor (AVR, Teensy, STM32) and
- * ESP-flavor (ESP8266, ESP32). Sometimes, it makes sense to implement both
- * versions, for example, on the STM32 where the default `EEPROM` is horribly
- * inefficient so a buffered version (See stm32_eeprom in this project) should
- * be used.
- */
-class IEepromAdapter {
-  public:
-    /**
-     * Initialize the size of the EEPROM space. On AVR-flavored EEPROM, this
-     * does nothing.
-     */
-    virtual void begin(size_t size) = 0;
-
-    /** Write thte byte at address, potentially buffered. */
-    virtual void write(size_t address, uint8_t val) = 0;
-
-    /** Return the byte at address. */
-    virtual uint8_t read(size_t address) const = 0;
-
-    /** Flush the buffer if it is used. */
-    virtual bool commit() = 0;
-};
-
-/**
- * A wrapper class around an EEPROM class that follows the AVR-style API.
- * @tparam E type of the EEPROM class
- */
-template <typename E>
-class AvrEepromAdapter: public IEepromAdapter {
-  public:
-    /** Wrap around an AVR-flavored EEPROM object. */
-    AvrEepromAdapter(E &eeprom)
-      : mEeprom(eeprom)
-    {}
-
-    virtual void begin(size_t size) {
-      (void) size; // disable compiler warning
-    }
-
-    virtual void write(size_t address, uint8_t val) {
-      mEeprom.update(address, val);
-    }
-
-    virtual uint8_t read(size_t address) const {
-      return mEeprom.read(address);
-    }
-
-    virtual bool commit() {
-      return true;
-    }
-
-  private:
-    E& mEeprom;
-};
-
-/**
- * A wrapper class around an EEPROM class that follows the ESP-style API.
- * @tparam E type of the EEPROM class
- */
-template <typename E>
-class EspEepromAdapter: public IEepromAdapter {
-  public:
-    /** Wrap around an ESP-flavored EEPROM object. */
-    EspEepromAdapter(E &eeprom)
-      : mEeprom(eeprom)
-    {}
-
-    virtual void begin(size_t size) {
-      mEeprom.begin(size);
-    }
-
-    virtual uint8_t read(size_t address) const {
-      return mEeprom.read(address);
-    }
-
-    virtual void write(size_t address, uint8_t val) {
-      mEeprom.write(address, val);
-    }
-
-    virtual bool commit() {
-      return mEeprom.commit();
-    }
-
-  private:
-    E& mEeprom;
-};
 
 /**
  * Thin wrapper around the EEPROM object (from the the built-in EEPROM library)
@@ -157,8 +66,9 @@ class CrcEeprom {
 
     /**
      * Return the actual number of bytes saved to EEPROM for the given dataSize.
-     * This includes the `contextId` header and the CRC. This is the minimum
-     * size that should be passed into the begin() method.
+     * This includes the `contextId` header and the CRC. Some EEPROM
+     * implementation need a size passed into its `begin()` method. You can use
+     * the value returned by this function.
      */
     static constexpr size_t toSavedSize(size_t dataSize) {
       return dataSize + 8;
@@ -168,9 +78,9 @@ class CrcEeprom {
      * Constructor with an optional `contextId` identifier and an
      * optional Crc32Calculator `crcCalc` function pointer.
      *
-     * @param eepromAdapter an instance of `IEepromAdapter` that encapsulates
+     * @param eeprom an instance of `EepromInterface` that encapsulates
      *    a specific `EEPROM` instance for a given platform. The
-     *    `IEepromAdapter` provides a common API to access the different
+     *    `EepromInterface` provides a common API to access the different
      *    `EEPROM` implementations on various platforms.
      * @param contextId an optional application-defined identifier of the data
      *    being stored. This prevents collisions between 2 different data which
@@ -190,7 +100,7 @@ class CrcEeprom {
      *    for details.
      */
     explicit CrcEeprom(
-      IEepromAdapter& eepromAdapter,
+      EepromInterface& eeprom,
       uint32_t contextId = 0,
       #if defined(ESP8266)
         Crc32Calculator crcCalc = ace_crc::crc32_nibblem::crc_calculate
@@ -198,19 +108,10 @@ class CrcEeprom {
         Crc32Calculator crcCalc = ace_crc::crc32_nibble::crc_calculate
       #endif
     ) :
-        mEepromAdapter(eepromAdapter),
+        mEeprom(eeprom),
         mContextId(contextId),
         mCrc32Calculator(crcCalc)
     {}
-
-    /**
-     * Initialize the underlying eepromAdapter with the given size. Some
-     * `EEPROM` implementations will just ignore the size, or do nothing upon
-     * this call.
-     */
-    void begin(size_t size) {
-      mEepromAdapter.begin(size);
-    }
 
     /**
      * Convenience method that writes the given `data` of type `T` at given
@@ -219,7 +120,7 @@ class CrcEeprom {
      *
      * @tparam T type of `data`
      */
-    template<typename T>
+    template <typename T>
     size_t writeWithCrc(size_t address, const T& data) {
       return writeDataWithCrc(address, &data, sizeof(T));
     }
@@ -231,7 +132,7 @@ class CrcEeprom {
      *
      * @tparam T type of `data`
      */
-    template<typename T>
+    template <typename T>
     bool readWithCrc(size_t address, T& data) const {
       return readDataWithCrc(address, &data, sizeof(T));
     }
@@ -251,12 +152,12 @@ class CrcEeprom {
 
   private:
     void write(size_t address, uint8_t val) {
-      mEepromAdapter.write(address, val);
+      mEeprom.write(address, val);
     }
 
-    uint8_t read(size_t address) const { return mEepromAdapter.read(address); }
+    uint8_t read(size_t address) const { return mEeprom.read(address); }
 
-    bool commit() { return mEepromAdapter.commit(); }
+    bool commit() { return mEeprom.commit(); }
 
     void writeData(size_t address, const uint8_t* data, size_t size) {
       while (size--) {
@@ -271,7 +172,7 @@ class CrcEeprom {
     }
 
   private:
-    IEepromAdapter& mEepromAdapter;
+    EepromInterface& mEeprom;
     uint32_t const mContextId;
     Crc32Calculator const mCrc32Calculator;
 };
@@ -279,4 +180,4 @@ class CrcEeprom {
 } // crc_eeprom
 } // ace_utils
 
-#endif // defined(ACE_UTILS_CRC_EEPROM_H)
+#endif // defined(ACE_UTILS_CRC_EEPROM_CRC_EEPROM_H)

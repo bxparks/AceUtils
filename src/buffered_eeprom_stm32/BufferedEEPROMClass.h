@@ -38,14 +38,15 @@
  *  * `uint8_t& operator[]()` and `const uint8_t& operator[]()` are not
  *    implemented.
  *  * The `begin()` method takes no arguments, instead of the `size` argument
- *    because the size of flash page is fixed.
+ *    because the size of flash page is determined by the hardware and is fixed.
+ *    Use the BufferedEEPROMclass::length() method to determine the size of the
+ *    EEPROM flash page.
  */
 class BufferedEEPROMClass {
 public:
   BufferedEEPROMClass() = default;
 
-  void begin(size_t size) {
-    (void) size;
+  void begin() {
     eeprom_buffer_fill();
   }
 
@@ -61,7 +62,7 @@ public:
 
   void end() { commit(); }
 
-  template<typename T>
+  template <typename T>
   T &get(int address, T &t) {
     size_t dataSize = sizeof(T);
     uint8_t* data = (uint8_t*) &t;
@@ -71,7 +72,7 @@ public:
     return t;
   }
 
-  template<typename T>
+  template <typename T>
   const T &put(int address, const T &t) {
     size_t dataSize = sizeof(T);
     uint8_t* data = (uint8_t*) &t;
@@ -81,7 +82,17 @@ public:
     return t;
   }
 
-  size_t length() { return FLASH_PAGE_SIZE; }
+  /**
+   * Return the size of the EEPROM emulation flash page. On most STM32, this
+   * will be equal to to FLASH_PAGE_SIZE. There are apparently some STM32
+   * processors (e.g. STM32MP1xx) which don't have flash, so the EEPROM
+   * emulation will use something called RETRAM, and FLASH_PAGE_SIZE is not
+   * defined. However, it seems like even on those processors, E2END is defined
+   * to be 1 smaller than the size of the EEPROM emulation size.
+   */
+  size_t length() const {
+    return E2END + 1;
+  }
 
   // Not implemented because the buffer address is not exposed and it's
   // too much trouble to work around this using a helper class.

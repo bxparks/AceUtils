@@ -14,38 +14,53 @@ that the data came from the same application.
 ```C++
 #include <Arduino.h>
 #include <AceUtilsCrcEeprom.h>
-using ace_utils::crc_eeprom::AvrEepromAdapter;
-using ace_utils::crc_eeprom::EspEepromAdapter;
+using ace_utils::crc_eeprom::AvrStyleEeprom;
+using ace_utils::crc_eeprom::EspStyleEeprom;
 
-#if defined(ESP8266) || defined(ESP32)
+#if defined(EPOXY_DUINO)
+  #include <EpoxyEepromEsp.h>
+  EspStyleEeprom<EpoxyEepromEsp> eeprom(EspStyleEepromInstance);
+
+#elif defined(ESP8266) || defined(ESP32)
   #include <EEPROM.h>
-  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  EspStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
 
 #elif defined(ARDUINO_ARCH_STM32)
 
-  // Use this for STM32. The <AceUtilsStm32BufferedEeprom.h> library provides
+  // Use this for STM32. The <AceUtilsBufferedEepromStm32.h> library provides
   // the BufferedEEPROM object which internally uses the buffered versions of
   // the low-level eeprom functions. The BufferedEEPROM object implements the
   // ESP-flavored EEPROM API.
-  #include <AceUtilsStm32BufferedEeprom.h>
-  EspEepromAdapter<BufferedEEPROMClass> eepromAdapter(BufferedEEPROM);
+  #include <AceUtilsBufferedEepromStm32.h>
+  EspStyleEeprom<BufferedEEPROMClass> eepromInterface(BufferedEEPROM);
 
   // Don't do this for STM32 because the default EEPROM flashes the entire
   // page for *every* byte!
   //#include <EEPROM.h>
-  //AvrEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  //AvrStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
 
 #else
-
+  // Assume AVR-style EEPROM for all other cases.
   #include <EEPROM.h>
-  AvrEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  AvrStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
 
 #endif
 
-// The contextId is generated from "demo". This can be anything you want, and
-// should uniquely identify the application to avoid collisions with another
-// applications that store data with the same length.
-CrcEeprom crcEeprom(eepromAdapter, CrcEeprom::toContextId('d', 'e', 'm', 'o'));
+// The contextId should be some random 32-bit integer.
+CrcEeprom crcEeprom(
+    eepromInterface, CrcEeprom::toContextId('d', 'e', 'm', 'o'));
+
+void setupEeprom() {
+#if defined(EPOXY_DUINO)
+  EpoxyEepromEspInstance.begin(1024);
+#elif defined(ESP8266) || defined(ESP32)
+  EEPROM.begin(256);
+#elif defined(ARDUINO_ARCH_STM32)
+  BufferedEEPROM.begin();
+#else
+  // Assume AVR style EEPOM and do nothing.
+#endif
+}
 
 struct StoredInfo {
   [...]
@@ -57,7 +72,7 @@ void setup() {
   Serial.begin(115200);
   while (!Serial);
 
-  eepromAdapter.begin(CrcEeprom::toSavedSize(sizeof(StoredInfo)));
+  setupEeprom();
 
   // Write to EEPROM w/ CRC and contextId check.
   size_t writtenSize = crcEeprom.writeWithCrc(0, storedInfo);
