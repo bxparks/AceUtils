@@ -140,7 +140,7 @@ A previous version of this used a `EepromInterface` pure abstract class that
 provides a stable API to the `CrcEeprom` class. Two subclasses were
 `AvrStyleEeprom` and `EspStyleEeprom`. Converting `CrcEeprom` to a template
 class, templatized on `AvrStyleEeprom` and `EspStyleEeprom` eliminates the
-virtual function calls, and seems to save between 150 to 250 bytes of flash
+virtual function calls, and seems to save between 150 to 950 bytes of flash
 memory on AVR processors. On small processors, like the ATtiny85, this seemed
 like an optimization worth making.
 

@@ -86,7 +86,7 @@ test(CrcEepromTest, readWriteInvalidContextId_shouldFail) {
   crcEeprom.writeWithCrc(0, info);
 
   // Write directly into 'contextId' to invalidate it
-  const uint32_t contextId2 = toContextId('t', 'e', 's', 't');
+  const uint32_t contextId2 = 0x12345678;
 #if defined(EPOXY_DUINO_EPOXY_EEPROM_ESP)
   EpoxyEepromEspInstance.put(0, contextId2);
   EpoxyEepromEspInstance.commit();
