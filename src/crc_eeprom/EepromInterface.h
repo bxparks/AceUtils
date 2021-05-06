@@ -9,6 +9,7 @@
 namespace ace_utils {
 namespace crc_eeprom {
 
+#if 0
 /**
  * The base EEPROM API used by CrcEeprom class. Different platforms have
  * implemented the `EEPROM` object in different ways, and this interface hides
@@ -33,6 +34,7 @@ class EepromInterface {
     /** Flush the buffer if it is used. */
     virtual bool commit() = 0;
 };
+#endif
 
 /**
  * A wrapper class around an EEPROM class that follows the AVR-style API. This
@@ -43,20 +45,20 @@ class EepromInterface {
  * @tparam E type of the EEPROM class
  */
 template <typename E>
-class AvrStyleEeprom: public EepromInterface {
+class AvrStyleEeprom {
   public:
     /** Wrap around an AVR-style EEPROM object. */
     AvrStyleEeprom(E &eeprom) : mEeprom(eeprom) {}
 
-    void write(size_t address, uint8_t val) override {
+    void write(size_t address, uint8_t val) {
       mEeprom.update(address, val);
     }
 
-    uint8_t read(size_t address) const override {
+    uint8_t read(size_t address) const {
       return mEeprom.read(address);
     }
 
-    bool commit() override {
+    bool commit() {
       return true;
     }
 
@@ -73,20 +75,20 @@ class AvrStyleEeprom: public EepromInterface {
  * @tparam E type of the EEPROM class
  */
 template <typename E>
-class EspStyleEeprom: public EepromInterface {
+class EspStyleEeprom {
   public:
     /** Wrap around an ESP-style EEPROM object. */
     EspStyleEeprom(E &eeprom) : mEeprom(eeprom) {}
 
-    uint8_t read(size_t address) const override {
+    uint8_t read(size_t address) const {
       return mEeprom.read(address);
     }
 
-    void write(size_t address, uint8_t val) override {
+    void write(size_t address, uint8_t val) {
       mEeprom.write(address, val);
     }
 
-    bool commit() override {
+    bool commit() {
       return mEeprom.commit();
     }
 

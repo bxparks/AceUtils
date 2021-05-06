@@ -14,16 +14,22 @@ that the data came from the same application.
 ```C++
 #include <Arduino.h>
 #include <AceUtilsCrcEeprom.h>
-using ace_utils::crc_eeprom::AvrStyleEeprom;
-using ace_utils::crc_eeprom::EspStyleEeprom;
+using ace_utils::crc_eeprom::toContextId;
+using ace_utils::crc_eeprom::CrcEepromAvr;
+using ace_utils::crc_eeprom::CrcEepromEsp;
+
+// The contextId can be anything you want, and should uniquely identify the
+// application to avoid collisions with another applications that store data
+// with the same length.
+const uint32_t CONTEXT_ID = 0x664cb683;
 
 #if defined(EPOXY_DUINO)
   #include <EpoxyEepromEsp.h>
-  EspStyleEeprom<EpoxyEepromEsp> eeprom(EspStyleEepromInstance);
+  CrcEepromEsp<EpoxyEepromEsp> crcEeprom(EspStyleEepromInstance, CONTEXT_ID);
 
 #elif defined(ESP8266) || defined(ESP32)
   #include <EEPROM.h>
-  EspStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
+  CrcEepromEsp<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 
 #elif defined(ARDUINO_ARCH_STM32)
 
@@ -32,23 +38,19 @@ using ace_utils::crc_eeprom::EspStyleEeprom;
   // the low-level eeprom functions. The BufferedEEPROM object implements the
   // ESP-flavored EEPROM API.
   #include <AceUtilsBufferedEepromStm32.h>
-  EspStyleEeprom<BufferedEEPROMClass> eepromInterface(BufferedEEPROM);
+  CrcEepromEsp<BufferedEEPROMClass> crcEeprom(BufferedEEPROM, CONTEXT_ID);
 
   // Don't do this for STM32 because the default EEPROM flashes the entire
   // page for *every* byte!
   //#include <EEPROM.h>
-  //AvrStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
+  //CrcEepromAvr<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 
 #else
   // Assume AVR-style EEPROM for all other cases.
   #include <EEPROM.h>
-  AvrStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
+  CrcEepromAvr<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 
 #endif
-
-// The contextId should be some random 32-bit integer.
-CrcEeprom crcEeprom(
-    eepromInterface, CrcEeprom::toContextId('d', 'e', 'm', 'o'));
 
 void setupEeprom() {
 #if defined(EPOXY_DUINO)
@@ -68,6 +70,8 @@ struct StoredInfo {
 
 StoredInfo storedInfo;
 
+const uint16_t EEPROM_ADDRESS = 0;
+
 void setup() {
   Serial.begin(115200);
   while (!Serial);
@@ -75,13 +79,13 @@ void setup() {
   setupEeprom();
 
   // Write to EEPROM w/ CRC and contextId check.
-  size_t writtenSize = crcEeprom.writeWithCrc(0, storedInfo);
+  size_t writtenSize = crcEeprom.writeWithCrc(EEPROM_ADDRESS, storedInfo);
   if (!writtenSize) {
     Serial.println("Error writing to EEPROM");
   }
 
   // Read from EEPROM w/ CRC and contextId check.
-  bool status = crcEeprom.readWithCrc(0, storedInfo);
+  bool status = crcEeprom.readWithCrc(EEPROM_ADDRESS, storedInfo);
   if (!status) {
     Serial.println("Error reading from EEPROM");
   }
@@ -90,6 +94,8 @@ void setup() {
 void loop() {
 }
 ```
+
+### Context ID
 
 The `contextId` is a 32-bit identifier that is designed to help collisions
 between 2 applications which store different data, but with the **same** size.
@@ -127,3 +133,23 @@ the `contextId`. Here are some sources:
       purpose. Here are some:
     * https://onlinerandomtools.com/generate-random-hexadecimal-numbers
     * https://numbergenerator.org/hex-code-generator
+
+### Template Classes
+
+A previous version of this used a `EepromInterface` pure abstract class that
+provides a stable API to the `CrcEeprom` class. Two subclasses were
+`AvrStyleEeprom` and `EspStyleEeprom`. Converting `CrcEeprom` to a template
+class, templatized on `AvrStyleEeprom` and `EspStyleEeprom` eliminates the
+virtual function calls, and seems to save between 150 to 250 bytes of flash
+memory on AVR processors. On small processors, like the ATtiny85, this seemed
+like an optimization worth making.
+
+The complexity of `CrcEeprom<>` has been reduced by creating the following
+helper classes:
+
+* `CrcEepromAvr<E>`
+* `CrcEepromEsp<E>`
+
+New EEPROM implementations can be with with `CrcEeprom` by creating a new
+instance of the `EepromInterface`, then using the raw `CrcEeprom` template
+class.

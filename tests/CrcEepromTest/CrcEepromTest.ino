@@ -5,32 +5,32 @@
 #include <AceUtilsCrcEeprom.h>
 
 using aunit::TestRunner;
-using ace_utils::crc_eeprom::CrcEeprom;
-using ace_utils::crc_eeprom::EspStyleEeprom;
-using ace_utils::crc_eeprom::AvrStyleEeprom;
+using ace_utils::crc_eeprom::CrcEepromEsp;
+using ace_utils::crc_eeprom::CrcEepromAvr;
+
+// The contextId can be anything you want, and should uniquely identify the
+// application to avoid collisions with another applications that store data
+// with the same length.
+const uint32_t CONTEXT_ID = 0x812e4519;
 
 #if defined(EPOXY_DUINO)
   #include <EpoxyEepromEsp.h>
-  EspStyleEeprom<EpoxyEepromEsp> eepromInterface(EpoxyEepromEspInstance);
+  CrcEepromEsp<EpoxyEepromEsp> crcEeprom(EpoxyEepromEspInstance, CONTEXT_ID);
 #elif defined(ESP8266) || defined(ESP32)
   #include <EEPROM.h>
-  EspStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
+  CrcEepromEsp<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 #elif defined(ARDUINO_ARCH_STM32)
   #include <AceUtilsBufferedEepromStm32.h>
-  EspStyleEeprom<BufferedEEPROMClass> eepromInterface(BufferedEEPROM);
-#else
-  // Assume AVR
+  CrcEepromEsp<BufferedEEPROMClass> crcEeprom(BufferedEEPROM, CONTEXT_ID);
+#else // Assume AVR
   #include <EEPROM.h>
-  AvrStyleEeprom<EEPROMClass> eepromInterface(EEPROM);
+  CrcEepromAvr<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 #endif
 
 struct Info {
   int startTime;
   int interval;
 };
-
-CrcEeprom crcEeprom(
-    eepromInterface, CrcEeprom::toContextId('c', 't', 's', 't'));
 
 void setupEeprom() {
 #if defined(EPOXY_DUINO)
@@ -86,7 +86,7 @@ test(CrcEepromTest, readWriteInvalidContextId_shouldFail) {
   crcEeprom.writeWithCrc(0, info);
 
   // Write directly into 'contextId' to invalidate it
-  const uint32_t contextId2 = CrcEeprom::toContextId('t', 'e', 's', 't');
+  const uint32_t contextId2 = toContextId('t', 'e', 's', 't');
 #if defined(EPOXY_DUINO_EPOXY_EEPROM_ESP)
   EpoxyEepromEspInstance.put(0, contextId2);
   EpoxyEepromEspInstance.commit();
