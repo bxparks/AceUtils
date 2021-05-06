@@ -9,7 +9,7 @@
     * Rename `EpoxyPromAvr` to `EpoxyEepromAvr`; `EpoxyPromEsp` to
       `EpoxyEepromEsp`; tracks the changes in EpoxyDuino library.
     * Convert `CrcEeprom` into a template class, templatized on `EspStyleEeprom`
-      and `AvrStyleEeprom`. Seems to save between 150-250 bytes of flash memory
+      and `AvrStyleEeprom`. Seems to save between 150-950 bytes of flash memory
       by avoiding virtual function calls and class hierarchies.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
