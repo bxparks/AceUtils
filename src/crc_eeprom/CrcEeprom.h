@@ -77,11 +77,13 @@ typedef uint32_t (*Crc32Calculator)(const void* data, size_t dataSize);
  * beginning, those CRC byes would experience the highest level of writes, even
  * when the data block size changes.
  *
- * @tparam T_EI the EEPROM interface, one of AvrStyleEeprom or EspStyleEeprom
+ * @tparam T_EI the template class representing the EEPROM adapter interface,
+ *    one of AvrStyleEeprom or EspStyleEeprom (this is a nested template class,
+ *    hence the funny `template` syntax below)
  * @tparam T_E the EEPROM class, e.g. EEPROMClass or BufferedEEPROMClass
  */
 template <
-  template <typename> typename T_EI,
+  template <typename> class T_EI,
   typename T_E
 >
 class CrcEeprom {
