@@ -11,7 +11,8 @@
 #if defined(ARDUINO_ARCH_STM32)
 
 #include <stdint.h>
-#include <Arduino.h> // eeprom_buffered_*()
+#include <Arduino.h>
+#include <EEPROM.h> // eeprom_buffered_*()
 
 /**
  * An alternative implementation of `EEPROM` object on STM32 using the
