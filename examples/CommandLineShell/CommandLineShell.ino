@@ -15,13 +15,12 @@
 #include <Arduino.h>
 #include <AceRoutine.h>
 #include <AceUtilsCli.h>
-
-#if defined(EPOXY_DUINO)
-  #include <unistd.h>
-#endif
+#include <AceUtils.h>
+#include <freemem/freemem.h> // From AceUtils
 
 using namespace ace_routine;
 using namespace ace_utils::cli;
+using ace_utils::freemem::freeMemory;
 
 // Every board except ESP32 defines SERIAL_PORT_MONITOR..
 #if defined(ESP32)
@@ -53,63 +52,6 @@ COROUTINE(blinkLed) {
     digitalWrite(LED, LED_OFF);
     COROUTINE_DELAY(ledOffDelay);
   }
-}
-
-//---------------------------------------------------------------------------
-
-#ifdef __arm__
-// should use uinstd.h to define sbrk but Due causes a conflict
-extern "C" char* sbrk(int incr);
-#elif defined(ESP8266)
-extern "C" {
-#include "user_interface.h"
-}
-#else
-extern char *__brkval;
-#endif
-
-/**
- * Return the amount of free memory. See various tutorials and references:
- *
- * - https://learn.adafruit.com/memories-of-an-arduino/measuring-free-memory
- * - https://arduino.stackexchange.com/questions/30497
- * - https://github.com/mpflaga/Arduino-MemoryFree/blob/master/MemoryFree.cpp
- *
- * For a Nano, the original code returns 2252, which seems too high since it
- * has only 2048 of static RAM. Changed to always test for non-zero value of
- * __brkval, which gives 1553 which seems more accurate because the Arduino
- * IDE says that the sketch leaves 1605 bytes for RAM.
- *
- * For ESP8266, see:
- * - https://github.com/esp8266/Arduino/issues/81
- *
- * For ESP32, see:
- * - https://techtutorialsx.com/2017/12/17/esp32-arduino-getting-the-free-heap/
- *
- * For Unix:
- * - https://stackoverflow.com/questions/2513505
- */
-unsigned long freeMemory() {
-#if defined(ARDUINO_ARCH_AVR)
-  char top;
-  return &top - (__brkval ? __brkval : __malloc_heap_start);
-#elif defined(ARDUINO_ARCH_SAMD)
-  char top;
-  return &top - reinterpret_cast<char*>(sbrk(0));
-#elif defined(TEENSYDUINO)
-  char top;
-  return &top - reinterpret_cast<char*>(sbrk(0));
-#elif defined(ESP8266)
-  return system_get_free_heap_size();
-#elif defined(ESP32)
-  return ESP.getFreeHeap();
-#elif defined(EPOXY_DUINO)
-  long pages = sysconf(_SC_PHYS_PAGES);
-  long page_size = sysconf(_SC_PAGE_SIZE);
-  return pages * page_size;
-#else
-  #error Unsupported platform
-#endif
 }
 
 //---------------------------------------------------------------------------
@@ -223,7 +165,6 @@ void setup() {
   while (!SERIAL_PORT_MONITOR); // micro/leonardo
   pinMode(LED, OUTPUT);
 
-  commandManager.setupCoroutine(F("commandManager"));
   CoroutineScheduler::setup();
 }
 

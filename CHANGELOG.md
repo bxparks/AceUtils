@@ -11,6 +11,9 @@
     * Convert `CrcEeprom` into a template class, templatized on `EspStyleEeprom`
       and `AvrStyleEeprom`. Seems to save between 150-950 bytes of flash memory
       by avoiding virtual function calls and class hierarchies.
+    * Move `freeMemory()` function from `examples/CommandLineShell.ino`
+      into `freemem/freemem.h` so that it can be used elsewhere.
+        * Add support for STM32, and clean up header imports.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.
