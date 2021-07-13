@@ -26,21 +26,21 @@ SOFTWARE.
 #define ACE_UTILS_CLI_COMMAND_MANAGER_H
 
 #include <AceRoutine.h> // Coroutine, Channel
-#include "CommandDispatcher.h"
+#include "ChannelDispatcher.h"
 #include "StreamLineReader.h"
 
 namespace ace_utils {
 namespace cli {
 
 /**
- * A convenience wrapper around a CommandDispatcher that hides complexity of
+ * A convenience wrapper around a ChannelDispatcher that hides complexity of
  * creating, initializing and injecting the resources needed by the
- * CommandDispatcher. It is not strictly necessary to use this, but the setup
+ * ChannelDispatcher. It is not strictly necessary to use this, but the setup
  * is much easier using this class.
  *
- * This is a subclass of Coroutine, just like CommandDispatcher. The
- * runCoroutine() method simply delegates to the underlying CommandDispatcher,
- * so this class can be used as a substitute for CommandDispatcher. The
+ * This is a subclass of Coroutine, just like ChannelDispatcher. The
+ * runCoroutine() method simply delegates to the underlying ChannelDispatcher,
+ * so this class can be used as a substitute for ChannelDispatcher. The
  * setupCoroutine() method should be called to initialize the name of the
  * coroutine and insert it into the CoroutineScheduler.
  *
@@ -65,7 +65,7 @@ namespace cli {
  * const uint8_t ARGV_SIZE = 5;
  * const char PROMPT[] = "$ ";
  *
- * CommandManager<BUF_SIZE, ARGV_SIZE> commandManager(
+ * StreamChannelManager<BUF_SIZE, ARGV_SIZE> commandManager(
  *     COMMANDS, NUM_COMMANDS, Serial, PROMPT);
  *
  * void setup() {
@@ -79,7 +79,7 @@ namespace cli {
  * @param ARGV_SIZE Size of the command line argv token list.
  */
 template<uint8_t BUF_SIZE, uint8_t ARGV_SIZE>
-class CommandManager: public ace_routine::Coroutine {
+class StreamChannelManager: public ace_routine::Coroutine {
   public:
 
     /**
@@ -93,28 +93,35 @@ class CommandManager: public ace_routine::Coroutine {
      *        by the user. If null, don't print the prompt and don't echo the
      *        input from the user.
      */
-    CommandManager(const CommandHandler* const* commands, uint8_t numCommands,
-            Stream& serial, const char* prompt = nullptr):
+    StreamChannelManager(
+        const CommandHandler* const* commands,
+        uint8_t numCommands,
+        Stream& serial,
+        const char* prompt = nullptr
+    ) :
         mCommands(commands),
         mNumCommands(numCommands),
         mSerial(serial),
         mPrompt(prompt),
         mStreamLineReader(mChannel, mSerial, mLineBuffer, BUF_SIZE),
-        mDispatcher(mChannel, mSerial, mCommands, mNumCommands,
-            mArgv, ARGV_SIZE, mPrompt) {}
+        mCommandDispatcher(mSerial, mCommands, mNumCommands, mArgv, ARGV_SIZE),
+        mChannelDispatcher(mChannel, mCommandDispatcher, mSerial, mPrompt)
+    {}
 
     /**
      * Main body of coroutine, dispatches to the underlying mStreamLineReader
-     * and mDispatcher.
+     * and mChannelDispatcher.
      */
     int runCoroutine() override {
       mStreamLineReader.runCoroutine();
-      mDispatcher.runCoroutine();
+      mChannelDispatcher.runCoroutine();
       return 0;
     }
 
-    /** Return the CommandDispatcher. VisibleForTesting. */
-    const CommandDispatcher* getDispatcher() const { return &mDispatcher; }
+    /** Return the ChannelDispatcher. VisibleForTesting. */
+    const ChannelDispatcher& getDispatcher() const {
+      return mChannelDispatcher;
+    }
 
   private:
     const CommandHandler* const* const mCommands;
@@ -123,7 +130,8 @@ class CommandManager: public ace_routine::Coroutine {
     const char* const mPrompt;
     ace_routine::Channel<InputLine> mChannel;
     StreamLineReader mStreamLineReader;
-    CommandDispatcher mDispatcher;
+    CommandDispatcher mCommandDispatcher;
+    ChannelDispatcher mChannelDispatcher;
     char mLineBuffer[BUF_SIZE];
     const char* mArgv[ARGV_SIZE];
 };

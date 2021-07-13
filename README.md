@@ -45,7 +45,8 @@ will always remain in the `v0.xx.yy` form.
         * AceCRC (https://github.com/bxparks/AceCRC)
 * Command Line Interface (CLI)
     * [src/cli/README.md](src/cli/README.md)
-    * `#include <AceUtilsCli.h>`
+    * `#include <AceUtils.h>`
+    * `#include <cli/cli.h>
     * `using namespace ace_utils::cli`
     * Summary:
         * Implement a command line interface over the Serial port.

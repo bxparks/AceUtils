@@ -24,8 +24,9 @@ SOFTWARE.
 
 /*
  * Most of these methods are in the .cpp file instead of remaining in the .h
- * file because they use the F() macro, which causes problems for ESP8266 if
- * they are used in an inline context.
+ * file because they use the F() macro, which used to cause problems for ESP8266
+ * if they are used in an inline context. That was fixed in one of the
+ * ESP8266-Arduino releases.
  */
 
 #include "CommandDispatcher.h"
@@ -35,22 +36,6 @@ namespace cli {
 
 // Same whitespace characters used by isspace() in the standard C99 library.
 const char CommandDispatcher::DELIMS[] = " \f\r\n\t\v";
-
-void CommandDispatcher::printLineError(const char* line, uint8_t statusCode)
-    const {
-  if (statusCode == STATUS_BUFFER_OVERFLOW) {
-    mPrinter.print(F("BufferOverflow: "));
-    mPrinter.println(line);
-  } else if (statusCode == STATUS_FLUSH_TO_EOL) {
-    mPrinter.print(F("FlushToEOL: "));
-    mPrinter.println(line);
-  } else {
-    mPrinter.print(F("UnknownError: "));
-    mPrinter.print(statusCode);
-    mPrinter.print(F(": "));
-    mPrinter.println(line);
-  }
-}
 
 void CommandDispatcher::helpCommandHandler(
     Print& printer, int argc, const char* const* argv) const {

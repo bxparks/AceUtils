@@ -14,12 +14,13 @@
 
 #include <Arduino.h>
 #include <AceRoutine.h>
-#include <AceUtilsCli.h>
 #include <AceUtils.h>
-#include <freemem/freemem.h> // From AceUtils
+#include <cli/cli.h> // StreamChannelManager from AceUtils
+#include <freemem/freemem.h> // freeMemory() from AceUtils
 
-using namespace ace_routine;
-using namespace ace_utils::cli;
+using ace_routine::CoroutineScheduler;
+using ace_utils::cli::CommandHandler;
+using ace_utils::cli::StreamChannelManager;
 using ace_utils::freemem::freeMemory;
 
 // Every board except ESP32 defines SERIAL_PORT_MONITOR..
@@ -62,8 +63,8 @@ class ListCommand: public CommandHandler {
     ListCommand():
       CommandHandler(F("list"), nullptr) {}
 
-    virtual void run(Print& printer, int /* argc */,
-        const char* const* /* argv */) const override {
+    void run(Print& printer, int /* argc */, const char* const* /* argv */)
+        const override {
       CoroutineScheduler::list(printer);
     }
 };
@@ -74,8 +75,7 @@ class EchoCommand: public CommandHandler {
     EchoCommand():
       CommandHandler(F("echo"), F("args ...")) {}
 
-    virtual void run(Print& printer, int argc, const char* const* argv)
-        const override {
+    void run(Print& printer, int argc, const char* const* argv) const override {
      for (int i = 1; i < argc; i++) {
         printer.print(argv[i]);
         printer.print(' ');
@@ -90,8 +90,8 @@ class FreeCommand: public CommandHandler {
     FreeCommand():
         CommandHandler(F("free"), nullptr) {}
 
-    virtual void run(Print& printer, int /* argc */,
-        const char* const* /* argv */) const override {
+    void run(Print& printer, int /* argc */, const char* const* /* argv */)
+        const override {
       printer.print(F("Free memory: "));
       printer.println(freeMemory());
     }
@@ -107,8 +107,7 @@ class DelayCommand: public CommandHandler {
     DelayCommand():
         CommandHandler(F("delay"), F("[(on | off) millis]")) {}
 
-    virtual void run(Print& printer, int argc, const char* const* argv)
-        const override {
+    void run(Print& printer, int argc, const char* const* argv) const override {
       if (argc == 1) {
         printer.print(F("LED_ON delay: "));
         printer.println(ledOnDelay);
@@ -152,7 +151,8 @@ static const uint8_t BUF_SIZE = 64;
 static const uint8_t ARGV_SIZE = 5;
 static const char PROMPT[] = "$ ";
 
-CommandManager<BUF_SIZE, ARGV_SIZE> commandManager(
+// Auto-inserts itself into CoroutineScheduler
+StreamChannelManager<BUF_SIZE, ARGV_SIZE> commandManager(
     COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
 
 //---------------------------------------------------------------------------

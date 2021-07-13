@@ -14,6 +14,11 @@
     * Move `freeMemory()` function from `examples/CommandLineShell.ino`
       into `freemem/freemem.h` so that it can be used elsewhere.
         * Add support for STM32, and clean up header imports.
+    * AceUtils/cli
+        * Move `AceUtilsCli.h` to `cli/cli.h`.
+        * Split `CommandDispatcher` from `ChannelDispatcher` so that it can be
+          used without using an AceRoutine `Channel`.
+        * Rename `CommandManager` to `StreamChannelManager`.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.

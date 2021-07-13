@@ -25,9 +25,7 @@ SOFTWARE.
 #ifndef ACE_UTILS_CLI_COMMAND_DISPATCHER_H
 #define ACE_UTILS_CLI_COMMAND_DISPATCHER_H
 
-#include <AceRoutine.h> // Coroutine, Channel
 #include "CommandHandler.h"
-#include "InputLine.h"
 
 class Print;
 class __FlashStringHelper;
@@ -36,10 +34,10 @@ namespace ace_utils {
 namespace cli {
 
 /**
- * A coroutine that reads lines from the Serial port, tokenizes the line on
- * whitespace boundaries, and calls the appropriate command handler to handle
- * the command. Command have the form "command arg1 arg2 ...", where the 'arg*'
- * can be any string.
+ * A class that tokenizes a line containing tokens separated on whitespace
+ * boundaries, and calls the appropriate command handler to handle the command.
+ * Command have the form "command arg1 arg2 ...", where the 'arg*' can be any
+ * string.
  *
  * The calling code is expected to provide a mapping of the command string
  * (e.g. "list") to its command handler (CommandHandler). The CommandHandler is
@@ -49,12 +47,11 @@ namespace cli {
  * The template parameters can be either a 'char' for C-strings or
  * '__FlashStringHelper' for F() flash strings.
  */
-class CommandDispatcher: public ace_routine::Coroutine {
+class CommandDispatcher {
   public:
     /**
      * Constructor.
      *
-     * @param channel A channel from the StringLineReader to this coroutine.
      * @param printer The output object, normally the global Serial object.
      * @param commands Array of CommandHandler pointers.
      * @param numCommands number of commands.
@@ -62,27 +59,23 @@ class CommandDispatcher: public ace_routine::Coroutine {
      *        tokens of a command line string.
      * @param argvSize The size of the argv array. Tokens which are beyond this
      *        limit will be silently dropped.
-     * @param prompt If not null, print a prompt and echo the command entered
-     *        by the user. If null, don't print prompt and don't echo.
      */
     CommandDispatcher(
-            ace_routine::Channel<InputLine>& channel,
-            Print& printer,
-            const CommandHandler* const* commands,
-            uint8_t numCommands,
-            const char** argv,
-            uint8_t argvSize,
-            const char* prompt):
-        mChannel(channel),
+        Print& printer,
+        const CommandHandler* const* commands,
+        uint8_t numCommands,
+        const char** argv,
+        uint8_t argvSize
+    ) :
         mPrinter(printer),
         mCommands(commands),
         mNumCommands(numCommands),
         mArgv(argv),
-        mArgvSize(argvSize),
-        mPrompt(prompt) {}
+        mArgvSize(argvSize)
+    {}
 
-    /** Destructor. Used only in unit tests. */
-    virtual ~CommandDispatcher() {}
+    /** Tokenize the given line and run the command handler. */
+    void runCommand(char* line) const;
 
     /**
      * Tokenize the line, separating tokens delimited by whitespace (space,
@@ -101,26 +94,6 @@ class CommandDispatcher: public ace_routine::Coroutine {
         token = strtok(nullptr, DELIMS);
       }
       return argc;
-    }
-
-    int runCoroutine() override {
-      InputLine input;
-      COROUTINE_LOOP() {
-        if (mPrompt != nullptr) {
-          mPrinter.print(mPrompt);
-        }
-        COROUTINE_CHANNEL_READ(mChannel, input);
-
-        if (input.status == InputLine::kStatusOverflow) {
-          printLineError(input.line, STATUS_BUFFER_OVERFLOW);
-          continue;
-        }
-
-        if (mPrompt != nullptr) {
-          mPrinter.print(input.line); // line includes the \n
-        }
-        runCommand(input.line);
-      }
     }
 
     /**
@@ -142,13 +115,10 @@ class CommandDispatcher: public ace_routine::Coroutine {
       return nullptr;
     }
 
-  protected:
+  private:
     // Disable copy-constructor and assignment operator
     CommandDispatcher(const CommandDispatcher&) = delete;
     CommandDispatcher& operator=(const CommandDispatcher&) = delete;
-
-    /** Print the input line that caused an error along with its status code. */
-    void printLineError(const char* line, uint8_t statusCode) const;
 
     /** Handle the 'help' command. */
     void helpCommandHandler(Print& printer, int argc, const char* const* argv)
@@ -163,25 +133,18 @@ class CommandDispatcher: public ace_routine::Coroutine {
     /** Print help string for the given command. */
     static void printHelp(Print& printer, const CommandHandler* command);
 
-    /** Tokenize the given line and run the command handler. */
-    void runCommand(char* line) const;
-
     /** Find and run the given command. */
     void findAndRunCommand(const char* cmd, int argc, const char* const* argv)
         const;
 
-    static const uint8_t STATUS_SUCCESS = 0;
-    static const uint8_t STATUS_BUFFER_OVERFLOW = 1;
-    static const uint8_t STATUS_FLUSH_TO_EOL = 2;
+  private:
     static const char DELIMS[];
 
-    ace_routine::Channel<InputLine>& mChannel;
     Print& mPrinter;
     const CommandHandler* const* const mCommands;
     uint8_t const mNumCommands;
     const char** const mArgv;
     uint8_t const mArgvSize;
-    const char* const mPrompt;
 };
 
 } // cli
