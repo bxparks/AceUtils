@@ -50,8 +50,9 @@ void CommandDispatcher::helpCommandHandler(
 
     bool found = helpSpecific(printer, cmd);
     if (found) return;
-    printer.print(F("Unknown command: "));
-    printer.println(cmd);
+    printer.print(F("Unknown command: '"));
+    printer.print(cmd);
+    printer.println('\'');
   } else {
     printer.println(F("Commands:"));
     printer.println(F("  help [command]"));
@@ -89,7 +90,7 @@ void CommandDispatcher::printHelp(
   }
 }
 
-void CommandDispatcher::runCommand(char* line) const {
+void CommandDispatcher::runCommand(Print& printer, char* line) const {
   // Tokenize the line.
   int argc = tokenize(line, mArgv, mArgvSize);
   if (argc == 0) return;
@@ -97,23 +98,24 @@ void CommandDispatcher::runCommand(char* line) const {
 
   // Handle the built-in 'help' command.
   if (strcmp(cmd, "help") == 0) {
-    helpCommandHandler(mPrinter, argc, mArgv);
+    helpCommandHandler(printer, argc, mArgv);
     return;
   }
 
-  findAndRunCommand(cmd, argc, mArgv);
+  findAndRunCommand(printer, cmd, argc, mArgv);
 }
 
 void CommandDispatcher::findAndRunCommand(
-    const char* cmd, int argc, const char* const* argv) const {
+    Print& printer, const char* cmd, int argc, const char* const* argv) const {
   const CommandHandler* command = findCommand(cmd);
   if (command != nullptr) {
-    command->run(mPrinter, argc, argv);
+    command->run(printer, argc, argv);
     return;
   }
 
-  mPrinter.print(F("Unknown command: "));
-  mPrinter.println(cmd);
+  printer.print(F("Unknown command: '"));
+  printer.print(cmd);
+  printer.println('\'');
 }
 
 } // cli

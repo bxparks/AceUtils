@@ -52,7 +52,6 @@ class CommandDispatcher {
     /**
      * Constructor.
      *
-     * @param printer The output object, normally the global Serial object.
      * @param commands Array of CommandHandler pointers.
      * @param numCommands number of commands.
      * @param argv Array of (const char*) that will be used to hold the word
@@ -61,21 +60,22 @@ class CommandDispatcher {
      *        limit will be silently dropped.
      */
     CommandDispatcher(
-        Print& printer,
         const CommandHandler* const* commands,
         uint8_t numCommands,
         const char** argv,
         uint8_t argvSize
     ) :
-        mPrinter(printer),
         mCommands(commands),
         mNumCommands(numCommands),
         mArgv(argv),
         mArgvSize(argvSize)
     {}
 
-    /** Tokenize the given line and run the command handler. */
-    void runCommand(char* line) const;
+    /**
+     * Tokenize the given 'line', run the matching command handler, and send
+     * output to the 'printer'.
+     */
+    void runCommand(Print& printer, char* line) const;
 
     /**
      * Tokenize the line, separating tokens delimited by whitespace (space,
@@ -134,13 +134,12 @@ class CommandDispatcher {
     static void printHelp(Print& printer, const CommandHandler* command);
 
     /** Find and run the given command. */
-    void findAndRunCommand(const char* cmd, int argc, const char* const* argv)
-        const;
+    void findAndRunCommand(Print& printer, const char* cmd,
+        int argc, const char* const* argv) const;
 
   private:
     static const char DELIMS[];
 
-    Print& mPrinter;
     const CommandHandler* const* const mCommands;
     uint8_t const mNumCommands;
     const char** const mArgv;

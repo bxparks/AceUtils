@@ -44,7 +44,7 @@ int ChannelDispatcher::runCoroutine() {
     if (mPrompt != nullptr) {
       mPrinter.print(input.line); // line includes the \n
     }
-    mCommandDispatcher.runCommand(input.line);
+    mCommandDispatcher.runCommand(mPrinter, input.line);
   }
 }
 

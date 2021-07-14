@@ -104,7 +104,7 @@ class StreamChannelManager: public ace_routine::Coroutine {
         mSerial(serial),
         mPrompt(prompt),
         mStreamLineReader(mChannel, mSerial, mLineBuffer, BUF_SIZE),
-        mCommandDispatcher(mSerial, mCommands, mNumCommands, mArgv, ARGV_SIZE),
+        mCommandDispatcher(mCommands, mNumCommands, mArgv, ARGV_SIZE),
         mChannelDispatcher(mChannel, mCommandDispatcher, mSerial, mPrompt)
     {}
 
