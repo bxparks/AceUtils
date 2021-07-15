@@ -6,7 +6,7 @@
 #ifndef ACE_UTILS_CRC_EEPROM_H
 #define ACE_UTILS_CRC_EEPROM_H
 
-#include "crc_eeprom/EepromInterface.h"
-#include "crc_eeprom/CrcEeprom.h"
+#include "EepromInterface.h"
+#include "CrcEeprom.h"
 
 #endif

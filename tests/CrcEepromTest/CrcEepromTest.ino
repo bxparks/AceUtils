@@ -2,7 +2,8 @@
 
 #include <Arduino.h>
 #include <AUnitVerbose.h>
-#include <AceUtilsCrcEeprom.h>
+#include <AceUtils.h>
+#include <crc_eeprom/crc_eeprom.h>
 
 using aunit::TestRunner;
 using ace_utils::crc_eeprom::CrcEepromEsp;

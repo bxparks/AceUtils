@@ -13,7 +13,8 @@ that the data came from the same application.
 
 ```C++
 #include <Arduino.h>
-#include <AceUtilsCrcEeprom.h>
+#include <AceUtils.h>
+#include <crc_eeprom/crc_eeprom.h>
 using ace_utils::crc_eeprom::toContextId;
 using ace_utils::crc_eeprom::CrcEepromAvr;
 using ace_utils::crc_eeprom::CrcEepromEsp;

@@ -37,26 +37,31 @@ will always remain in the `v0.xx.yy` form.
 
 * CrcEeprom
     * See [src/crc_eeprom/README.md](src/crc_eeprom/README.md).
-    * `#include <AceUtilsCrcEeprom.h>`
-    * `using ace_utils::crc_eeprom::CrcEeprom`
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <crc_eeprom/crc_eeprom.h>`
+        * `using ace_utils::crc_eeprom::CrcEepromAvr`
+        * `using ace_utils::crc_eeprom::CrcEepromEsp`
     * Summary:
         * Store data structures in EEPROM with a CRC check.
     * Depends on:
         * AceCRC (https://github.com/bxparks/AceCRC)
 * Command Line Interface (CLI)
     * [src/cli/README.md](src/cli/README.md)
-    * `#include <AceUtils.h>`
-    * `#include <cli/cli.h>
-    * `using namespace ace_utils::cli`
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <cli/cli.h>
+        * `using namespace ace_utils::cli`
     * Summary:
         * Implement a command line interface over the Serial port.
     * Depends on:
         * AceRoutine (https://github.com/bxparks/AceRoutine)
         * AceCommon (https://github.com/bxparks/AceCommon)
 * ModeGroup
-    * `#include <AceUtilsModeGroup.h>`
-    * `using ace_utils::mode_group::ModeGroup`
-    * `using ace_utils::mode_group::ModeNavigator`
+    * Header files
+        * `#include <AceUtilsModeGroup.h>`
+        * `using ace_utils::mode_group::ModeGroup`
+        * `using ace_utils::mode_group::ModeNavigator`
     * Summary:
         * A data-driven mechanism to encode and navigate the hierarchy of
           view and change modes of the display of a clock controlled by 2
@@ -64,7 +69,8 @@ will always remain in the `v0.xx.yy` form.
     * Depends on:
         * (none)
 * STM32 Buffered EEPROM
-    * `#include <AceUtilsBufferedEepromStm32.h>`
+    * Header files
+        * `#include <AceUtilsBufferedEepromStm32.h>`
     * A version of `EEPROM` on STM32 that uses a buffer to avoid
       writing to the flash page on every byte update. Implements an API
       compatible with the `EEPROM` object on ESP8266 and ESP32.
@@ -72,6 +78,12 @@ will always remain in the `v0.xx.yy` form.
         * `BufferedEEPROM.write()`, `read()`, `put()`, `get()`, `length()`
         * `BufferedEEPROM.commit()`
     * Can be used with `CrcEeprom` through the `EspStyleEeprom`.
+* Free memory
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <freemem/freemem.h>`
+        * `using ace_utils::freemem::freeMemory;`
+    * Returns the amount of free memory in the heap.
 
 ## Installation
 
@@ -122,15 +134,23 @@ Unlike most of my other libraries, the header files of various submodules are
 many of the submodules are unrelated to each other, and have dependencies on
 different external libraries. If I included all the subheaders into `AceUtils.h`
 then the end user would be force to install the union of all external libraries
-which are needed by the entire collection. By splitting each module into
-separate headers (e.g. `AceUtilsCrcEeprom.h`, `AceUtilsModeGroup.h`), the
-external dependencies are minimized.
+which are needed by the entire collection. Instead, the headers for each
+submodule in the various subdirectories must be included explicitly.
 
-The header file of all submodules will begin with the prefix `AceUtils{xxx}.h`,
-for example, `AceUtilsModeGroup.h`.
+For example, to use the `crc_eeprom.h` header, use
 
-All modules are placed in separate namespaces, under the `ace_utils::` top-level
-namespace.
+```C++
+#include <AceUtils.h>
+#include <crc_eeprom/crc_eeprom.h>
+using namespace ace_utils::crc_eeprom;
+```
+
+The first include file (`<AceUtils.h>`) tells the Arduino IDE which library
+should be searched (more technically, this determines the `-I` flag of the `g++`
+compiler). The second include file (`<crc_eeprom/crc_eeprom.h>`) brings in the
+actual header file information of the submodule. All modules are placed in
+separate namespaces, which means that a `using namespace ace_utils::crc_eeprom`
+is required.
 
 ## System Requirements
 
