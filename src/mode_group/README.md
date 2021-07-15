@@ -29,7 +29,8 @@ This package is used by:
 ## Usage
 
 ```C++
-#include <AceUtilsModeGroup.h>
+#include <AceUtils.h>
+#include <mode_group/mode_group.h>
 using namespace ace_util::mode_group;
 ```
 

@@ -59,7 +59,8 @@ will always remain in the `v0.xx.yy` form.
         * AceCommon (https://github.com/bxparks/AceCommon)
 * ModeGroup
     * Header files
-        * `#include <AceUtilsModeGroup.h>`
+        * `#include <AceUtils.h>`
+        * `#include <mode_group/mode_group.h>`
         * `using ace_utils::mode_group::ModeGroup`
         * `using ace_utils::mode_group::ModeNavigator`
     * Summary:
