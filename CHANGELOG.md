@@ -3,7 +3,8 @@
 * Unreleased
     * `CrcEeprom`: Recommend using a 32-bit random number for the `contextId`
       instead of using `toContextId()` helper function.
-    * Rename `AceUtilsStm32BufferedEeprom.h` to `AceUtilsBufferedEepromStm32.h`.
+    * Rename `AceUtilsStm32BufferedEeprom.h` to
+      `buffered_eeprom_stm32/buffered_eeprom_stm32.h`
     * Rename `IEepromAdapter` to `EepromInterface`; `EspEepromAdapter` to
       `EspStyleEeprom`; `AvrEepromAdapter` to `AvrStyleEeprom`.
     * Rename `EpoxyPromAvr` to `EpoxyEepromAvr`; `EpoxyPromEsp` to
