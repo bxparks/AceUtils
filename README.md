@@ -124,11 +124,14 @@ and to lookup the signatures of the methods in those classes.
 
 * [examples/CrcEepromDemo](examples/CrcEepromDemo)
     * Demo of `CrcEeprom` class.
-* [examples/CommandLineShell](examples/CommandLineShell)
-    * Demo of the `<CommandLineInterface.h>` classes to implement a command line
+* [examples/SimpleCommandLineShell](examples/SimpleCommandLineShell)
+    * Demo of the `<cli/cli.h>` classes to implement a command line
       interface that accepts a number of commands on the serial port. In other
       words, it is a primitive "shell". The shell is non-blocking and uses
       coroutines so that other coroutines continue to run.
+* [examples/ChannelCommandLineShell](examples/ChannelCommandLineShell)
+    * Deprecated version of `SimpleCommandLineShell` using
+      `ace_routine::Channels`.
 
 ## Usage
 

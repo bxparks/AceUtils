@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef ACE_UTILS_CLI_CHANNEL_DISPATCHER_H
-#define ACE_UTILS_CLI_CHANNEL_DISPATCHER_H
+#ifndef ACE_UTILS_CLI_CHANNEL_PROCESSOR_COROUTINE_H
+#define ACE_UTILS_CLI_CHANNEL_PROCESSOR_COROUTINE_H
 
 #include <AceRoutine.h> // Coroutine, Channel
 #include "InputLine.h"
@@ -38,10 +38,10 @@ class CommandDispatcher;
 
 /**
  * A coroutine that reads lines from a Channel (e.g. written by
- * StreamLineReader), then sends the command to the CommandDispatcher for
+ * StreamReaderCoroutine), then sends the command to the CommandDispatcher for
  * processing.
  */
-class ChannelDispatcher: public ace_routine::Coroutine {
+class ChannelProcessorCoroutine: public ace_routine::Coroutine {
   public:
     /**
      * Constructor.
@@ -52,7 +52,7 @@ class ChannelDispatcher: public ace_routine::Coroutine {
      * @param prompt If not null, print a prompt and echo the command entered
      *        by the user. If null, don't print prompt and don't echo.
      */
-    ChannelDispatcher(
+    ChannelProcessorCoroutine(
         ace_routine::Channel<InputLine>& channel,
         const CommandDispatcher& commandDispatcher,
         Print& printer,
@@ -66,15 +66,16 @@ class ChannelDispatcher: public ace_routine::Coroutine {
 
     int runCoroutine() override;
 
-    /** Return the ChannelDispatcher. VisibleForTesting. */
+    /** Return the ChannelProcessorCoroutine. VisibleForTesting. */
     const CommandDispatcher& getDispatcher() const {
       return mCommandDispatcher;
     }
 
   private:
     // Disable copy-constructor and assignment operator
-    ChannelDispatcher(const ChannelDispatcher&) = delete;
-    ChannelDispatcher& operator=(const ChannelDispatcher&) = delete;
+    ChannelProcessorCoroutine(const ChannelProcessorCoroutine&) = delete;
+    ChannelProcessorCoroutine& operator=(const ChannelProcessorCoroutine&) =
+        delete;
 
     void printLineError(const char* line, uint8_t statusCode) const;
 

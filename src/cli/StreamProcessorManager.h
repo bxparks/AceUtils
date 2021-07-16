@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2018 Brian T. Park
+Copyright (c) 2021 Brian T. Park
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef ACE_UTILS_CLI_COMMAND_MANAGER_H
-#define ACE_UTILS_CLI_COMMAND_MANAGER_H
+#ifndef ACE_UTILS_CLI_STREAM_PROCESSOR_MANAGER_H
+#define ACE_UTILS_CLI_STREAM_PROCESSOR_MANAGER_H
 
-#include <AceRoutine.h> // Coroutine, Channel
-#include "ChannelDispatcher.h"
-#include "StreamLineReader.h"
+#include <AceRoutine.h> // Coroutine
+#include "StreamProcessorCoroutine.h"
 
 namespace ace_utils {
 namespace cli {
 
 /**
- * A convenience wrapper around a ChannelDispatcher that hides complexity of
- * creating, initializing and injecting the resources needed by the
- * ChannelDispatcher. It is not strictly necessary to use this, but the setup
- * is much easier using this class.
+ * A convenience wrapper around a StreamProcessorCoroutine that hides complexity
+ * of creating, initializing and injecting the resources needed by the
+ * StreamProcessorCoroutine. It is not strictly necessary to use this, but the
+ * setup is much easier using this class.
  *
- * This is a subclass of Coroutine, just like ChannelDispatcher. The
- * runCoroutine() method simply delegates to the underlying ChannelDispatcher,
- * so this class can be used as a substitute for ChannelDispatcher. The
- * setupCoroutine() method should be called to initialize the name of the
- * coroutine and insert it into the CoroutineScheduler.
+ * The StreamProcessorCoroutine auto-registers itself into the
+ * CoroutineScheduler. If you aren't using the CoroutineScheduler, then you need
+ * to explicitly obtain the reference to StreamProcessorCoroutine using
+ * getStreamProcessor() and call the StreamProcessorCoroutine::runCoroutine()
+ * method manually from the global loop() function.
  *
  * Example usage:
  *
@@ -65,13 +64,16 @@ namespace cli {
  * const uint8_t ARGV_SIZE = 5;
  * const char PROMPT[] = "$ ";
  *
- * StreamChannelManager<BUF_SIZE, ARGV_SIZE> commandManager(
+ * StreamProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
  *     COMMANDS, NUM_COMMANDS, Serial, PROMPT);
  *
  * void setup() {
  *   ...
- *   commandManager.setupCoroutine("commandManager");
  *   CoroutineScheduler::setup();
+ * }
+ *
+ * void loop() {
+ *   CoroutineScheduler::loop();
  * }
  * @endcode
  *
@@ -79,7 +81,7 @@ namespace cli {
  * @param ARGV_SIZE Size of the command line argv token list.
  */
 template<uint8_t BUF_SIZE, uint8_t ARGV_SIZE>
-class StreamChannelManager: public ace_routine::Coroutine {
+class StreamProcessorManager {
   public:
 
     /**
@@ -87,51 +89,41 @@ class StreamChannelManager: public ace_routine::Coroutine {
      *
      * @param commands Array of (CommandHandler*).
      * @param numCommands Number of commands in 'commands'.
-     * @param serial The serial port used to read commands and send output,
+     * @param stream The serial port used to read commands and send output,
      *        will normally be 'Serial', but can be set to something else.
      * @param prompt If not null, print a prompt and echo the command entered
      *        by the user. If null, don't print the prompt and don't echo the
-     *        input from the user.
+     *        input from the user. (not implemented yet)
      */
-    StreamChannelManager(
+    StreamProcessorManager(
         const CommandHandler* const* commands,
         uint8_t numCommands,
-        Stream& serial,
+        Stream& stream,
         const char* prompt = nullptr
     ) :
         mCommands(commands),
         mNumCommands(numCommands),
-        mSerial(serial),
-        mPrompt(prompt),
-        mStreamLineReader(mChannel, mSerial, mLineBuffer, BUF_SIZE),
         mCommandDispatcher(mCommands, mNumCommands, mArgv, ARGV_SIZE),
-        mChannelDispatcher(mChannel, mCommandDispatcher, mSerial, mPrompt)
+        mStreamProcessor(
+            stream, mCommandDispatcher, mLineBuffer, BUF_SIZE, prompt)
     {}
 
-    /**
-     * Main body of coroutine, dispatches to the underlying mStreamLineReader
-     * and mChannelDispatcher.
-     */
-    int runCoroutine() override {
-      mStreamLineReader.runCoroutine();
-      mChannelDispatcher.runCoroutine();
-      return 0;
+    /** Return the underlying StreamProcessorCoroutine. */
+    StreamProcessorCoroutine& getStreamProcessor() {
+      return mStreamProcessor;
     }
 
-    /** Return the ChannelDispatcher. VisibleForTesting. */
-    const ChannelDispatcher& getDispatcher() const {
-      return mChannelDispatcher;
-    }
+  private:
+    // Disable copy-constructor and assignment operator
+    StreamProcessorManager(const StreamProcessorManager&) = delete;
+    StreamProcessorManager& operator=(const StreamProcessorManager&) = delete;
 
   private:
     const CommandHandler* const* const mCommands;
     uint8_t const mNumCommands;
-    Stream& mSerial;
-    const char* const mPrompt;
-    ace_routine::Channel<InputLine> mChannel;
-    StreamLineReader mStreamLineReader;
+
     CommandDispatcher mCommandDispatcher;
-    ChannelDispatcher mChannelDispatcher;
+    StreamProcessorCoroutine mStreamProcessor;
     char mLineBuffer[BUF_SIZE];
     const char* mArgv[ARGV_SIZE];
 };

@@ -1,11 +1,13 @@
 #ifndef ACE_UTILS_CLI_H
 #define ACE_UTILS_CLI_H
 
-#include "InputLine.h"
-#include "StreamLineReader.h"
-#include "CommandDispatcher.h"
-#include "ChannelDispatcher.h"
 #include "CommandHandler.h"
-#include "StreamChannelManager.h"
+#include "CommandDispatcher.h"
+#include "InputLine.h"
+#include "StreamReaderCoroutine.h"
+#include "ChannelProcessorCoroutine.h"
+#include "ChannelProcessorManager.h"
+#include "StreamProcessorCoroutine.h"
+#include "StreamProcessorManager.h"
 
 #endif
