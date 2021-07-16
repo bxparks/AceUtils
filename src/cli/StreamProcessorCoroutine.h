@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef ACE_UTILS_CLI_STREAM_DISPATCHER_H
-#define ACE_UTILS_CLI_STREAM_DISPATCHER_H
+#ifndef ACE_UTILS_CLI_STREAM_PROCESSOR_COROUTINE_H
+#define ACE_UTILS_CLI_STREAM_PROCESSOR_COROUTINE_H
 
 #include <Arduino.h> // Stream, Print
 #include <AceRoutine.h>
@@ -39,7 +39,7 @@ namespace cli {
  * until the next '\\n' or '\\r', and an error message is printed on the given
  * Print output.
  */
-class StreamDispatcher: public ace_routine::Coroutine {
+class StreamProcessorCoroutine : public ace_routine::Coroutine {
   private:
     static uint8_t const kBufferOk = 0;
     static uint8_t const kBufferOverflow = 1;
@@ -53,17 +53,22 @@ class StreamDispatcher: public ace_routine::Coroutine {
      * @param buffer input character buffer
      * @param bufferSize size of the buffer. Should be set large enough to
      *        hold the longest expected line without triggering buffer overflow.
+     * @param prompt If not null, print a prompt and echo the command entered
+     *        by the user. If null, don't print the prompt and don't echo the
+     *        input from the user. (not implemented yet)
      */
-    StreamDispatcher(
+    StreamProcessorCoroutine(
         Stream& stream,
         const CommandDispatcher& commandDispatcher,
         char* buffer,
-        uint8_t bufferSize
+        uint8_t bufferSize,
+        const char* prompt
     ):
         mCommandDispatcher(commandDispatcher),
         mStream(stream),
         mBuf(buffer),
-        mBufSize(bufferSize)
+        mBufSize(bufferSize),
+        mPrompt(prompt)
     {}
 
     /**
@@ -71,11 +76,10 @@ class StreamDispatcher: public ace_routine::Coroutine {
      * and writes it into the output channel.
      */
     int runCoroutine() override {
-
       COROUTINE_LOOP() {
         COROUTINE_AWAIT(mStream.available() > 0);
 
-        // There may be multiple bytes waiting, so loop to get all of them.
+        // There could be multiple bytes waiting, so loop to get all of them.
         while (mStream.available() > 0) {
           char c = mStream.read();
           mBuf[mIndex] = c;
@@ -104,8 +108,9 @@ class StreamDispatcher: public ace_routine::Coroutine {
 
   private:
     // Disable copy-constructor and assignment operator
-    StreamDispatcher(const StreamDispatcher&) = delete;
-    StreamDispatcher& operator=(const StreamDispatcher&) = delete;
+    StreamProcessorCoroutine(const StreamProcessorCoroutine&) = delete;
+    StreamProcessorCoroutine& operator=(const StreamProcessorCoroutine&) =
+        delete;
 
     /**
      * Terminate the current buffer with the NUL character (so that the current
@@ -122,6 +127,7 @@ class StreamDispatcher: public ace_routine::Coroutine {
     Stream& mStream;
     char* const mBuf;
     uint8_t const mBufSize;
+    const char* const mPrompt;
 
     uint8_t mIndex = 0;
     uint8_t mBufStatus = kBufferOk;

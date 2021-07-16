@@ -4,10 +4,10 @@
 #include "CommandHandler.h"
 #include "CommandDispatcher.h"
 #include "InputLine.h"
-#include "StreamLineReader.h"
-#include "ChannelDispatcher.h"
-#include "StreamChannelManager.h"
-#include "StreamDispatcher.h"
-#include "StreamManager.h"
+#include "StreamReaderCoroutine.h"
+#include "ChannelProcessorCoroutine.h"
+#include "ChannelProcessorManager.h"
+#include "StreamProcessorCoroutine.h"
+#include "StreamProcessorManager.h"
 
 #endif

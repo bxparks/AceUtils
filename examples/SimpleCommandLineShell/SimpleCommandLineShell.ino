@@ -24,7 +24,7 @@
 
 using ace_routine::CoroutineScheduler;
 using ace_utils::cli::CommandHandler;
-using ace_utils::cli::StreamManager;
+using ace_utils::cli::StreamProcessorManager;
 using ace_utils::freemem::freeMemory;
 
 // Every board except ESP32 defines SERIAL_PORT_MONITOR..
@@ -156,7 +156,7 @@ static const uint8_t ARGV_SIZE = 5;
 static const char PROMPT[] = "$ ";
 
 // Auto-inserts itself into CoroutineScheduler
-StreamManager<BUF_SIZE, ARGV_SIZE> commandManager(
+StreamProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
     COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
 
 //---------------------------------------------------------------------------

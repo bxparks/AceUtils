@@ -1,25 +1,35 @@
 # Changelog
 
 * Unreleased
-    * `CrcEeprom`: Recommend using a 32-bit random number for the `contextId`
-      instead of using `toContextId()` helper function.
-    * Rename `AceUtilsStm32BufferedEeprom.h` to
-      `buffered_eeprom_stm32/buffered_eeprom_stm32.h`
-    * Rename `IEepromAdapter` to `EepromInterface`; `EspEepromAdapter` to
-      `EspStyleEeprom`; `AvrEepromAdapter` to `AvrStyleEeprom`.
-    * Rename `EpoxyPromAvr` to `EpoxyEepromAvr`; `EpoxyPromEsp` to
-      `EpoxyEepromEsp`; tracks the changes in EpoxyDuino library.
-    * Convert `CrcEeprom` into a template class, templatized on `EspStyleEeprom`
-      and `AvrStyleEeprom`. Seems to save between 150-950 bytes of flash memory
-      by avoiding virtual function calls and class hierarchies.
-    * Move `freeMemory()` function from `examples/CommandLineShell.ino`
-      into `freemem/freemem.h` so that it can be used elsewhere.
+    * `AceUtils/buffered_eeprom_stm32`
+        * Rename `AceUtilsStm32BufferedEeprom.h` to
+          `buffered_eeprom_stm32/buffered_eeprom_stm32.h`
+    * `AceUtils/crc_eeprom`
+        * `CrcEeprom`: Recommend using a 32-bit random number for the
+          `contextId` instead of using `toContextId()` helper function.
+        * Rename `IEepromAdapter` to `EepromInterface`; `EspEepromAdapter` to
+          `EspStyleEeprom`; `AvrEepromAdapter` to `AvrStyleEeprom`.
+        * Rename `EpoxyPromAvr` to `EpoxyEepromAvr`; `EpoxyPromEsp` to
+          `EpoxyEepromEsp`; tracks the changes in EpoxyDuino library.
+        * Convert `CrcEeprom` into a template class, templatized on
+          `EspStyleEeprom` and `AvrStyleEeprom`. Seems to save between 150-950
+          bytes of flash memory by avoiding virtual function calls and class
+          hierarchies.
+    * `AceUtils/freemem`
+        * Move `freeMemory()` function from `examples/CommandLineShell.ino`
+          into `freemem/freemem.h` so that it can be used elsewhere.
         * Add support for STM32, and clean up header imports.
-    * AceUtils/cli
+    * `AceUtils/cli`
         * Move `AceUtilsCli.h` to `cli/cli.h`.
         * Split `CommandDispatcher` from `ChannelDispatcher` so that it can be
           used without using an AceRoutine `Channel`.
-        * Rename `CommandManager` to `StreamChannelManager`.
+        * Rename `CommandManager` to `ChannelProcessorManager`.
+        * Rename `ChannelDispatcher` to `ChannelProcessorCoroutine`.
+        * Rename `StreamManager` to `StreamProcessorManager`.
+        * Rename `StreamDispatcher` to `StreamProcessorCoroutine`.
+        * Rename `StreamLineReader` to `StreamReaderCoroutine`.
+        * Split `examples/CommandLineShell.ino` into `ChannelCommandLineShell`
+          and `SimpleCommandLineShell`.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.

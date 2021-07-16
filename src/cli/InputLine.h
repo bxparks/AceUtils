@@ -29,9 +29,9 @@ namespace ace_utils {
 namespace cli {
 
 /**
- * Message sent from StreamLineReader to CommandDispatcher coroutines through
- * Channel<InputLine> channel. Represents a line typed by a user into the
- * Serial port.
+ * Message sent from StreamReaderCoroutine to CommandDispatcher coroutines
+ * through Channel<InputLine> channel. Represents a line typed by a user into
+ * the Serial port.
  */
 struct InputLine {
   static uint8_t const kStatusOk = 0;

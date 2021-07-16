@@ -9,9 +9,9 @@
 using aunit::TestRunner;
 using aunit::TestOnce;
 using ace_utils::cli::CommandHandler;
-using ace_utils::cli::StreamChannelManager;
 using ace_utils::cli::CommandDispatcher;
-using ace_utils::cli::ChannelDispatcher;
+using ace_utils::cli::ChannelProcessorCoroutine;
+using ace_utils::cli::ChannelProcessorManager;
 using ace_common::FCString;
 
 // ---------------------------------------------------------------------------
@@ -47,7 +47,7 @@ static const CommandHandler* const COMMANDS[] = {
 };
 static uint8_t const NUM_COMMANDS = sizeof(COMMANDS) / sizeof(CommandHandler*);
 
-static StreamChannelManager<BUF_SIZE, ARGV_SIZE> commandManager(
+static ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
     COMMANDS, NUM_COMMANDS, Serial, PROMPT);
 
 class CommandDispatcherTest: public TestOnce {
@@ -84,9 +84,9 @@ testF(CommandDispatcherTest, tokenize) {
 }
 
 test(findCommand) {
-  const ChannelDispatcher& channelDispatcher = commandManager.getDispatcher();
-  const CommandDispatcher& commandDispatcher =
-      channelDispatcher.getDispatcher();
+  const ChannelProcessorCoroutine& channelProcessor =
+      commandManager.getChannelProcessor();
+  const CommandDispatcher& commandDispatcher = channelProcessor.getDispatcher();
 
   // "echo" command uses normal C strings
   const CommandHandler* echoCommandResult =

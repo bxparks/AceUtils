@@ -22,13 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ChannelDispatcher.h"
+#include <Arduino.h> // Print
+#include "ChannelProcessorCoroutine.h"
 #include "CommandDispatcher.h"
 
 namespace ace_utils {
 namespace cli {
 
-int ChannelDispatcher::runCoroutine() {
+int ChannelProcessorCoroutine::runCoroutine() {
   InputLine input;
   COROUTINE_LOOP() {
     if (mPrompt != nullptr) {
@@ -48,8 +49,8 @@ int ChannelDispatcher::runCoroutine() {
   }
 }
 
-void ChannelDispatcher::printLineError(const char* line, uint8_t statusCode)
-    const {
+void ChannelProcessorCoroutine::printLineError(
+    const char* line, uint8_t statusCode) const {
   if (statusCode == InputLine::kStatusOverflow) {
     mPrinter.print(F("BufferOverflow: "));
     mPrinter.println(line);

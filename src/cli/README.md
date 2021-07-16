@@ -7,9 +7,11 @@ These classes were initially an experiment to validate the `AceRoutine` macros
 and classes but they seem to be useful as an independent library. They may be
 moved to a separate project/repository later.
 
-Version: (2019-07-23)
+Version: (2021-07-16)
 
 ## Usage
+
+### StreamProcessorManager
 
 The basic steps for adding a command line interface to an Arduino sketch
 using the `cli/` library is the following:
@@ -18,28 +20,102 @@ using the `cli/` library is the following:
    `name` and `helpString`.
 1. Create a static array of `CommandHandler*` pointers with all the commands
    that you would like to support.
-1. Create a `StreamChannelManager` object, giving it the `CommandHandler*` array,
-   and a number of size parameters for various internal buffers (maximum line
-   buffer length, and maximum number of `argv` parameters for a command).
+1. Create a `StreamChannelManager` object, giving it the `CommandHandler*`
+   array, and a number of size parameters for various internal buffers (maximum
+   line buffer length, and maximum number of `argv` parameters for a command).
 1. Call `CoroutineScheduler::setup()` in the global `setup()` function.
 1. Run the `CoroutineScheduler::loop()` in the global `loop()` function to
-   run the `StreamChannelManager` as a coroutine.
+   run the `StreamProcessorCoroutine` that was created inside the
+   `StreamProcessorManager`.
 
 The dependency diagram looks like this:
 
 ```
-        StreamChannelManager
+ StreamProcessorManager
+       |
+       v
+StreamProcessorCoroutine
+       |
+       v
+  CommandDispatcher
+       |
+       v
+  CommandHandler
+```
+
+The `StreamProcessorManager` is a templatized convenience class that creates
+all the helper objects and buffers needed to read and parse the command line
+input. It includes:
+
+* a `StreamProcessorCoroutine` coroutine that reads lines from the given
+  `Stream` object.
+* a `CommandDispatcher` instance that knows how to tokenize a string line
+  and call the matching `CommandHandler`
+* a line buffer for each input line
+* a array of `(const char*)` to hold the command line arguments of the command
+
+You don't have to use the `StreamProcessorManager`, but it greatly simplifies
+the creation and usage of the `StreamProcessorCoroutine`.
+
+### ChannelProcessorManager
+
+**Deprecated**: This uses the experimental `ace_routine::Channel` class to allow
+passing the input string from the `StreamReaderCoroutine` to the
+`ChannelProcessorCoroutine`. It turns out that the direct approach of
+`StreamProcessorCoroutine` (above) is simpler with the same functionality,
+without using the `Channel` class.
+
+The basic steps for adding a command line interface to an Arduino sketch
+using the `cli/` library is the following:
+
+1. Create a `CommandHandler` class for each command, defining its
+   `name` and `helpString`.
+1. Create a static array of `CommandHandler*` pointers with all the commands
+   that you would like to support.
+1. Create a `ChannelProcessorManager` object, giving it the `CommandHandler*`
+   array, and a number of size parameters for various internal buffers (maximum
+   line buffer length, and maximum number of `argv` parameters for a command).
+1. Call `CoroutineScheduler::setup()` in the global `setup()` function.
+1. Run the `CoroutineScheduler::loop()` in the global `loop()` function to
+   run the `ChannelProcessorCoroutine` and `StreamReaderCoroutine`
+   which were created inside the `ChannelProcessorManager`.
+
+The dependency diagram looks like this:
+
+```
+        ChannelProcessorManager
           /     |       \
     ------      v        v
-   /   ChannelDispatcher StreamLineReader
-   |        |         \        |
-   |        |          ---\    |
-   v        v              v   v
+   /   ChannelProcessor  StreamReader
+        Coroutine         Coroutine
+   |        |      \          |
+   |        |       ---\      |
+   v        v           v     v
 CommandDispatcher       InputLine
        |
        v
   CommandHandler
 ```
+
+The `ChannelProcessorManager` is a templatized convenience class that creates
+all the helper objects and buffers needed to read and parse the command line
+input. It includes:
+
+* a `StreamReaderCoroutine` coroutine that reads the input lines from `Serial`
+* a `ChannelProcessorCoroutine` coroutine that parses the input lines
+  inside `Channel<InputLine>`, from `StreamReaderCoroutine` to
+  `ChannelProcessorCoroutine`
+* a `CommandDispatcher` instance that knows how to tokenize a string line
+  and call the matching `CommandHandler`
+* a line buffer for each input line
+* a array of `(const char*)` to hold the command line arguments of the command
+
+You don't have to use the `ChannelProcessorManager`, but it greatly simplifies
+the creation and usage of the `ChannelProcessorCoroutine`.
+
+### Command Line Over MQTT
+
+(TBD: Add documentation or example of a command line shell over MQTT messages.)
 
 ### Command Handler and Arguments
 
@@ -56,23 +132,6 @@ parameters:
   function. For example, `argv[0]` is the name of the command, and `argv[1]`
   is the first argument after the command (if it exists).
 
-### StreamChannelManager
-
-The `StreamChannelManager` is a templatized convenience class that creates all the
-helper objects and buffers needed to read and parse the command line input.
-It includes:
-
-* a `StreamLineReader` coroutine that reads the input lines from `Serial`
-* a `ChannelDispatcher` coroutine that parses the input lines
-* a `Channel<InputLine>` from `StreamLineReader` to `ChannelDispatcher`
-* a `CommandDispatcher` instance that knows how to tokenize a string line
-  and call the matching `CommandHandler`
-* a line buffer for each input line
-* a array of `(const char*)` to hold the command line arguments of the command
-
-You don't have to use the `StreamChannelManager`, but it greatly simplifies the
-creation and usage of the `ChannelDispatcher`.
-
 ### CommandHandler Definitions and Setup
 
 An Arduino `.ino` file that uses the CLI classes to implement a command line
@@ -83,11 +142,13 @@ shell will look something like this:
 #include <cli/cli.h> // CommandHandler from AceUtils
 
 using ace_utils::cli::CommandHandler;
-using ace_utils::cli::StreamChannelManager;
+using ace_utils::cli::ChannelProcessorManager;
+using ace_utils::cli::StreamProcessorManager;
 
 class FooCommand: public CommandHandler {
   FooCommand():
-    CommandHandler("{fooName}", "{helpString}") {}
+    CommandHandler("{fooName}", "{helpString}")
+  {}
 
   void run(Print& printer, int argc, const char* const* argv) const override {
     ...
@@ -96,16 +157,19 @@ class FooCommand: public CommandHandler {
 
 class BarCommand: public CommandHandler {
   BarCommand():
-    CommandHandler(F("{barCommand}"), F("{helpString}")) {}
+    CommandHandler(F("{barCommand}"), F("{helpString}"))
+  {}
 
   void run(Print& printer, int argc, const char* const* argv) const override {
     ...
   }
 };
 
+// Instantiate each command
 FooCommand fooCommand;
 BarCommand barCommand;
 
+// Create an array of command handlers.
 static const CommandHandler* const COMMANDS[] = {
   &fooCommand,
   &barCommand,
@@ -116,17 +180,25 @@ uint8_t const BUF_SIZE = 64; // maximum size of an input line
 uint8_t const ARGV_SIZE = 10; // maximum number of tokens in command
 char const PROMPT[] = "$ ";
 
-StreamChannelManager<BUF_SIZE, ARGV_SIZE> commandManager(
-    COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+// Create a command manager, using one of the following:
+#if 1
+  // Use this, it's simpler.
+  StreamProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
+      COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+#else
+  // Deprecated.
+  ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
+      COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+#endif
 
 void setup() {
   ...
-  commandManager.setupCoroutine("commandManager");
   CoroutineScheduler::setup();
 }
 
 void loop() {
   CoroutineScheduler::loop();
+  ...
 }
 ```
 

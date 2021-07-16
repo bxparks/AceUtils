@@ -1,4 +1,6 @@
-# Command Line Shell
+# Command Line Shell using Channel
+
+**Warning**: This is deprecated in favor of `examples/SimpleCommandLineShell`.
 
 A demo of a primitive command line "shell" for Arduino using the classes in
 `src/ace_routine/cli`. It currently supports 5 commands:

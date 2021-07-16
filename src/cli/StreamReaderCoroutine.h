@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef ACE_UTILS_CLI_STREAM_LINE_READER_H
-#define ACE_UTILS_CLI_STREAM_LINE_READER_H
+#ifndef ACE_UTILS_CLI_STREAM_READER_COROUTINE_H
+#define ACE_UTILS_CLI_STREAM_READER_COROUTINE_H
 
 #include <Arduino.h> // Stream
 #include <AceRoutine.h>
@@ -37,7 +37,7 @@ namespace cli {
  * the Stream device, and write the InputLine message into the provided
  * Channel. The Stream will normally be the global Serial object.
  */
-class StreamLineReader: public ace_routine::Coroutine {
+class StreamReaderCoroutine : public ace_routine::Coroutine {
   public:
     /**
      * Constructor.
@@ -49,12 +49,16 @@ class StreamLineReader: public ace_routine::Coroutine {
      * @param bufferSize The size of the buffer, should be set large enough to
      *        hold the longest line without triggering buffer overflow.
      */
-    StreamLineReader(ace_routine::Channel<InputLine>& channel, Stream& stream,
-        char* buffer, int bufferSize):
-      mChannel(channel),
-      mStream(stream),
-      mBuf(buffer),
-      mBufSize(bufferSize)
+    StreamReaderCoroutine (
+        ace_routine::Channel<InputLine>& channel,
+        Stream& stream,
+        char* buffer,
+        int bufferSize
+    ):
+        mChannel(channel),
+        mStream(stream),
+        mBuf(buffer),
+        mBufSize(bufferSize)
     {}
 
     /**
@@ -64,8 +68,10 @@ class StreamLineReader: public ace_routine::Coroutine {
     int runCoroutine() override {
       InputLine input;
       char c;
+
       COROUTINE_LOOP() {
         COROUTINE_AWAIT(mStream.available() > 0);
+
         while (mStream.available() > 0) {
           c = mStream.read();
           mBuf[mIndex] = c;
@@ -90,8 +96,8 @@ class StreamLineReader: public ace_routine::Coroutine {
 
   private:
     // Disable copy-constructor and assignment operator
-    StreamLineReader(const StreamLineReader&) = delete;
-    StreamLineReader& operator=(const StreamLineReader&) = delete;
+    StreamReaderCoroutine (const StreamReaderCoroutine &) = delete;
+    StreamReaderCoroutine & operator=(const StreamReaderCoroutine &) = delete;
 
     /**
      * Terminate the current buffer with the NUL character (so that the current

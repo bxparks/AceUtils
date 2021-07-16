@@ -15,12 +15,12 @@
 #include <Arduino.h>
 #include <AceRoutine.h>
 #include <AceUtils.h>
-#include <cli/cli.h> // StreamChannelManager from AceUtils
+#include <cli/cli.h> // ChannelProcessorManager from AceUtils
 #include <freemem/freemem.h> // freeMemory() from AceUtils
 
 using ace_routine::CoroutineScheduler;
 using ace_utils::cli::CommandHandler;
-using ace_utils::cli::StreamChannelManager;
+using ace_utils::cli::ChannelProcessorManager;
 using ace_utils::freemem::freeMemory;
 
 // Every board except ESP32 defines SERIAL_PORT_MONITOR..
@@ -152,7 +152,7 @@ static const uint8_t ARGV_SIZE = 5;
 static const char PROMPT[] = "$ ";
 
 // Auto-inserts itself into CoroutineScheduler
-StreamChannelManager<BUF_SIZE, ARGV_SIZE> commandManager(
+ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
     COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
 
 //---------------------------------------------------------------------------
