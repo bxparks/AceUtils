@@ -33,11 +33,12 @@ const uint32_t CONTEXT_ID = 0xeca4c474;
 
 #elif defined(ARDUINO_ARCH_STM32)
   #if 1
-    // Use this for STM32. The <AceUtilsBufferedEepromStm32.h> library provides
+    // Use this for STM32. The buffered_eeprom_stm32 library provides
     // the BufferedEEPROM object which internally uses the buffered versions of
     // the low-level eeprom functions. The BufferedEEPROM object implements the
     // ESP-flavored EEPROM API.
-    #include <AceUtilsBufferedEepromStm32.h>
+    #include <AceUtils.h>
+    #include <buffered_eeprom_stm32/buffered_eeprom_stm32.h> // AceUtils
     CrcEepromEsp<BufferedEEPROMClass> crcEeprom(BufferedEEPROM, CONTEXT_ID);
   #else
     // Don't do this for STM32 because the default EEPROM flashes the entire

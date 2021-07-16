@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <AUnitVerbose.h>
 #include <AceUtils.h>
-#include <crc_eeprom/crc_eeprom.h>
+#include <crc_eeprom/crc_eeprom.h> // from AceUtils
 
 using aunit::TestRunner;
 using ace_utils::crc_eeprom::CrcEepromEsp;
@@ -21,7 +21,8 @@ const uint32_t CONTEXT_ID = 0x812e4519;
   #include <EEPROM.h>
   CrcEepromEsp<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 #elif defined(ARDUINO_ARCH_STM32)
-  #include <AceUtilsBufferedEepromStm32.h>
+  #include <AceUtils.h>
+  #include <buffered_eeprom_stm32/buffered_eeprom_stm32.h>
   CrcEepromEsp<BufferedEEPROMClass> crcEeprom(BufferedEEPROM, CONTEXT_ID);
 #else // Assume AVR
   #include <EEPROM.h>

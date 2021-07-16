@@ -71,14 +71,19 @@ will always remain in the `v0.xx.yy` form.
         * (none)
 * STM32 Buffered EEPROM
     * Header files
-        * `#include <AceUtilsBufferedEepromStm32.h>`
+        * `#include <AceUtils.h>`
+        * `#include <buffered_eeprom_stm32/buffered_eeprom_stm32.h>
     * A version of `EEPROM` on STM32 that uses a buffer to avoid
-      writing to the flash page on every byte update. Implements an API
-      compatible with the `EEPROM` object on ESP8266 and ESP32.
+      writing to the flash page on every byte update.
+        * Implements an API compatible with the `EEPROM` object on ESP8266 and
+          ESP32.
+        * Creates `BufferedEEPROM` instance in the global namespace, just like
+          the `EEPROM` instance.
+        * Can be used with `CrcEeprom` through the `CrcEepromEsp` class.
+    * API
         * `BufferedEEPROM.begin()`
         * `BufferedEEPROM.write()`, `read()`, `put()`, `get()`, `length()`
         * `BufferedEEPROM.commit()`
-    * Can be used with `CrcEeprom` through the `EspStyleEeprom`.
 * Free memory
     * Header files
         * `#include <AceUtils.h>`
