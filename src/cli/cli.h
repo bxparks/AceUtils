@@ -9,5 +9,7 @@
 #include "ChannelProcessorManager.h"
 #include "StreamProcessorCoroutine.h"
 #include "StreamProcessorManager.h"
+#include "DirectProcessor.h"
+#include "DirectProcessorManager.h"
 
 #endif

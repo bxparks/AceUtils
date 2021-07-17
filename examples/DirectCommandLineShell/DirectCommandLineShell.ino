@@ -4,9 +4,8 @@
  * handler.
  *
  * Similar to examples/ChannelCommandLineShell and
- * examples/DirectCommandLineShell except that it reads the Stream directly
- * using StreamProcessorCoroutine, instead of going through the
- * ace_routine::Channel object.
+ * examples/SimpleCommandLineShell except that it reads the Stream directly
+ * using DirectProcessor.
  *
  * Run the sketch, then type 'help' on the serial port. The following
  * commands are supported:
@@ -25,7 +24,7 @@
 
 using ace_routine::CoroutineScheduler;
 using ace_utils::cli::CommandHandler;
-using ace_utils::cli::StreamProcessorManager;
+using ace_utils::cli::DirectProcessorManager;
 using ace_utils::freemem::freeMemory;
 
 // Every board except ESP32 defines SERIAL_PORT_MONITOR..
@@ -157,7 +156,7 @@ static const uint8_t ARGV_SIZE = 5;
 static const char PROMPT[] = "$ ";
 
 // Auto-inserts itself into CoroutineScheduler
-StreamProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
+DirectProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
     COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
 
 //---------------------------------------------------------------------------
@@ -174,5 +173,6 @@ void setup() {
 }
 
 void loop() {
+  commandManager.process();
   CoroutineScheduler::loop();
 }
