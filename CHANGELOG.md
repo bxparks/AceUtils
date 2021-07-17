@@ -26,11 +26,11 @@
         * Rename `CommandManager` to `ChannelProcessorManager`.
         * Rename `ChannelDispatcher` to `ChannelProcessorCoroutine`.
         * Rename `StreamLineReader` to `StreamReaderCoroutine`.
-        * Add `StreamProcessorManager`, `StreamProcessorCoroutine`.
+        * Add `StreamProcessorCoroutine` and `StreamProcessorManager`.
         * Add `DirectProcessor` and `DirectProcessorManager`.
         * Split `examples/CommandLineShell.ino` into 3 versions:
             * `ChannelCommandLineShell`
-            * `SimpleCommandLineShell`
+            * `StreamCommandLineShell`
             * `DirectCommandLineShell`
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
