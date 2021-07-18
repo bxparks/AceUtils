@@ -17,7 +17,6 @@
  */
 
 #include <Arduino.h>
-#include <AceRoutine.h>
 #include <AceUtils.h>
 #include <cli/cli.h> // from AceUtils
 #include <freemem/freemem.h> // from AceUtils
@@ -155,9 +154,8 @@ static const uint8_t BUF_SIZE = 64;
 static const uint8_t ARGV_SIZE = 5;
 static const char PROMPT[] = "$ ";
 
-// Auto-inserts itself into CoroutineScheduler
 DirectProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
-    COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
+    SERIAL_PORT_MONITOR, COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
 
 //---------------------------------------------------------------------------
 

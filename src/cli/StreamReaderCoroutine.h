@@ -109,6 +109,7 @@ class StreamReaderCoroutine : public ace_routine::Coroutine {
       mIndex = 0;
     }
 
+  private:
     ace_routine::Channel<InputLine>& mChannel;
     Stream& mStream;
     char* const mBuf;

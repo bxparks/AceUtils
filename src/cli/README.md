@@ -181,15 +181,18 @@ uint8_t const ARGV_SIZE = 10; // maximum number of tokens in command
 char const PROMPT[] = "$ ";
 
 // Create a command manager, using one of the following:
-#if 1
-  // Use this, it's simpler.
-  StreamProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
-      COMMANDS, NUM_COMMANDS, Serial, PROMPT);
-#else
-  // Deprecated.
-  ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
-      COMMANDS, NUM_COMMANDS, Serial, PROMPT);
-#endif
+//
+// 1) Simplest, direct polling of the Serial port.
+DirectProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
+    Serial, COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+//
+// 2) Poll Serial port using a coroutine:
+//StreamProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
+//    Serial, COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+//
+// 3) Deprecated. Poll the Serial port using 2 coroutines and a Channel.
+//ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
+//    Serial, COMMANDS, NUM_COMMANDS, Serial, PROMPT);
 
 void setup() {
   ...

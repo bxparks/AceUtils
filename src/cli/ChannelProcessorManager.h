@@ -57,15 +57,18 @@ namespace cli {
  * CommandB commandB;
  *
  * static const CommandHandler* COMMANDS[] = {
- *
+ *   &commandA,
+ *   &commandB
  * };
+ * static const uint8_t NUM_COMMANDS =
+ *    sizeof(COMMANDS) / sizeof(CommandHandler*);
  *
  * const uint8_t BUF_SIZE = 64;
  * const uint8_t ARGV_SIZE = 5;
  * const char PROMPT[] = "$ ";
  *
  * ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
- *     COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+ *     Serial, COMMANDS, NUM_COMMANDS, Serial, PROMPT);
  *
  * void setup() {
  *   ...
@@ -83,25 +86,25 @@ class ChannelProcessorManager {
     /**
      * Constructor.
      *
-     * @param commands Array of (CommandHandler*).
-     * @param numCommands Number of commands in 'commands'.
      * @param stream The serial port used to read commands and send output,
      *        will normally be 'Serial', but can be set to something else.
+     * @param commands Array of (CommandHandler*).
+     * @param numCommands Number of commands in 'commands'.
+     * @param printer output stream, often the same as `stream` but not always
      * @param prompt If not null, print a prompt and echo the command entered
      *        by the user. If null, don't print the prompt and don't echo the
      *        input from the user.
      */
     ChannelProcessorManager(
+        Stream& stream,
         const CommandHandler* const* commands,
         uint8_t numCommands,
-        Stream& stream,
+        Print& printer,
         const char* prompt = nullptr
     ) :
-        mCommands(commands),
-        mNumCommands(numCommands),
         mStreamReader(mChannel, stream, mLineBuffer, BUF_SIZE),
-        mCommandDispatcher(mCommands, mNumCommands, mArgv, ARGV_SIZE),
-        mChannelProcessor(mChannel, mCommandDispatcher, stream, prompt)
+        mCommandDispatcher(commands, numCommands, mArgv, ARGV_SIZE),
+        mChannelProcessor(mChannel, mCommandDispatcher, printer, prompt)
     {}
 
     /** Return the StreamReaderCoroutine. */
@@ -115,9 +118,12 @@ class ChannelProcessorManager {
     }
 
   private:
-    const CommandHandler* const* const mCommands;
-    uint8_t const mNumCommands;
+    // Disable copy-constructor and assignment operator
+    ChannelProcessorManager (const ChannelProcessorManager &) = delete;
+    ChannelProcessorManager& operator=(const ChannelProcessorManager &) =
+        delete;
 
+  private:
     ace_routine::Channel<InputLine> mChannel;
     StreamReaderCoroutine mStreamReader;
     CommandDispatcher mCommandDispatcher;

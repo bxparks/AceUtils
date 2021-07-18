@@ -153,7 +153,7 @@ static const char PROMPT[] = "$ ";
 
 // Auto-inserts itself into CoroutineScheduler
 ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
-    COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
+    SERIAL_PORT_MONITOR, COMMANDS, NUM_COMMANDS, SERIAL_PORT_MONITOR, PROMPT);
 
 //---------------------------------------------------------------------------
 

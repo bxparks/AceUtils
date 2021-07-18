@@ -50,6 +50,7 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
      *
      * @param stream input stream, usually the global Serial object
      * @param commandDispatcher CommandDispatcher for processing the command
+     * @param printer output stream, often the same as `stream` but not always
      * @param buffer input character buffer
      * @param bufferSize size of the buffer. Should be set large enough to
      *        hold the longest expected line without triggering buffer overflow.
@@ -60,12 +61,14 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
     StreamProcessorCoroutine(
         Stream& stream,
         const CommandDispatcher& commandDispatcher,
+        Print& printer,
         char* buffer,
         uint8_t bufferSize,
         const char* prompt
     ):
         mCommandDispatcher(commandDispatcher),
         mStream(stream),
+        mPrinter(printer),
         mBuf(buffer),
         mBufSize(bufferSize),
         mPrompt(prompt)
@@ -87,7 +90,7 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
 
           if (mIndex >= mBufSize - 1) {
             resetBuffer();
-            mStream.println(
+            mPrinter.println(
                 F("Error: Buffer overflow... flushing until Newline"));
             mBufStatus = kBufferOverflow;
           } else if (c == '\n' || c == '\r') {
@@ -95,9 +98,9 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
             // until the \n or \r.
             resetBuffer();
             if (mBufStatus == kBufferOk) {
-              mCommandDispatcher.runCommand(mStream, mBuf);
+              mCommandDispatcher.runCommand(mPrinter, mBuf);
             } else {
-              mStream.println(
+              mPrinter.println(
                   F("Error: Buffer overflow... flushed after Newline"));
               mBufStatus = kBufferOk;
             }
@@ -125,6 +128,7 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
   private:
     const CommandDispatcher& mCommandDispatcher;
     Stream& mStream;
+    Print& mPrinter;
     char* const mBuf;
     uint8_t const mBufSize;
     const char* const mPrompt;

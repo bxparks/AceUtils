@@ -57,15 +57,18 @@ namespace cli {
  * CommandB commandB;
  *
  * static const CommandHandler* COMMANDS[] = {
- *
+ *   &commandA,
+ *   &commandB
  * };
+ * static const uint8_t NUM_COMMANDS =
+ *    sizeof(COMMANDS) / sizeof(CommandHandler*);
  *
  * const uint8_t BUF_SIZE = 64;
  * const uint8_t ARGV_SIZE = 5;
  * const char PROMPT[] = "$ ";
  *
  * StreamProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
- *     COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+ *     Serial, COMMANDS, NUM_COMMANDS, Serial, PROMPT);
  *
  * void setup() {
  *   ...
@@ -87,25 +90,25 @@ class StreamProcessorManager {
     /**
      * Constructor.
      *
-     * @param commands Array of (CommandHandler*).
-     * @param numCommands Number of commands in 'commands'.
      * @param stream The serial port used to read commands and send output,
      *        will normally be 'Serial', but can be set to something else.
+     * @param commands Array of (CommandHandler*).
+     * @param numCommands Number of commands in 'commands'.
+     * @param printer output stream, often the same as `stream` but not always
      * @param prompt If not null, print a prompt and echo the command entered
      *        by the user. If null, don't print the prompt and don't echo the
      *        input from the user. (not implemented yet)
      */
     StreamProcessorManager(
+        Stream& stream,
         const CommandHandler* const* commands,
         uint8_t numCommands,
-        Stream& stream,
+        Print& printer,
         const char* prompt = nullptr
     ) :
-        mCommands(commands),
-        mNumCommands(numCommands),
-        mCommandDispatcher(mCommands, mNumCommands, mArgv, ARGV_SIZE),
+        mCommandDispatcher(commands, numCommands, mArgv, ARGV_SIZE),
         mStreamProcessor(
-            stream, mCommandDispatcher, mLineBuffer, BUF_SIZE, prompt)
+            stream, mCommandDispatcher, printer, mLineBuffer, BUF_SIZE, prompt)
     {}
 
     /** Return the underlying StreamProcessorCoroutine. */
@@ -119,9 +122,6 @@ class StreamProcessorManager {
     StreamProcessorManager& operator=(const StreamProcessorManager&) = delete;
 
   private:
-    const CommandHandler* const* const mCommands;
-    uint8_t const mNumCommands;
-
     CommandDispatcher mCommandDispatcher;
     StreamProcessorCoroutine mStreamProcessor;
     char mLineBuffer[BUF_SIZE];
