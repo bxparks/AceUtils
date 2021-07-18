@@ -48,7 +48,7 @@ static const CommandHandler* const COMMANDS[] = {
 static uint8_t const NUM_COMMANDS = sizeof(COMMANDS) / sizeof(CommandHandler*);
 
 static ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
-    COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+    Serial, COMMANDS, NUM_COMMANDS, Serial, PROMPT);
 
 class CommandDispatcherTest: public TestOnce {
   protected:
