@@ -95,9 +95,8 @@ class StreamProcessorManager {
      * @param commands Array of (CommandHandler*).
      * @param numCommands Number of commands in 'commands'.
      * @param printer output stream, often the same as `stream` but not always
-     * @param prompt If not null, print a prompt and echo the command entered
-     *        by the user. If null, don't print the prompt and don't echo the
-     *        input from the user. (not implemented yet)
+     * @param prompt Print this prompt just before accepting character inputs.
+     *        If null, don't print the prompt.
      */
     StreamProcessorManager(
         Stream& stream,

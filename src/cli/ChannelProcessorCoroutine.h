@@ -49,8 +49,8 @@ class ChannelProcessorCoroutine: public ace_routine::Coroutine {
      * @param channel A channel from the StringLineReader to this coroutine.
      * @param printer The output object, normally the global Serial object.
      * @param commandDispatcher instance of CommandDispatcher
-     * @param prompt If not null, print a prompt and echo the command entered
-     *        by the user. If null, don't print prompt and don't echo.
+     * @param prompt Print this prompt just before accepting character inputs.
+     *        If null, don't print the prompt.
      */
     ChannelProcessorCoroutine(
         ace_routine::Channel<InputLine>& channel,

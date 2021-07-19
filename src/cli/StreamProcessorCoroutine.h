@@ -54,9 +54,8 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
      * @param buffer input character buffer
      * @param bufferSize size of the buffer. Should be set large enough to
      *        hold the longest expected line without triggering buffer overflow.
-     * @param prompt If not null, print a prompt and echo the command entered
-     *        by the user. If null, don't print the prompt and don't echo the
-     *        input from the user. (not implemented yet)
+     * @param prompt Print this prompt just before accepting character inputs.
+     *        If null, don't print the prompt.
      */
     StreamProcessorCoroutine(
         Stream& stream,
@@ -64,7 +63,7 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
         Print& printer,
         char* buffer,
         uint8_t bufferSize,
-        const char* prompt
+        const char* prompt = nullptr
     ):
         mCommandDispatcher(commandDispatcher),
         mStream(stream),
@@ -80,6 +79,11 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
      */
     int runCoroutine() override {
       COROUTINE_LOOP() {
+        if (mPrompt && mShouldPrompt) {
+          mPrinter.print(mPrompt);
+          mPrinter.flush();
+          mShouldPrompt = false;
+        }
         COROUTINE_AWAIT(mStream.available() > 0);
 
         // There could be multiple bytes waiting, so loop to get all of them.
@@ -94,12 +98,14 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
                 F("Error: Buffer overflow... flushing until Newline"));
             mBufStatus = kBufferOverflow;
           } else if (c == '\n' || c == '\r') {
-            // If the buffer had previously overflown, then flush all input
-            // until the \n or \r.
             resetBuffer();
+            mShouldPrompt = true;
+
             if (mBufStatus == kBufferOk) {
               mCommandDispatcher.runCommand(mPrinter, mBuf);
             } else {
+              // If the buffer had previously overflown, then flush all input
+              // until the \n or \r.
               mPrinter.println(
                   F("Error: Buffer overflow... flushed after Newline"));
               mBufStatus = kBufferOk;
@@ -135,6 +141,7 @@ class StreamProcessorCoroutine : public ace_routine::Coroutine {
 
     uint8_t mIndex = 0;
     uint8_t mBufStatus = kBufferOk;
+    bool mShouldPrompt = true;
 };
 
 } // cli

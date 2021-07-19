@@ -53,9 +53,8 @@ class DirectProcessor {
      * @param buffer input character buffer
      * @param bufferSize size of the buffer. Should be set large enough to
      *        hold the longest expected line without triggering buffer overflow.
-     * @param prompt If not null, print a prompt and echo the command entered
-     *        by the user. If null, don't print the prompt and don't echo the
-     *        input from the user. (not implemented yet)
+     * @param prompt Print this prompt just before accepting character inputs.
+     *        If null, don't print the prompt.
      */
     DirectProcessor(
         Stream& stream,
@@ -63,7 +62,7 @@ class DirectProcessor {
         Print& printer,
         char* buffer,
         uint8_t bufferSize,
-        const char* prompt
+        const char* prompt = nullptr
     ):
         mCommandDispatcher(commandDispatcher),
         mStream(stream),
@@ -78,6 +77,11 @@ class DirectProcessor {
      * and writes it into the output channel.
      */
     void process() {
+      if (mPrompt && mShouldPrompt) {
+        mPrinter.print(mPrompt);
+        mPrinter.flush();
+        mShouldPrompt = false;
+      }
       if (mStream.available() == 0) return;
 
       // There could be multiple bytes waiting, so loop to get all of them.
@@ -92,12 +96,14 @@ class DirectProcessor {
               F("Error: Buffer overflow... flushing until Newline"));
           mBufStatus = kBufferOverflow;
         } else if (c == '\n' || c == '\r') {
-          // If the buffer had previously overflown, then flush all input
-          // until the \n or \r.
           resetBuffer();
+          mShouldPrompt = true;
+
           if (mBufStatus == kBufferOk) {
             mCommandDispatcher.runCommand(mPrinter, mBuf);
           } else {
+            // If the buffer had previously overflown, then flush all input
+            // until the \n or \r.
             mPrinter.println(
                 F("Error: Buffer overflow... flushed after Newline"));
             mBufStatus = kBufferOk;
@@ -131,6 +137,7 @@ class DirectProcessor {
 
     uint8_t mIndex = 0;
     uint8_t mBufStatus = kBufferOk;
+    bool mShouldPrompt = true;
 };
 
 } // cli
