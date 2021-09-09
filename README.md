@@ -163,18 +163,58 @@ is required.
 
 ## System Requirements
 
+### Hardware
+
+This library has Tier 1 support on the following boards:
+
+* Arduino Nano clone (16 MHz ATmega328P)
+* SparkFun Pro Micro clone (16 MHz ATmega32U4)
+* SAMD21 M0 Mini (48 MHz ARM Cortex-M0+)
+* STM32 Blue Pill (STM32F103C8, 72 MHz ARM Cortex-M3)
+* WeMos D1 Mini clone (ESP-12E module, 80 MHz ESP8266)
+* NodeMCU 1.0 (ESP-12E module, 80 MHz ESP8266)
+* ESP32 dev board (ESP-WROOM-32 module, 240 MHz dual core Tensilica LX6)
+* Teensy 3.2 (72 MHz ARM Cortex-M4)
+
+Tier 2 support can be expected on the following boards, mostly because I don't
+test these as often:
+
+* ATtiny85 (8 MHz ATtiny85)
+* Arduino Pro Mini (16 MHz ATmega328P)
+* Mini Mega 2560 (Arduino Mega 2560 compatible, 16 MHz ATmega2560)
+* Teensy LC (48 MHz ARM Cortex-M0+)
+
+Some utilities work only on microcontrollers with built-in WiFi. The header
+files for those utilities will contain preprocessor directives using `#ifdef`
+to print out a warning if the board is not one of the following:
+
+* ESP8266
+* ESP32
+
+The following boards are *not* supported (although sometimes, something may
+accidentally work on these boards):
+
+* Any platform using the ArduinoCore-API
+  (https://github.com/arduino/ArduinoCore-api), such as:
+    * megaAVR (e.g. Nano Every)
+    * SAMD21 boards w/ `arduino:samd` version >= 1.8.10 (e.g. MKRZero)
+    * Raspberry Pi Pico RP2040
+
 ### Tool Chain
 
 This library was developed and tested using:
 
 * [Arduino IDE 1.8.13](https://www.arduino.cc/en/Main/Software)
-* [Arduino AVR Boards 1.6.23](https://github.com/arduino/ArduinoCore-avr)
-* [Arduino SAMD Boards 1.8.3](https://github.com/arduino/ArduinoCore-samd)
-* [SparkFun AVR Boards 1.1.12](https://github.com/sparkfun/Arduino_Boards)
-* [SparkFun SAMD Boards 1.6.2](https://github.com/sparkfun/Arduino_Boards)
+* [Arduino CLI 0.15.2](https://arduino.github.io/arduino-cli)
+* [SpenceKonde ATTinyCore 1.5.2](https://github.com/SpenceKonde/ATTinyCore)
+* [Arduino AVR Boards 1.8.3](https://github.com/arduino/ArduinoCore-avr)
+* [Arduino SAMD Boards 1.8.9](https://github.com/arduino/ArduinoCore-samd)
+* [SparkFun AVR Boards 1.1.13](https://github.com/sparkfun/Arduino_Boards)
+* [SparkFun SAMD Boards 1.8.3](https://github.com/sparkfun/Arduino_Boards)
+* [STM32duino 2.0.0](https://github.com/stm32duino/Arduino_Core_STM32)
 * [ESP8266 Arduino 2.7.4](https://github.com/esp8266/Arduino)
-* [ESP32 Arduino 1.0.4](https://github.com/espressif/arduino-esp32)
-* [Teensydino 1.46](https://www.pjrc.com/teensy/td_download.html)
+* [ESP32 Arduino 1.0.6](https://github.com/espressif/arduino-esp32)
+* [Teensyduino 1.54](https://www.pjrc.com/teensy/td_download.html)
 
 It should work with [PlatformIO](https://platformio.org/) but I have
 not tested it.
@@ -189,48 +229,24 @@ I use Ubuntu 18.04 and 20.04 for the vast majority of my development. I expect
 that the library will work fine under MacOS and Windows, but I have not tested
 them.
 
-### Hardware
-
-Most utilities will work on various Arduino boards. I test most utilities on
-on the following boards:
-
-* Arduino Nano clone (16 MHz ATmega328P)
-* SparkFun Pro Micro clone (16 MHz ATmega32U4)
-* STM32 Blue Pill (STM32F103C8, 72 MHz ARM Cortex-M3)
-* WeMos D1 Mini clone (ESP-12E module, 80 MHz ESP8266)
-* ESP32 dev board (ESP-WROOM-32 module, 240 MHz dual core Tensilica LX6)
-
-Some utlities work only on microcontrollers with built-in WiFi. The header
-files for those utilities will contain preprpocessor directives using `#ifdef`
-to print out a warning if the board is not one of the following:
-
-* ESP8266
-* ESP32
-
-I will occasionally test on the following hardware as a sanity check:
-
-* Mini Mega 2560 (Arduino Mega 2560 compatible, 16 MHz ATmega2560)
-* SAMD21 M0 Mini (48 MHz ARM Cortex-M0+) (compatible with Arduino Zero)
-* Teensy 3.2 (72 MHz ARM Cortex-M4)
-
-The following boards are *not* supported (although sometimes, something may
-accidentally work on these boards):
-
-* megaAVR (e.g. Nano Every)
-* SAMD21 boards w/ `arduino:samd` version >= 1.8.10 (e.g. MKRZero)
-
 ## License
 
 [MIT License](https://opensource.org/licenses/MIT)
 
 ## Feedback and Support
 
-If you have any questions, comments, bug reports, or feature requests, please
-file a GitHub ticket instead of emailing me unless the content is sensitive.
-(The problem with email is that I cannot reference the email conversation when
-other people ask similar questions later.) I'd love to hear about how this
-software and its documentation can be improved. I can't promise that I will
-incorporate everything, but I will give your ideas serious consideration.
+If you have any questions, comments and other support questions about how to
+use this library, please use the
+[GitHub Discussions](https://github.com/bxparks/AceUtils/discussions)
+for this project. If you have bug reports or feature requests, please file a
+ticket in [GitHub Issues](https://github.com/bxparks/AceUtils/issues).
+I'd love to hear about how this software and its documentation can be improved.
+I can't promise that I will incorporate everything, but I will give your ideas
+serious consideration.
+
+Please refrain from emailing me directly unless the content is sensitive. The
+problem with email is that I cannot reference the email conversation when other
+people ask similar questions later.
 
 ## Authors
 
