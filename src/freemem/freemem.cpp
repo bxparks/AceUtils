@@ -39,9 +39,14 @@ namespace freemem {
  *
  * For a Nano:
  * * The original code returns 2252, which seems too high since it has only
- *    2048 of static RAM. Changed to always test for non-zero value of __brkval,
- *    which gives 1553 which seems more accurate because the Arduino IDE says
- *    that the sketch leaves 1605 bytes for RAM.
+ *   2048 of static RAM. Changed to always test for non-zero value of __brkval,
+ *   which gives 1553 which seems more accurate because the Arduino IDE says
+ *   that the sketch leaves 1605 bytes for RAM.
+ *
+ * For STM32:
+ * * The sbrk() code seems to work. But see
+ *   https://github.com/stm32duino/STM32Examples/blob/master/examples/Benchmarking/MemoryAllocationStatistics/MemoryAllocationStatistics.ino
+ *   for more info.
  *
  * For ESP8266:
  * * https://github.com/esp8266/Arduino/issues/81
