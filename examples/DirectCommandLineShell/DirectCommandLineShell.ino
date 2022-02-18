@@ -165,6 +165,11 @@ void setup() {
 #endif
   SERIAL_PORT_MONITOR.begin(115200);
   while (!SERIAL_PORT_MONITOR); // micro/leonardo
+#if defined(EPOXY_DUINO)
+  SERIAL_PORT_MONITOR.setLineModeUnix();
+  enableTerminalEcho();
+#endif
+
   pinMode(LED, OUTPUT);
 
   CoroutineScheduler::setup();
