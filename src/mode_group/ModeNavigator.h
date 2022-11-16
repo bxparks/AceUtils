@@ -36,10 +36,12 @@ class ModeNavigator {
     }
 
     /**
-     * Alternate between a root group and a child group. This class currently
-     * supports only a 2-level hierarchy. Supporting an arbitrary number of
-     * levels would require keeping a stack of the traversal, which would
-     * require memory allocation.
+     * Alternate between a root group and a child group, going to the first mode
+     * of the group.
+     *
+     * This class currently supports only a 2-level hierarchy. Supporting an
+     * arbitrary number of levels would require keeping a stack of the
+     * traversal, which would require memory allocation.
      */
     void changeGroup() {
       const ModeGroup* parentGroup = mCurrModeIterator.group->parentGroup;
