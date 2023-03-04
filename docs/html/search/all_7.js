@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['ieepromadapter_23',['IEepromAdapter',['../classace__utils_1_1crc__eeprom_1_1IEepromAdapter.html',1,'ace_utils::crc_eeprom']]],
-  ['inputline_24',['InputLine',['../structace__utils_1_1cli_1_1InputLine.html',1,'ace_utils::cli']]],
-  ['isargequal_25',['isArgEqual',['../classace__utils_1_1cli_1_1CommandHandler.html#ab664de864c17a35e0bbb6c75176684cb',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const char *token)'],['../classace__utils_1_1cli_1_1CommandHandler.html#aecf6a79d06930a7d91c8862274af698a',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const __FlashStringHelper *token)']]]
+  ['mode_20group_31',['Mode Group',['../md__home_brian_src_AceUtils_src_mode_group_README.html',1,'']]],
+  ['modegroup_32',['ModeGroup',['../structace__utils_1_1mode__group_1_1ModeGroup.html',1,'ace_utils::mode_group']]],
+  ['modeid_33',['modeId',['../structace__utils_1_1mode__group_1_1ModeRecord.html#a20cacd3adf2570b38219cabf4d1666e8',1,'ace_utils::mode_group::ModeRecord::modeId()'],['../classace__utils_1_1mode__group_1_1ModeNavigator.html#a98ad7d414cefceae440c3e0208622ccd',1,'ace_utils::mode_group::ModeNavigator::modeId()']]],
+  ['modeiterator_34',['ModeIterator',['../structace__utils_1_1mode__group_1_1ModeIterator.html',1,'ace_utils::mode_group']]],
+  ['modenavigator_35',['ModeNavigator',['../classace__utils_1_1mode__group_1_1ModeNavigator.html',1,'ace_utils::mode_group::ModeNavigator'],['../classace__utils_1_1mode__group_1_1ModeNavigator.html#aab97f3a22f4e9212356880285f6bfbb3',1,'ace_utils::mode_group::ModeNavigator::ModeNavigator()']]],
+  ['moderecord_36',['ModeRecord',['../structace__utils_1_1mode__group_1_1ModeRecord.html',1,'ace_utils::mode_group']]]
 ];

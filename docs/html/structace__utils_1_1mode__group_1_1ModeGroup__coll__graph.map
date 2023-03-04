@@ -1,3 +1,4 @@
 <map id="ace_utils::mode_group::ModeGroup" name="ace_utils::mode_group::ModeGroup">
 <area shape="rect" id="node1" title="A data structure that captures the group of sibliing clock modes which can be cycled through using th..." alt="" coords="5,5,175,47"/>
+<area shape="rect" id="node2" href="$structace__utils_1_1mode__group_1_1ModeRecord.html" title="A record of a child of a ModeGroup." alt="" coords="5,109,175,151"/>
 </map>
