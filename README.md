@@ -29,7 +29,7 @@ Arduino application if the API of this library is changed. To reflect the
 transient and experimental nature of this library, it is likely that the version
 will always remain in the `v0.xx.yy` form.
 
-**Version**: 0.5.0 (2021-03-08)
+**Version**: 0.6.0 (2023-03-04)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
@@ -57,7 +57,7 @@ will always remain in the `v0.xx.yy` form.
     * Depends on:
         * AceRoutine (https://github.com/bxparks/AceRoutine)
         * AceCommon (https://github.com/bxparks/AceCommon)
-* ModeGroup
+* ModeGroup (**Deprecated** Do not use)
     * Header files
         * `#include <AceUtils.h>`
         * `#include <mode_group/mode_group.h>`

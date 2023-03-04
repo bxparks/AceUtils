@@ -1,6 +1,7 @@
 # Changelog
 
 * Unreleased
+* 0.6.0 (2023-03-04)
     * `AceUtils/buffered_eeprom_stm32`
         * Rename `AceUtilsStm32BufferedEeprom.h` to
           `buffered_eeprom_stm32/buffered_eeprom_stm32.h`
