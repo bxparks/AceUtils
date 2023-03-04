@@ -1,5 +1,18 @@
 # Mode Group
 
+**Deprecated**: The `mode_group.h` header and its `ModeGroup` and
+`ModeNavigator` are deprecated. This was an attempt to encode the UI transitions
+of a small application (e.g. a clock with an LCD or LED display, and some
+buttons) in a way that was data driven. The alternative was to use a series of
+switch-statements that dispatched to short code fragments to handle external
+events (such as button presses, and periodic clock signals). It turned out that
+while using switch-statements seemed simplistic and verbose, it was far easier
+to understand and maintain compared to the  `ModeGroup` and `ModeNavigator`
+framework which became difficult to understand after a few months away from the
+code. I think this is another example where simple and verbose code wins over
+clever code because the execution path of the simple code is explicit and easier
+to follow.
+
 The `ModeGroup` struct defines a tree of sibling and parent/child modes which
 define the different modes of a clock that can be controlled by 2 buttons.
 

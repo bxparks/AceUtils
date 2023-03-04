@@ -32,11 +32,14 @@
             * `ChannelCommandLineShell`
             * `StreamCommandLineShell`
             * `DirectCommandLineShell`
-    * `AceUtil/mode_group`
+    * `AceUtils/mode_group`
         * Add `ModeRecord` to keep the modeId and its `ModeGroup*` pointer
           together in a single data structure.
         * Add some notes to [mode_group/README.md](src/mode_group/README.md)
           because I had a hard time understanding my own code.
+        * **Deprecated**: This code is deprecated before it is released. See
+          notes at the top of [src/mode_group](src/mode_group/README.md). I'll
+          keep it around for historical reference.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.
