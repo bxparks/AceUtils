@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['espeepromadapter_57',['EspEepromAdapter',['../classace__utils_1_1crc__eeprom_1_1EspEepromAdapter.html',1,'ace_utils::crc_eeprom']]]
+  ['directprocessor_63',['DirectProcessor',['../classace__utils_1_1cli_1_1DirectProcessor.html',1,'ace_utils::cli']]],
+  ['directprocessormanager_64',['DirectProcessorManager',['../classace__utils_1_1cli_1_1DirectProcessorManager.html',1,'ace_utils::cli']]]
 ];

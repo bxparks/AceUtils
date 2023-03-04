@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,64,91,91"/>
-<area shape="rect" id="node2" href="$classace__utils_1_1cli_1_1CommandDispatcher.html" title="A coroutine that reads lines from the Serial port, tokenizes the line on whitespace boundaries,..." alt="" coords="139,5,387,32"/>
-<area shape="rect" id="node3" href="$classace__utils_1_1cli_1_1CommandManager.html" title="A convenience wrapper around a CommandDispatcher that hides complexity of creating,..." alt="" coords="145,57,380,98"/>
-<area shape="rect" id="node4" href="$classace__utils_1_1cli_1_1StreamLineReader.html" title="An AceRoutine coroutine that reads lines (terminated by &#39;\n&#39; or &#39;\r&#39; from the Stream device,..." alt="" coords="170,122,355,163"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,78,175,105"/>
+<area shape="rect" id="node2" href="$classace__utils_1_1cli_1_1ChannelProcessorCoroutine.html" title="A coroutine that reads lines from a Channel (e.g." alt="" coords="223,5,449,47"/>
+<area shape="rect" id="node3" href="$classace__utils_1_1cli_1_1StreamProcessorCoroutine.html" title="An AceRoutine coroutine that reads lines (terminated by &#39;\n&#39; or &#39;\r&#39; from the Stream device,..." alt="" coords="225,71,447,112"/>
+<area shape="rect" id="node4" href="$classace__utils_1_1cli_1_1StreamReaderCoroutine.html" title="An AceRoutine coroutine that reads lines (terminated by &#39;\n&#39; or &#39;\r&#39; from the Stream device,..." alt="" coords="234,136,438,177"/>
 </map>

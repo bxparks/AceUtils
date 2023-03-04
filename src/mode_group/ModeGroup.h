@@ -7,31 +7,42 @@ namespace mode_group {
 /** A mode identifier guaranteed to be invalid. */
 const uint8_t kModeUnknown = 0;
 
+struct ModeGroup;
+
+/** A record of a child of a ModeGroup. */
+struct ModeRecord {
+  /** Unique integer identifier of the mode. */
+  uint8_t const modeId;
+
+  /** ModeGroup containing children ModeRecords. Null if no children. */
+  const ModeGroup* const childGroup;
+};
+
 /**
  * A data structure that captures the group of sibliing clock modes which can
- * be cycled through using the "Mode" button. An alternative is to represent
- * each mode as a hierarchy of "directories" and "files". But that requires
- * more memory. Grouping all the siblings together into a single object is more
- * memory efficient, but less aesthetically pleasing.
+ * be cycled through using the "Mode" button.
+ *
+ * An alternative is to represent each mode as a hierarchy of "directories" and
+ * "files". But that requires more memory. Grouping all the siblings together
+ * into a single object is more memory efficient, but less aesthetically
+ * pleasing. A ModeGroup does not have a modeId because it does not represent a
+ * specific rendering mode. It is a group of rendering modes.
  */
 struct ModeGroup {
   /** Pointer to the parent ModeGroup. Set to nullptr for the root group. */
   const ModeGroup* const parentGroup;
 
   /** Number of modes. */
-  const uint8_t numModes;
+  uint8_t const numModes;
 
-  /** Array of mode identifiers of size numModes. */
-  const uint8_t* const modes;
+  /** Array of children mode groups. */
+  const ModeRecord* const children;
+};
 
-  /**
-   * List of child ModeGroup corresponding to each element in 'modes'. If
-   * childGroups is set to nullptr, that is equivalent to setting each element
-   * to nullptr. In other words, if there are 3 elements in modes, then we
-   * could make childGroups point to an array of {nullptr, nullptr, nullptr}.
-   * But it's more space efficient to set childGroups = nullptr.
-   */
-  const ModeGroup* const* const childGroups;
+/** Point to the current Mode. */
+struct ModeIterator {
+  const ModeGroup* group;
+  uint8_t recordIndex;
 };
 
 } // mode_group

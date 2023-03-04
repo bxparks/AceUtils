@@ -7,51 +7,64 @@
  */
 
 #include <Arduino.h>
-#include <AceUtilsCrcEeprom.h>
-using ace_utils::crc_eeprom::AvrEepromAdapter;
-using ace_utils::crc_eeprom::EspEepromAdapter;
-using ace_utils::crc_eeprom::CrcEeprom;
+#include <AceUtils.h>
+#include <crc_eeprom/crc_eeprom.h>
+using ace_utils::crc_eeprom::CrcEepromAvr;
+using ace_utils::crc_eeprom::CrcEepromEsp;
 
 #if ! defined(SERIAL_PORT_MONITOR)
   #define SERIAL_PORT_MONITOR Serial
 #endif
 
-#if defined(EPOXY_DUINO)
+// The contextId can be anything you want, and should uniquely identify the
+// application to avoid collisions with another applications that store data
+// with the same length.
+const uint32_t CONTEXT_ID = 0xeca4c474;
 
+#if defined(EPOXY_DUINO)
   // Two versions of EEPROM.h can be selected using the ARDUINO_LIBS list in
-  // the Makefile: "EpoxyPromEsp" or "EpoxyPromAvr".
-  #include <EEPROM.h>
-  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  // the Makefile: "EpoxyEepromEsp" or "EpoxyEepromAvr".
+  #include <EpoxyEepromEsp.h>
+  CrcEepromEsp<EpoxyEepromEsp> crcEeprom(EpoxyEepromEspInstance, CONTEXT_ID);
 
 #elif defined(ESP8266) || defined(ESP32)
   #include <EEPROM.h>
-  EspEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  CrcEepromEsp<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 
 #elif defined(ARDUINO_ARCH_STM32)
-
-  // Use this for STM32. The <AceUtilsStm32BufferedEeprom.h> library provides
-  // the BufferedEEPROM object which internally uses the buffered versions of
-  // the low-level eeprom functions. The BufferedEEPROM object implements the
-  // ESP-flavored EEPROM API.
-  #include <AceUtilsStm32BufferedEeprom.h>
-  EspEepromAdapter<BufferedEEPROMClass> eepromAdapter(BufferedEEPROM);
-
-  // Don't do this for STM32 because the default EEPROM flashes the entire
-  // page for *every* byte!
-  //#include <EEPROM.h>
-  //AvrEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  #if 1
+    // Use this for STM32. The buffered_eeprom_stm32 library provides
+    // the BufferedEEPROM object which internally uses the buffered versions of
+    // the low-level eeprom functions. The BufferedEEPROM object implements the
+    // ESP-flavored EEPROM API.
+    #include <AceUtils.h>
+    #include <buffered_eeprom_stm32/buffered_eeprom_stm32.h> // AceUtils
+    CrcEepromEsp<BufferedEEPROMClass> crcEeprom(BufferedEEPROM, CONTEXT_ID);
+  #else
+    // Don't do this for STM32 because the default EEPROM flashes the entire
+    // page for *every* byte!
+    #include <EEPROM.h>
+    CrcEepromAvr<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
+  #endif
 
 #else
-
+  // Assume AVR
   #include <EEPROM.h>
-  AvrEepromAdapter<EEPROMClass> eepromAdapter(EEPROM);
+  CrcEepromAvr<EEPROMClass> crcEeprom(EEPROM, CONTEXT_ID);
 
 #endif
 
-// The contextId is generated from "demo". This can be anything you want, and
-// should uniquely identify the application to avoid collisions with another
-// applications that store data with the same length.
-CrcEeprom crcEeprom(eepromAdapter, CrcEeprom::toContextId('d', 'e', 'm', 'o'));
+void setupEeprom() {
+#if defined(EPOXY_DUINO)
+  EpoxyEepromEspInstance.begin(1024);
+#elif defined(ESP8266) || defined(ESP32)
+  EEPROM.begin(256);
+#elif defined(ARDUINO_ARCH_STM32)
+  BufferedEEPROM.begin();
+#else
+  // Assume AVR style EEPOM and do nothing.
+#endif
+}
 
 struct StoredInfo {
   int startTime = 100;
@@ -66,30 +79,30 @@ void setup() {
   SERIAL_PORT_MONITOR.begin(115200);
   while (!SERIAL_PORT_MONITOR);
 
-  eepromAdapter.begin(CrcEeprom::toSavedSize(sizeof(StoredInfo)));
+  setupEeprom();
 
   StoredInfo storedInfo;
 
-  SERIAL_PORT_MONITOR.print("Original storedInfo: ");
+  SERIAL_PORT_MONITOR.print("Generating StoredInfo: ");
   SERIAL_PORT_MONITOR.print("startTime: ");
   SERIAL_PORT_MONITOR.print(storedInfo.startTime);
   SERIAL_PORT_MONITOR.print("; interval: ");
   SERIAL_PORT_MONITOR.println(storedInfo.interval);
 
-  SERIAL_PORT_MONITOR.println("Writing StoredInfo struct");
+  SERIAL_PORT_MONITOR.println("Writing StoredInfo");
   size_t writtenSize = crcEeprom.writeWithCrc(0, storedInfo);
   SERIAL_PORT_MONITOR.print("Written size: ");
   SERIAL_PORT_MONITOR.println(writtenSize);
 
-  SERIAL_PORT_MONITOR.println("Clearing storedInfo struct");
+  SERIAL_PORT_MONITOR.println("Clearing storedInfo");
   storedInfo.startTime = 0;
   storedInfo.interval = 0;
-  SERIAL_PORT_MONITOR.println("Reading back StoredInfo struct");
+  SERIAL_PORT_MONITOR.println("Reading back StoredInfo");
   bool isValid = crcEeprom.readWithCrc(0, storedInfo);
   SERIAL_PORT_MONITOR.print("isValid: ");
   SERIAL_PORT_MONITOR.println(isValid);
 
-  SERIAL_PORT_MONITOR.print("storedInfo: ");
+  SERIAL_PORT_MONITOR.print("StoredInfo: ");
   SERIAL_PORT_MONITOR.print("startTime: ");
   SERIAL_PORT_MONITOR.print(storedInfo.startTime);
   SERIAL_PORT_MONITOR.print("; interval: ");

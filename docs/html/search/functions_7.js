@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['isargequal_81',['isArgEqual',['../classace__utils_1_1cli_1_1CommandHandler.html#ab664de864c17a35e0bbb6c75176684cb',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const char *token)'],['../classace__utils_1_1cli_1_1CommandHandler.html#aecf6a79d06930a7d91c8862274af698a',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const __FlashStringHelper *token)']]]
+  ['modeid_95',['modeId',['../classace__utils_1_1mode__group_1_1ModeNavigator.html#a98ad7d414cefceae440c3e0208622ccd',1,'ace_utils::mode_group::ModeNavigator']]],
+  ['modenavigator_96',['ModeNavigator',['../classace__utils_1_1mode__group_1_1ModeNavigator.html#aab97f3a22f4e9212356880285f6bfbb3',1,'ace_utils::mode_group::ModeNavigator']]]
 ];

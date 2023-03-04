@@ -1,6 +1,46 @@
 # Changelog
 
 * Unreleased
+* 0.6.0 (2023-03-04)
+    * `AceUtils/buffered_eeprom_stm32`
+        * Rename `AceUtilsStm32BufferedEeprom.h` to
+          `buffered_eeprom_stm32/buffered_eeprom_stm32.h`
+    * `AceUtils/crc_eeprom`
+        * `CrcEeprom`: Recommend using a 32-bit random number for the
+          `contextId` instead of using `toContextId()` helper function.
+        * Rename `IEepromAdapter` to `EepromInterface`; `EspEepromAdapter` to
+          `EspStyleEeprom`; `AvrEepromAdapter` to `AvrStyleEeprom`.
+        * Rename `EpoxyPromAvr` to `EpoxyEepromAvr`; `EpoxyPromEsp` to
+          `EpoxyEepromEsp`; tracks the changes in EpoxyDuino library.
+        * Convert `CrcEeprom` into a template class, templatized on
+          `EspStyleEeprom` and `AvrStyleEeprom`. Seems to save between 150-950
+          bytes of flash memory by avoiding virtual function calls and class
+          hierarchies.
+    * `AceUtils/freemem`
+        * Move `freeMemory()` function from `examples/CommandLineShell.ino`
+          into `freemem/freemem.h` so that it can be used elsewhere.
+        * Add support for STM32, and clean up header imports.
+    * `AceUtils/cli`
+        * Move `AceUtilsCli.h` to `cli/cli.h`.
+        * Split `CommandDispatcher` from `ChannelDispatcher` so that it can be
+          used without using an AceRoutine `Channel`.
+        * Rename `CommandManager` to `ChannelProcessorManager`.
+        * Rename `ChannelDispatcher` to `ChannelProcessorCoroutine`.
+        * Rename `StreamLineReader` to `StreamReaderCoroutine`.
+        * Add `StreamProcessorCoroutine` and `StreamProcessorManager`.
+        * Add `DirectProcessor` and `DirectProcessorManager`.
+        * Split `examples/CommandLineShell.ino` into 3 versions:
+            * `ChannelCommandLineShell`
+            * `StreamCommandLineShell`
+            * `DirectCommandLineShell`
+    * `AceUtils/mode_group`
+        * Add `ModeRecord` to keep the modeId and its `ModeGroup*` pointer
+          together in a single data structure.
+        * Add some notes to [mode_group/README.md](src/mode_group/README.md)
+          because I had a hard time understanding my own code.
+        * **Deprecated**: This code is deprecated before it is released. See
+          notes at the top of [src/mode_group](src/mode_group/README.md). I'll
+          keep it around for historical reference.
 * 0.5.0 (2021-03-08)
     * Add unit tests for `CrcEeprom` using `EpoxyPromAvr` and `EpoxyPromEsp`
       libraries from EpoxyDuino.

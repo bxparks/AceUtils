@@ -1,0 +1,6 @@
+#ifndef ACE_UTILS_BUFFERED_EEPROM_STM32_H
+#define ACE_UTILS_BUFFERED_EEPROM_STM32_H
+
+#include "BufferedEEPROMClass.h"
+
+#endif

@@ -24,8 +24,9 @@ SOFTWARE.
 
 /*
  * Most of these methods are in the .cpp file instead of remaining in the .h
- * file because they use the F() macro, which causes problems for ESP8266 if
- * they are used in an inline context.
+ * file because they use the F() macro, which used to cause problems for ESP8266
+ * if they are used in an inline context. That was fixed in one of the
+ * ESP8266-Arduino releases.
  */
 
 #include "CommandDispatcher.h"
@@ -35,22 +36,6 @@ namespace cli {
 
 // Same whitespace characters used by isspace() in the standard C99 library.
 const char CommandDispatcher::DELIMS[] = " \f\r\n\t\v";
-
-void CommandDispatcher::printLineError(const char* line, uint8_t statusCode)
-    const {
-  if (statusCode == STATUS_BUFFER_OVERFLOW) {
-    mPrinter.print(F("BufferOverflow: "));
-    mPrinter.println(line);
-  } else if (statusCode == STATUS_FLUSH_TO_EOL) {
-    mPrinter.print(F("FlushToEOL: "));
-    mPrinter.println(line);
-  } else {
-    mPrinter.print(F("UnknownError: "));
-    mPrinter.print(statusCode);
-    mPrinter.print(F(": "));
-    mPrinter.println(line);
-  }
-}
 
 void CommandDispatcher::helpCommandHandler(
     Print& printer, int argc, const char* const* argv) const {
@@ -65,8 +50,9 @@ void CommandDispatcher::helpCommandHandler(
 
     bool found = helpSpecific(printer, cmd);
     if (found) return;
-    printer.print(F("Unknown command: "));
-    printer.println(cmd);
+    printer.print(F("Unknown command: '"));
+    printer.print(cmd);
+    printer.println('\'');
   } else {
     printer.println(F("Commands:"));
     printer.println(F("  help [command]"));
@@ -104,7 +90,7 @@ void CommandDispatcher::printHelp(
   }
 }
 
-void CommandDispatcher::runCommand(char* line) const {
+void CommandDispatcher::runCommand(Print& printer, char* line) const {
   // Tokenize the line.
   int argc = tokenize(line, mArgv, mArgvSize);
   if (argc == 0) return;
@@ -112,23 +98,24 @@ void CommandDispatcher::runCommand(char* line) const {
 
   // Handle the built-in 'help' command.
   if (strcmp(cmd, "help") == 0) {
-    helpCommandHandler(mPrinter, argc, mArgv);
+    helpCommandHandler(printer, argc, mArgv);
     return;
   }
 
-  findAndRunCommand(cmd, argc, mArgv);
+  findAndRunCommand(printer, cmd, argc, mArgv);
 }
 
 void CommandDispatcher::findAndRunCommand(
-    const char* cmd, int argc, const char* const* argv) const {
+    Print& printer, const char* cmd, int argc, const char* const* argv) const {
   const CommandHandler* command = findCommand(cmd);
   if (command != nullptr) {
-    command->run(mPrinter, argc, argv);
+    command->run(printer, argc, argv);
     return;
   }
 
-  mPrinter.print(F("Unknown command: "));
-  mPrinter.println(cmd);
+  printer.print(F("Unknown command: '"));
+  printer.print(cmd);
+  printer.println('\'');
 }
 
 } // cli

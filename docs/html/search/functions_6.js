@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['helpall_78',['helpAll',['../classace__utils_1_1cli_1_1CommandDispatcher.html#a517055113aecc022baed1fa53742ee7c',1,'ace_utils::cli::CommandDispatcher']]],
-  ['helpcommandhandler_79',['helpCommandHandler',['../classace__utils_1_1cli_1_1CommandDispatcher.html#af91ec1340b0b62e43dab869316cf9b22',1,'ace_utils::cli::CommandDispatcher']]],
-  ['helpspecific_80',['helpSpecific',['../classace__utils_1_1cli_1_1CommandDispatcher.html#aaba7e9cf696e4a84e0611cf9c9d40607',1,'ace_utils::cli::CommandDispatcher']]]
+  ['isargequal_94',['isArgEqual',['../classace__utils_1_1cli_1_1CommandHandler.html#ab664de864c17a35e0bbb6c75176684cb',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const char *token)'],['../classace__utils_1_1cli_1_1CommandHandler.html#aecf6a79d06930a7d91c8862274af698a',1,'ace_utils::cli::CommandHandler::isArgEqual(const char *arg, const __FlashStringHelper *token)']]]
 ];

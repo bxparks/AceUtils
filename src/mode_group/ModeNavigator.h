@@ -20,61 +20,62 @@ class ModeNavigator {
   public:
     /** Constructor. Initialize the navigator using the root ModeGroup. */
     ModeNavigator(ModeGroup const* rootModeGroup) :
-        mCurrentModeGroup(rootModeGroup) {
+        mCurrModeIterator{rootModeGroup, 0} {
+      updateCurrentModeId();
     }
 
     /** Return the current mode identifier. */
-    uint8_t mode() const { return mMode; }
-
-    /**
-     * Activate the navigator by setting the mode to be the first mode
-     * in the ModeGroup hierarchy. It is no longer kModeUnknown.
-     */
-    void setup() {
-      mMode = getCurrentMode(mCurrentModeIndex);
-    }
+    uint8_t modeId() const { return mModeId; }
 
     /** Move to the next sibling mode and wrap to 0 if the end is reached. */
     void changeMode() {
-      ace_common::incrementMod(mCurrentModeIndex, mCurrentModeGroup->numModes);
-      mMode = getCurrentMode(mCurrentModeIndex);
+      ace_common::incrementMod(
+          mCurrModeIterator.recordIndex,
+          mCurrModeIterator.group->numModes);
+      updateCurrentModeId();
     }
 
     /**
-     * Alternate between a root group and a child group. This class currently
-     * supports only a 2-level hierarchy.
+     * Alternate between a root group and a child group, going to the first mode
+     * of the group.
+     *
+     * This class currently supports only a 2-level hierarchy. Supporting an
+     * arbitrary number of levels would require keeping a stack of the
+     * traversal, which would require memory allocation.
      */
     void changeGroup() {
-      const ModeGroup* parentGroup = mCurrentModeGroup->parentGroup;
+      const ModeGroup* parentGroup = mCurrModeIterator.group->parentGroup;
 
       if (parentGroup) {
-        mCurrentModeGroup = parentGroup;
-        mCurrentModeIndex = mTopLevelIndexSave;
+        // Go back to the parent.
+        mCurrModeIterator = mPrevModeIterator;
       } else {
-        const ModeGroup* const* childGroups = mCurrentModeGroup->childGroups;
-        const ModeGroup* childGroup = childGroups
-            ? childGroups[mCurrentModeIndex]
+        // Go down to the child group.
+        const ModeRecord* children = mCurrModeIterator.group->children;
+        const ModeRecord* childRecord = children
+            ? &children[mCurrModeIterator.recordIndex]
             : nullptr;
-        if (childGroup) {
-          mCurrentModeGroup = childGroup;
-          // Save the current top level index so that we can go back to it.
-          mTopLevelIndexSave = mCurrentModeIndex;
-          mCurrentModeIndex = 0;
+        if (childRecord && childRecord->childGroup) {
+          mPrevModeIterator = mCurrModeIterator;
+          mCurrModeIterator.group = childRecord->childGroup;
+          mCurrModeIterator.recordIndex = 0;
         }
       }
 
-      mMode = getCurrentMode(mCurrentModeIndex);
+      updateCurrentModeId();
     }
 
   private:
-    uint8_t getCurrentMode(uint8_t index) const {
-      return mCurrentModeGroup->modes[index];
+    void updateCurrentModeId() {
+      mModeId = mCurrModeIterator.group->children
+          ? mCurrModeIterator.group->children[
+              mCurrModeIterator.recordIndex].modeId
+          : 0;
     }
 
-    ModeGroup const* mCurrentModeGroup;
-    uint8_t mTopLevelIndexSave = 0;
-    uint8_t mCurrentModeIndex = 0;
-    uint8_t mMode = kModeUnknown;
+    ModeIterator mCurrModeIterator;
+    ModeIterator mPrevModeIterator;
+    uint8_t mModeId = kModeUnknown;
 };
 
 } // mode_group

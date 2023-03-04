@@ -3,11 +3,15 @@
 #include <Arduino.h> // Print
 #include <AceCommon.h> // FCString
 #include <AUnitVerbose.h>
-#include <AceUtilsCli.h>
+#include <AceUtils.h>
+#include <cli/cli.h> // from AceUtils.h
 
 using aunit::TestRunner;
 using aunit::TestOnce;
-using namespace ace_utils::cli;
+using ace_utils::cli::CommandHandler;
+using ace_utils::cli::CommandDispatcher;
+using ace_utils::cli::ChannelProcessorCoroutine;
+using ace_utils::cli::ChannelProcessorManager;
 using ace_common::FCString;
 
 // ---------------------------------------------------------------------------
@@ -43,8 +47,8 @@ static const CommandHandler* const COMMANDS[] = {
 };
 static uint8_t const NUM_COMMANDS = sizeof(COMMANDS) / sizeof(CommandHandler*);
 
-static CommandManager<BUF_SIZE, ARGV_SIZE> commandManager(
-    COMMANDS, NUM_COMMANDS, Serial, PROMPT);
+static ChannelProcessorManager<BUF_SIZE, ARGV_SIZE> commandManager(
+    Serial, COMMANDS, NUM_COMMANDS, Serial, PROMPT);
 
 class CommandDispatcherTest: public TestOnce {
   protected:
@@ -80,24 +84,28 @@ testF(CommandDispatcherTest, tokenize) {
 }
 
 test(findCommand) {
-  const CommandDispatcher* dispatcher = commandManager.getDispatcher();
+  const ChannelProcessorCoroutine& channelProcessor =
+      commandManager.getChannelProcessor();
+  const CommandDispatcher& commandDispatcher = channelProcessor.getDispatcher();
 
   // "echo" command uses normal C strings
-  const CommandHandler* echoCommandResult = dispatcher->findCommand("echo");
+  const CommandHandler* echoCommandResult =
+      commandDispatcher.findCommand("echo");
   assertEqual(echoCommandResult, &echoCommand);
   assertEqual(echoCommandResult->getName().compareTo(FCString("echo")), 0);
   assertEqual(echoCommandResult->getHelpString().compareTo(
       FCString("args ...")), 0);
 
   // "list" command uses flash strings
-  const CommandHandler* listCommandResult = dispatcher->findCommand("list");
+  const CommandHandler* listCommandResult =
+      commandDispatcher.findCommand("list");
   assertEqual(listCommandResult, &listCommand);
   assertEqual(listCommandResult->getName().compareTo(FCString("list")), 0);
   assertEqual(listCommandResult->getHelpString().compareTo(
       FCString("files ...")), 0);
 
   // this should not be found
-  const CommandHandler* notFound = dispatcher->findCommand("NOTFOUND");
+  const CommandHandler* notFound = commandDispatcher.findCommand("NOTFOUND");
   assertEqual(notFound, nullptr);
 }
 

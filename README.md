@@ -29,7 +29,7 @@ Arduino application if the API of this library is changed. To reflect the
 transient and experimental nature of this library, it is likely that the version
 will always remain in the `v0.xx.yy` form.
 
-**Version**: 0.5.0 (2021-03-08)
+**Version**: 0.6.0 (2023-03-04)
 
 **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
@@ -37,25 +37,32 @@ will always remain in the `v0.xx.yy` form.
 
 * CrcEeprom
     * See [src/crc_eeprom/README.md](src/crc_eeprom/README.md).
-    * `#include <AceUtilsCrcEeprom.h>`
-    * `using ace_utils::crc_eeprom::CrcEeprom`
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <crc_eeprom/crc_eeprom.h>`
+        * `using ace_utils::crc_eeprom::CrcEepromAvr`
+        * `using ace_utils::crc_eeprom::CrcEepromEsp`
     * Summary:
         * Store data structures in EEPROM with a CRC check.
     * Depends on:
         * AceCRC (https://github.com/bxparks/AceCRC)
 * Command Line Interface (CLI)
     * [src/cli/README.md](src/cli/README.md)
-    * `#include <AceUtilsCli.h>`
-    * `using namespace ace_utils::cli`
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <cli/cli.h>
+        * `using namespace ace_utils::cli`
     * Summary:
         * Implement a command line interface over the Serial port.
     * Depends on:
         * AceRoutine (https://github.com/bxparks/AceRoutine)
         * AceCommon (https://github.com/bxparks/AceCommon)
-* ModeGroup
-    * `#include <AceUtilsModeGroup.h>`
-    * `using ace_utils::mode_group::ModeGroup`
-    * `using ace_utils::mode_group::ModeNavigator`
+* ModeGroup (**Deprecated** Do not use)
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <mode_group/mode_group.h>`
+        * `using ace_utils::mode_group::ModeGroup`
+        * `using ace_utils::mode_group::ModeNavigator`
     * Summary:
         * A data-driven mechanism to encode and navigate the hierarchy of
           view and change modes of the display of a clock controlled by 2
@@ -63,14 +70,26 @@ will always remain in the `v0.xx.yy` form.
     * Depends on:
         * (none)
 * STM32 Buffered EEPROM
-    * `#include <AceUtilsStm32BufferedEeprom.h>`
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <buffered_eeprom_stm32/buffered_eeprom_stm32.h>
     * A version of `EEPROM` on STM32 that uses a buffer to avoid
-      writing to the flash page on every byte update. Implements an API
-      compatible with the `EEPROM` object on ESP8266 and ESP32.
+      writing to the flash page on every byte update.
+        * Implements an API compatible with the `EEPROM` object on ESP8266 and
+          ESP32.
+        * Creates `BufferedEEPROM` instance in the global namespace, just like
+          the `EEPROM` instance.
+        * Can be used with `CrcEeprom` through the `CrcEepromEsp` class.
+    * API
         * `BufferedEEPROM.begin()`
         * `BufferedEEPROM.write()`, `read()`, `put()`, `get()`, `length()`
         * `BufferedEEPROM.commit()`
-    * Can be used with `CrcEeprom` through the `EspEepromAdapter`.
+* Free memory
+    * Header files
+        * `#include <AceUtils.h>`
+        * `#include <freemem/freemem.h>`
+        * `using ace_utils::freemem::freeMemory;`
+    * Returns the amount of free memory in the heap.
 
 ## Installation
 
@@ -105,11 +124,14 @@ and to lookup the signatures of the methods in those classes.
 
 * [examples/CrcEepromDemo](examples/CrcEepromDemo)
     * Demo of `CrcEeprom` class.
-* [examples/CommandLineShell](examples/CommandLineShell)
-    * Demo of the `<CommandLineInterface.h>` classes to implement a command line
+* [examples/SimpleCommandLineShell](examples/SimpleCommandLineShell)
+    * Demo of the `<cli/cli.h>` classes to implement a command line
       interface that accepts a number of commands on the serial port. In other
       words, it is a primitive "shell". The shell is non-blocking and uses
       coroutines so that other coroutines continue to run.
+* [examples/ChannelCommandLineShell](examples/ChannelCommandLineShell)
+    * Deprecated version of `SimpleCommandLineShell` using
+      `ace_routine::Channels`.
 
 ## Usage
 
@@ -121,30 +143,78 @@ Unlike most of my other libraries, the header files of various submodules are
 many of the submodules are unrelated to each other, and have dependencies on
 different external libraries. If I included all the subheaders into `AceUtils.h`
 then the end user would be force to install the union of all external libraries
-which are needed by the entire collection. By splitting each module into
-separate headers (e.g. `AceUtilsCrcEeprom.h`, `AceUtilsModeGroup.h`), the
-external dependencies are minimized.
+which are needed by the entire collection. Instead, the headers for each
+submodule in the various subdirectories must be included explicitly.
 
-The header file of all submodules will begin with the prefix `AceUtils{xxx}.h`,
-for example, `AceUtilsModeGroup.h`.
+For example, to use the `crc_eeprom.h` header, use
 
-All modules are placed in separate namespaces, under the `ace_utils::` top-level
-namespace.
+```C++
+#include <AceUtils.h>
+#include <crc_eeprom/crc_eeprom.h>
+using namespace ace_utils::crc_eeprom;
+```
+
+The first include file (`<AceUtils.h>`) tells the Arduino IDE which library
+should be searched (more technically, this determines the `-I` flag of the `g++`
+compiler). The second include file (`<crc_eeprom/crc_eeprom.h>`) brings in the
+actual header file information of the submodule. All modules are placed in
+separate namespaces, which means that a `using namespace ace_utils::crc_eeprom`
+is required.
 
 ## System Requirements
+
+### Hardware
+
+This library has Tier 1 support on the following boards:
+
+* Arduino Nano clone (16 MHz ATmega328P)
+* SparkFun Pro Micro clone (16 MHz ATmega32U4)
+* SAMD21 M0 Mini (48 MHz ARM Cortex-M0+)
+* STM32 Blue Pill (STM32F103C8, 72 MHz ARM Cortex-M3)
+* WeMos D1 Mini clone (ESP-12E module, 80 MHz ESP8266)
+* NodeMCU 1.0 (ESP-12E module, 80 MHz ESP8266)
+* ESP32 dev board (ESP-WROOM-32 module, 240 MHz dual core Tensilica LX6)
+* Teensy 3.2 (72 MHz ARM Cortex-M4)
+
+Tier 2 support can be expected on the following boards, mostly because I don't
+test these as often:
+
+* ATtiny85 (8 MHz ATtiny85)
+* Arduino Pro Mini (16 MHz ATmega328P)
+* Mini Mega 2560 (Arduino Mega 2560 compatible, 16 MHz ATmega2560)
+* Teensy LC (48 MHz ARM Cortex-M0+)
+
+Some utilities work only on microcontrollers with built-in WiFi. The header
+files for those utilities will contain preprocessor directives using `#ifdef`
+to print out a warning if the board is not one of the following:
+
+* ESP8266
+* ESP32
+
+The following boards are *not* supported (although sometimes, something may
+accidentally work on these boards):
+
+* Any platform using the ArduinoCore-API
+  (https://github.com/arduino/ArduinoCore-api), such as:
+    * megaAVR (e.g. Nano Every)
+    * SAMD21 boards w/ `arduino:samd` version >= 1.8.10 (e.g. MKRZero)
+    * Raspberry Pi Pico RP2040
 
 ### Tool Chain
 
 This library was developed and tested using:
 
 * [Arduino IDE 1.8.13](https://www.arduino.cc/en/Main/Software)
-* [Arduino AVR Boards 1.6.23](https://github.com/arduino/ArduinoCore-avr)
-* [Arduino SAMD Boards 1.8.3](https://github.com/arduino/ArduinoCore-samd)
-* [SparkFun AVR Boards 1.1.12](https://github.com/sparkfun/Arduino_Boards)
-* [SparkFun SAMD Boards 1.6.2](https://github.com/sparkfun/Arduino_Boards)
+* [Arduino CLI 0.15.2](https://arduino.github.io/arduino-cli)
+* [SpenceKonde ATTinyCore 1.5.2](https://github.com/SpenceKonde/ATTinyCore)
+* [Arduino AVR Boards 1.8.3](https://github.com/arduino/ArduinoCore-avr)
+* [Arduino SAMD Boards 1.8.9](https://github.com/arduino/ArduinoCore-samd)
+* [SparkFun AVR Boards 1.1.13](https://github.com/sparkfun/Arduino_Boards)
+* [SparkFun SAMD Boards 1.8.3](https://github.com/sparkfun/Arduino_Boards)
+* [STM32duino 2.0.0](https://github.com/stm32duino/Arduino_Core_STM32)
 * [ESP8266 Arduino 2.7.4](https://github.com/esp8266/Arduino)
-* [ESP32 Arduino 1.0.4](https://github.com/espressif/arduino-esp32)
-* [Teensydino 1.46](https://www.pjrc.com/teensy/td_download.html)
+* [ESP32 Arduino 1.0.6](https://github.com/espressif/arduino-esp32)
+* [Teensyduino 1.54](https://www.pjrc.com/teensy/td_download.html)
 
 It should work with [PlatformIO](https://platformio.org/) but I have
 not tested it.
@@ -159,48 +229,24 @@ I use Ubuntu 18.04 and 20.04 for the vast majority of my development. I expect
 that the library will work fine under MacOS and Windows, but I have not tested
 them.
 
-### Hardware
-
-Most utilities will work on various Arduino boards. I test most utilities on
-on the following boards:
-
-* Arduino Nano clone (16 MHz ATmega328P)
-* SparkFun Pro Micro clone (16 MHz ATmega32U4)
-* STM32 Blue Pill (STM32F103C8, 72 MHz ARM Cortex-M3)
-* WeMos D1 Mini clone (ESP-12E module, 80 MHz ESP8266)
-* ESP32 dev board (ESP-WROOM-32 module, 240 MHz dual core Tensilica LX6)
-
-Some utlities work only on microcontrollers with built-in WiFi. The header
-files for those utilities will contain preprpocessor directives using `#ifdef`
-to print out a warning if the board is not one of the following:
-
-* ESP8266
-* ESP32
-
-I will occasionally test on the following hardware as a sanity check:
-
-* Mini Mega 2560 (Arduino Mega 2560 compatible, 16 MHz ATmega2560)
-* SAMD21 M0 Mini (48 MHz ARM Cortex-M0+) (compatible with Arduino Zero)
-* Teensy 3.2 (72 MHz ARM Cortex-M4)
-
-The following boards are *not* supported (although sometimes, something may
-accidentally work on these boards):
-
-* megaAVR (e.g. Nano Every)
-* SAMD21 boards w/ `arduino:samd` version >= 1.8.10 (e.g. MKRZero)
-
 ## License
 
 [MIT License](https://opensource.org/licenses/MIT)
 
 ## Feedback and Support
 
-If you have any questions, comments, bug reports, or feature requests, please
-file a GitHub ticket instead of emailing me unless the content is sensitive.
-(The problem with email is that I cannot reference the email conversation when
-other people ask similar questions later.) I'd love to hear about how this
-software and its documentation can be improved. I can't promise that I will
-incorporate everything, but I will give your ideas serious consideration.
+If you have any questions, comments, or feature requests for this library,
+please use the [GitHub
+Discussions](https://github.com/bxparks/AceUtils/discussions) for this project.
+If you have bug reports, please file a ticket in [GitHub
+Issues](https://github.com/bxparks/AceUtils/issues). Feature requests should go
+into Discussions first because they often have alternative solutions which are
+useful to remain visible, instead of disappearing from the default view of the
+Issue tracker after the ticket is closed.
+
+Please refrain from emailing me directly unless the content is sensitive. The
+problem with email is that I cannot reference the email conversation when other
+people ask similar questions later.
 
 ## Authors
 
