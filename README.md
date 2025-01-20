@@ -196,8 +196,9 @@ accidentally work on these boards):
 
 * Any platform using the ArduinoCore-API
   (https://github.com/arduino/ArduinoCore-api), such as:
-    * megaAVR (e.g. Nano Every)
-    * SAMD21 boards w/ `arduino:samd` version >= 1.8.10 (e.g. MKRZero)
+    * Arduino Nano Every
+    * Arduino MKRZero
+    * Arduino UNO R4
     * Raspberry Pi Pico RP2040
 
 ### Tool Chain
